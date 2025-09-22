@@ -82,10 +82,8 @@ def main():
     perf_start = time.perf_counter()
 
     def get_duration():
-        perf_diff = time.perf_counter() - perf_start
-        delta = dt.timedelta(seconds=perf_diff)
-        total_seconds = int(delta.total_seconds())
-        hours, remainder = divmod(total_seconds, 60 * 60)
+        perf_diff = int(time.perf_counter() - perf_start)
+        hours, remainder = divmod(perf_diff, 60 * 60)
         minutes, seconds = divmod(remainder, 60)
 
         return f'{hours:02d}:{minutes:02d}:{seconds:02d}'
