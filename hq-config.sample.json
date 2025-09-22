@@ -1,0 +1,16 @@
+{
+  "faction_data_path": "public/faction_data",
+  "factions": [
+    {
+      "faction": "The Dork Wheel",
+      "key_systems": [
+        "Sol",
+        "Polaris"
+      ],
+      "inara_faction_id": "54321"
+    },
+    {
+      "faction": "Faction 2"
+    }
+  ]
+}
