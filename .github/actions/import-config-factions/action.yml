@@ -8,19 +8,23 @@ runs:
         python-version: '3.12'
 
     - name: Install Python dependencies
+      shell: bash
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
     - name: Factions data import
+      shell: bash
       run: python py/faction_data.py --config-json hq-config.json
 
     - name: Set up Git
+      shell: bash
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
     - name: Commit changes
+      shell: bash
       run: |
         git add .
         git commit -m "Daily factions data import" || echo "No changes to commit"

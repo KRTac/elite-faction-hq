@@ -8,9 +8,11 @@ runs:
         node-version: '22'
 
     - name: Install Node dependencies
+      shell: bash
       run: npm ci
 
     - name: Build Vite site
+      shell: bash
       run: npm run build
 
     - name: Upload artifact
