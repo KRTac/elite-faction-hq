@@ -8,6 +8,7 @@ import numeral from 'numeral';
 import { format, formatDistanceToNow } from 'date-fns';
 import ToClipboard from '../components/ToClipboard';
 import { FactionDatasetContext } from '../hooks/useFactionDataset';
+import DateTimeText from '../components/data/DateTimeText';
 
 
 export const SystemFiltersContext = createContext(null);
@@ -606,8 +607,8 @@ export function useSystemsColumnDefinitions(columns) {
               const date = info.getValue();
 
               return (
-                <span title={`${format(new Date(date), "do MMM y 'at' HH:mm:ss")}`}>
-                  {formatDistanceToNow(date, { addSuffix: true })}
+                <span title={`${format(date, "do MMM y 'at' HH:mm:ss")}`}>
+                  <DateTimeText date={date} />
                 </span>
               );
             },

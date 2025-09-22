@@ -32,7 +32,7 @@ export const Route = createFileRoute('/$factionDir')({
       timestamp = faction.datasets[0];
     }
 
-    const jsonUrl = `${root_path}${faction.directory}/${timestamp}.json`;
+    const jsonUrl = `${root_path}${factionDir}/${timestamp}.json`;
     try {
       dataset = await fetch(jsonUrl).then(res => res.json());
     } catch (ex) {

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import numeral from 'numeral';
-import { format, formatDistanceToNow } from 'date-fns';
 import { FactionDatasetContext } from '../hooks/useFactionDataset';
+import DateTimeText from './data/DateTimeText';
 
 
 function DetailsItem({ label, children, ...rest }) {
@@ -45,8 +45,8 @@ function FactionDetails() {
         </DetailsItem>}
         <DetailsItem label="Import duration">{numeral(importDuration).format('0.00')}s</DetailsItem>
         <DetailsItem label="Generated at">
-          <p>{`${format(new Date(timestamp), "do MMM y 'at' HH:mm:ss")}`}</p>
-          <p>{formatDistanceToNow(timestamp, { addSuffix: true })}</p>
+          <p><DateTimeText date={timestamp} showDate /></p>
+          <p><DateTimeText date={timestamp} /></p>
         </DetailsItem>
       </DetailsWrapper>
     </div>

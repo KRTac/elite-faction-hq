@@ -1,9 +1,9 @@
-import { format, formatDistanceToNow } from 'date-fns';
 import { Link, useSearch } from '@tanstack/react-router';
 import { ChevronLeftIcon } from '@heroicons/react/20/solid';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
 import NavLink from './NavLink';
 import useFaction from '../hooks/useFaction';
+import DateTimeText from './data/DateTimeText';
 
 
 function HeaderButton({ to, children, matchExact }) {
@@ -66,10 +66,10 @@ function DatasetSelector() {
       </Link>
       <div className="text-center w-40">
         <p className="text-sm dark:text-neutral-300">
-          {formatDistanceToNow(timestamp, { addSuffix: true })}
+          <DateTimeText date={timestamp} />
         </p>
         <p className="text-xs dark:text-neutral-400">
-          {format(new Date(timestamp), "do MMM y 'at' HH:mm:ss")}
+          <DateTimeText date={timestamp} showDate />
         </p>
       </div>
       <Link

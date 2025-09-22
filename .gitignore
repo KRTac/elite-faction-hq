@@ -30,3 +30,4 @@ faction_data_test
 zmq
 src/routeTree.gen.ts
 src/routeTree.gen.js
+src/assets/factions_meta.json
