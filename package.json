@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "import-factions": "./py/faction_data.py --config-json hq-config.json --indent 0",
+    "import-factions-test": "./py/faction_data.py --config-json hq-config.json --indent 1 --output-root faction_data_test"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",

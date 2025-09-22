@@ -26,6 +26,7 @@ dist-ssr
 
 hq-config.json
 public/faction_data
+faction_data_test
 zmq
 src/routeTree.gen.ts
 src/routeTree.gen.js
