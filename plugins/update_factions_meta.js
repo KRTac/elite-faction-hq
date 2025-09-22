@@ -136,6 +136,10 @@ export default function updateFactionsMeta() {
 
       metaJson += ']}\n';
 
+      if (!fs.existsSync(path.join('src/assets'))) {
+        fs.mkdirSync(path.join('src/assets'));
+      }
+
       const metaPath = path.join('src/assets/factions_meta.json');
       fs.writeFileSync(metaPath, metaJson);
     }
