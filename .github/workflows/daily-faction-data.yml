@@ -18,6 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          ref: gh-pages
           fetch-depth: 0
 
       - uses: ./.github/actions/import-config-factions
