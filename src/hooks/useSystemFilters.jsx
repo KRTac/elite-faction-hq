@@ -5,10 +5,9 @@ import { useNavigate } from '@tanstack/react-router';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid';
 import numeral from 'numeral';
-import { format, formatDistanceToNow } from 'date-fns';
 import ToClipboard from '../components/ToClipboard';
 import { FactionDatasetContext } from '../hooks/useFactionDataset';
-import DateTimeText from '../components/data/DateTimeText';
+import DateTimeText, { dateTimeText } from '../components/data/DateTimeText';
 
 
 export const SystemFiltersContext = createContext(null);
@@ -607,7 +606,7 @@ export function useSystemsColumnDefinitions(columns) {
               const date = info.getValue();
 
               return (
-                <span title={`${format(date, "do MMM y 'at' HH:mm:ss")}`}>
+                <span title={dateTimeText(date, true)}>
                   <DateTimeText date={date} />
                 </span>
               );

@@ -45,7 +45,7 @@ function FactionDetails() {
         </DetailsItem>}
         <DetailsItem label="Import duration">{numeral(importDuration).format('0.00')}s</DetailsItem>
         <DetailsItem label="Generated at">
-          <p><DateTimeText date={timestamp} showDate /></p>
+          <p><DateTimeText date={timestamp} showDate dateFormat="do MMM y', 'HH:mm" /></p>
           <p><DateTimeText date={timestamp} /></p>
         </DetailsItem>
       </DetailsWrapper>

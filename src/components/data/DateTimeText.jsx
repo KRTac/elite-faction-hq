@@ -2,9 +2,24 @@ import { useEffect, useState } from 'react';
 import { format, formatDistanceToNow } from 'date-fns';
 
 
+export const defaultDateFormat = "do MMM y' at 'HH:mm";
+
+export function dateTimeText(
+  date,
+  showDate = false,
+  dateFormat = defaultDateFormat,
+  addSuffix = true
+) {
+  if (showDate) {
+    return format(date, dateFormat);
+  }
+
+  return formatDistanceToNow(date, { addSuffix });
+}
+
 function DateTimeText({
-  date, showDate = false, refreshSeconds = 30,
-  dateFormat = "do MMM y 'at' HH:mm"
+  date, showDate = false, dateFormat = defaultDateFormat,
+  timeAgoSuffix = true, refreshSeconds = 30
  }) {
   const [ _refresh, refresh ] = useState();
 
@@ -21,11 +36,7 @@ function DateTimeText({
     }
   }, [ _refresh, refreshSeconds, showDate ]);
 
-  if (showDate) {
-    return format(date, dateFormat);
-  }
-
-  return formatDistanceToNow(date, { addSuffix: true });
+  return dateTimeText(date, showDate, dateFormat, timeAgoSuffix);
 }
 
 export default DateTimeText;
