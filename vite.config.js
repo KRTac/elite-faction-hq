@@ -8,6 +8,7 @@ import updateFactionsMeta from './plugins/update_factions_meta';
 // https://vite.dev/config/
 export default defineConfig(() => {
   return {
+    base: '/elite-faction-hq/',
     plugins: [
       tanstackRouter({
         target: 'react',
