@@ -23,6 +23,7 @@ jobs:
       - uses: ./.github/actions/build-and-deploy
 
   deploy:
+    environment: github-pages
     runs-on: ubuntu-latest
     needs: build
     steps:
