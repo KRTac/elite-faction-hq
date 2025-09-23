@@ -1,6 +1,7 @@
 name: "Build and deploy app"
 runs:
   using: "composite"
+  environment: github-pages
   steps:
     - name: Set up Node.js
       uses: actions/setup-node@v4
