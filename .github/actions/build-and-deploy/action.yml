@@ -13,7 +13,7 @@ runs:
 
     - name: Build Vite site
       shell: bash
-      run: npm run build-gh
+      run: npm run build
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
