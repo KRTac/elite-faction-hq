@@ -60,7 +60,7 @@ function SystemsMapView({ systems, debug = false }) {
     <>
     <iframe
       ref={iframeRef}
-      src="/edmap.html"
+      src={`${import.meta.env.BASE_URL}edmap.html`}
       title="Map frame"
       className="border-0 absolute top-0 left-0 w-full h-full"
       onLoad={handleLoad}
