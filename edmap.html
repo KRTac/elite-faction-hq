@@ -4,7 +4,7 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-  <title>3d Map</title>
+  <title>Faction HQ 3D map</title>
   <style type="text/css">
   #hud {
     overflow-y: scroll;
@@ -35,7 +35,7 @@
   <div id="json_data"></div>
 
   <link href="/ed3d/css/styles.css" rel="stylesheet" type="text/css" />
-  <script src="/ed3d/js/ed3dmap.min.js?v=5"></script>
+  <script src="/ed3d/js/ed3dmap.min.js" type="module"></script>
   <script type="text/javascript">
     let mapInitialized = false;
 
@@ -52,7 +52,7 @@
         Ed3d.init({
           container: 'edmap',
           jsonContainer: 'json_data',
-          basePath: '/ed3d/',
+          basePath: '%VITE_BASE_PATH%ed3d/',
           effectScaleSystem: [ 10, 1500 ],
           startAnim: false,
           withHudPanel: true,
