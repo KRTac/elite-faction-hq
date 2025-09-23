@@ -10,10 +10,13 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  VITE_BASE_PATH: ${{ vars.VITE_BASE_PATH }}
+
 jobs:
   factions-data-and-build:
+    environment: github-pages
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
