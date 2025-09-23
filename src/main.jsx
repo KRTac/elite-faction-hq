@@ -10,7 +10,7 @@ import { routeTree } from './routeTree.gen';
 
 const router = createRouter({
   routeTree,
-  basepath: import.meta.env.BASE_URL
+  basepath: '/elite-faction-hq'
 });
 console.log(`BASE_PATH: ${import.meta.env.BASE_URL}`);
 
