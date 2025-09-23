@@ -15,7 +15,7 @@ runs:
 
     - name: Factions data import
       shell: bash
-      run: python py/faction_data.py --config-json hq-config.json
+      run: python py/faction_data.py --config-json hq-config.json --indent 0
 
     - name: Set up Git
       shell: bash
