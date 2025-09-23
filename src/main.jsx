@@ -8,8 +8,6 @@ import '@fontsource/inter/600.css';
 import { routeTree } from './routeTree.gen';
 
 
-console.log('create router base path: ', import.meta.env.BASE_URL);
-
 const router = createRouter({
   basepath: import.meta.env.BASE_URL,
   routeTree
