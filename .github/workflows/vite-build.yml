@@ -10,6 +10,9 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  VITE_BASE_PATH: ${{ secrets.VITE_BASE_PATH }}
+
 jobs:
   build:
     environment: github-pages

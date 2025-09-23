@@ -15,8 +15,6 @@ runs:
     - name: Build Vite site
       shell: bash
       run: npm run build
-      env:
-        VITE_BASE_PATH: ${{ secrets.VITE_BASE_PATH }}
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
