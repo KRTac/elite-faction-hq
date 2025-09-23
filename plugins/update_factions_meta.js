@@ -1,8 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 
-import config from '../hq-config.json';
-
 
 function filenameToDate(name) {
   const nameTimestamp = name.split('.json')[0];
@@ -11,7 +9,7 @@ function filenameToDate(name) {
   return new Date(`${parts[0]}T${parts[1].replaceAll('-', ':')}`);
 }
 
-export function generateFactionsMeta(dataRootPath) {
+export function generateFactionsMeta(dataRootPath, allFactions) {
   const dataRoot = path.join(process.cwd(), dataRootPath);
   const factions = [];
 
@@ -81,7 +79,7 @@ export function generateFactionsMeta(dataRootPath) {
         const json = fs.readFileSync(file, { encoding: 'utf-8' });
         const dataset = JSON.parse(json);
 
-        const factionConfig = config.factions.find(f => f.faction === dataset.faction);
+        const factionConfig = allFactions.find(f => f.faction === dataset.faction);
 
         if (!factionConfig) {
           console.log(`No faction config found for ${dataset.faction}, skipping it...`)
@@ -112,7 +110,16 @@ export default function updateFactionsMeta() {
   return {
     name: 'update_factions_meta',
     buildStart() {
-      const meta = generateFactionsMeta(config.faction_data_path);
+      let configFile = 'hq-config.json';
+
+      if (process.env.NODE_ENV === 'development') {
+        configFile = 'hq-config.dev.json';
+      }
+
+      const config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
+
+      const meta = generateFactionsMeta(config.faction_data_path, config.factions);
+
       const timestamp = (new Date()).toISOString().split('.')[0] + 'Z';
       let rootPath = path.join('/', config.faction_data_path, '/');
       rootPath = rootPath.replace(/^\/public/gm, '');

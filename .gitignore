@@ -25,7 +25,9 @@ dist-ssr
 *.sw?
 
 hq-config.json
+hq-config.dev.json
 public/faction_data
+public/faction_data_dev
 faction_data_test
 zmq
 src/routeTree.gen.ts
