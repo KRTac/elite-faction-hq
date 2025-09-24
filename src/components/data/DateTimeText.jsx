@@ -10,11 +10,17 @@ export function dateTimeText(
   dateFormat = defaultDateFormat,
   addSuffix = true
 ) {
-  if (showDate) {
-    return format(date, dateFormat);
-  }
+  try {
+    if (showDate) {
+      return format(date, dateFormat);
+    }
 
-  return formatDistanceToNow(date, { addSuffix });
+    return formatDistanceToNow(date, { addSuffix });
+  } catch (ex) {
+    console.log(ex);
+
+    return 'invalid time';
+  }
 }
 
 function DateTimeText({
