@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createLazyFileRoute } from '@tanstack/react-router';
 import FactionDetails from '../../components/FactionDetails';
 import FactionStats from '../../components/FactionStats';
 
@@ -14,6 +14,6 @@ function Details() {
   );
 }
 
-export const Route = createFileRoute('/$factionDir/details')({
+export const Route = createLazyFileRoute('/$factionDir/details')({
   component: Details
 });

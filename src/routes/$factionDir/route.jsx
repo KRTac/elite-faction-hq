@@ -1,21 +1,21 @@
-import { createFileRoute } from '@tanstack/react-router';
-import FactionApp from '../../components/layouts/FactionApp';
+import { lazy } from 'react';
+import { createFileRoute, Link } from '@tanstack/react-router';
 
 import { factions, root_path } from '../../assets/factions_meta.json';
+import StandardPage from '../../components/layouts/Standard';
 
+
+const FactionAppRoute = lazy(() => import('../../components/layouts/FactionApp'));
 
 function ErrorComponent({ error }) {
   return (
-    <div className="min-h-48 flex justify-center items-center p-3">
-      <p className="text-2xl text-center">{error.message}</p>
-    </div>
+    <StandardPage>
+      <div className="min-h-48 flex flex-col justify-center items-center gap-3 p-3">
+        <p className="text-2xl text-center">{error.message}</p>
+        <Link to="/">To Faction list</Link>
+      </div>
+    </StandardPage>
   );
-}
-
-function Faction() {
-  const { faction, dataset } = Route.useLoaderData();
-
-  return <FactionApp faction={faction} dataset={dataset} />;
 }
 
 export const Route = createFileRoute('/$factionDir')({
@@ -41,6 +41,6 @@ export const Route = createFileRoute('/$factionDir')({
 
     return { faction, dataset };
   },
-  component: Faction,
+  component: FactionAppRoute,
   errorComponent: ErrorComponent
 });
