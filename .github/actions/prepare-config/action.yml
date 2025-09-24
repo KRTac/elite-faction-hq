@@ -1,0 +1,7 @@
+name: "Prepare hq-config.json"
+runs:
+  using: "composite"
+  steps:
+    - name: Copy hq-config.prod.json to hq-config.json
+      shell: bash
+      run: cp hq-config.prod.json hq-config.json

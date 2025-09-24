@@ -24,6 +24,8 @@ jobs:
           ref: gh-pages
           fetch-depth: 1
 
+      - uses: ./.github/actions/prepare-config
+
       - uses: ./.github/actions/build-and-deploy
 
   deploy:
