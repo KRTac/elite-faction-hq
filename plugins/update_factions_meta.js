@@ -110,13 +110,7 @@ export default function updateFactionsMeta() {
   return {
     name: 'update_factions_meta',
     buildStart() {
-      let configFile = 'hq-config.json';
-
-      if (process.env.NODE_ENV === 'development') {
-        configFile = 'hq-config.dev.json';
-      }
-
-      const config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
+      const config = JSON.parse(fs.readFileSync('hq-config.json', 'utf8'));
 
       const meta = generateFactionsMeta(config.faction_data_path, config.factions);
 
