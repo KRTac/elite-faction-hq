@@ -11,23 +11,28 @@ process.env.VITE_BASE_PATH = process.env.VITE_BASE_PATH || '/';
 
 // https://vite.dev/config/
 export default defineConfig(() => {
+  const plugins = [
+    tanstackRouter({
+      target: 'react',
+      autoCodeSplitting: true
+    }),
+    react(),
+    tailwindcss(),
+    updateFactionsMeta()
+  ];
+
+  if (process.env.VITE_GA_TAG) {
+    plugins.push(VitePluginRadar({
+      enableDev: true,
+      analytics: {
+        id: process.env.VITE_GA_TAG
+      }
+    }));
+  }
+
   return {
     base: process.env.VITE_BASE_PATH,
-    plugins: [
-      tanstackRouter({
-        target: 'react',
-        autoCodeSplitting: true
-      }),
-      react(),
-      tailwindcss(),
-      VitePluginRadar({
-        enableDev: true,
-        analytics: {
-          id: 'G-G3G6Z2XN0B'
-        }
-      }),
-      updateFactionsMeta()
-    ],
+    plugins,
     build: {
       sourcemap: true,
       manifest: true,
