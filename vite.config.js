@@ -25,12 +25,6 @@ export default defineConfig(() => {
       sourcemap: true,
       manifest: true,
       rollupOptions: {
-        external: [
-          '/plugins/',
-          '/py/',
-          '/public/faction_data/',
-          '/public/faction_data_dev/'
-        ],
         input: {
           main: resolve(__dirname, 'index.html'),
           edMap: resolve(__dirname, 'edmap.html')
