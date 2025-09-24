@@ -11,9 +11,18 @@
 
 @layer base {
   body {
-    @apply bg-white text-black dark:bg-bg-d dark:text-neutral-200;
     @apply text-base;
     font-family: 'Inter', sans-serif;
+  }
+
+  @variant dark {
+    body {
+      @apply bg-bg-d text-neutral-200;
+    }
+
+    body a {
+      @apply dark:text-lime-600 hover:underline hover:text-lime-400;
+    }
   }
 }
 
