@@ -1,4 +1,4 @@
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useLoaderData } from '@tanstack/react-router';
 import Header from '../Header';
 import SystemModal from '../SystemModal';
 import { FactionContext } from '../../hooks/useFaction';
@@ -6,7 +6,13 @@ import useFactionDataset, { FactionDatasetContext } from '../../hooks/useFaction
 import useSystemFilters, { SystemFiltersContext } from '../../hooks/useSystemFilters';
 
 
-function FactionApp({ faction, dataset }) {
+function FactionAppRoute() {
+  const { faction, dataset } = useLoaderData({ from: '/$factionDir' });
+
+  return <FactionApp faction={faction} dataset={dataset} />;
+}
+
+export function FactionApp({ faction, dataset }) {
   const factionDataset = useFactionDataset(dataset);
   const systemFilters = useSystemFilters(factionDataset);
 
@@ -27,4 +33,4 @@ function FactionApp({ faction, dataset }) {
   );
 }
 
-export default FactionApp;
+export default FactionAppRoute;

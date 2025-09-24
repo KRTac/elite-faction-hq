@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import useStorageState from 'use-storage-state';
-import { createFileRoute } from '@tanstack/react-router';
+import { createLazyFileRoute } from '@tanstack/react-router';
 import SystemsMapView from '../../components/SystemsMapView';
 import SystemsTablesView from '../../components/SystemsTablesView';
 import SystemsHeader from '../../components/SystemsHeader';
@@ -25,6 +25,6 @@ function Systems() {
   );
 }
 
-export const Route = createFileRoute('/$factionDir/')({
+export const Route = createLazyFileRoute('/$factionDir/')({
   component: Systems
 });
