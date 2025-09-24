@@ -1,8 +1,9 @@
+import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
-import { resolve } from 'path';
+import { VitePluginRadar } from 'vite-plugin-radar'
 import updateFactionsMeta from './plugins/update_factions_meta';
 
 
@@ -19,6 +20,12 @@ export default defineConfig(() => {
       }),
       react(),
       tailwindcss(),
+      VitePluginRadar({
+        enableDev: true,
+        analytics: {
+          id: 'G-G3G6Z2XN0B'
+        }
+      }),
       updateFactionsMeta()
     ],
     build: {
