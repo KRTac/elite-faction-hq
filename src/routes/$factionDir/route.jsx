@@ -18,6 +18,22 @@ function ErrorComponent({ error }) {
   );
 }
 
+function PendingComponent() {
+  return (
+    <StandardPage>
+      <div
+        className={[
+          'flex justify-center items-center',
+          'absolute top-0 left-0 w-full h-full z-20',
+          'backdrop-blur-sm'
+        ].join(' ')}
+      >
+        <p className="text-xl text-center dark:text-neutral-400/80">Loading faction data...</p>
+      </div>
+    </StandardPage>
+  );
+}
+
 export const Route = createFileRoute('/$factionDir')({
   loaderDeps: ({ search }) => ({ timestamp: search.dataset }),
   loader: async ({ params: { factionDir }, deps: { timestamp }}) => {
@@ -34,7 +50,17 @@ export const Route = createFileRoute('/$factionDir')({
 
     const jsonUrl = `${import.meta.env.BASE_URL}${root_path.replace(/^\/+/, '')}${factionDir}/${timestamp}.json`;
     try {
-      dataset = await fetch(jsonUrl).then(res => res.json());
+      dataset = await fetch(jsonUrl).then(res => {
+        if (import.meta.env.DEV) {
+          return new Promise(resolve => {
+            setTimeout(() => {
+              resolve(res.json());
+            }, 10000);
+          });
+        }
+
+        return res.json();
+      });
     } catch (ex) {
       throw new Error('Requested faction data doesn\'t exist');
     }
@@ -42,5 +68,6 @@ export const Route = createFileRoute('/$factionDir')({
     return { faction, dataset };
   },
   component: FactionAppRoute,
+  pendingComponent: PendingComponent,
   errorComponent: ErrorComponent
 });
