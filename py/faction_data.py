@@ -300,7 +300,7 @@ def generate_faction_data(faction_name, key_systems = [], inara_faction_id = Non
         })
 
     return {
-        'timestamp': datetime.now(timezone.utc).isoformat().split('.')[0].replace(':', '-') + 'Z',
+        'timestamp': datetime.now(timezone.utc).isoformat().split('.')[0] + 'Z',
         'import_duration': 0,
         'faction': faction_name,
         'inara_faction_id': inara_faction_id,
@@ -457,7 +457,7 @@ def main():
                 args.allow_npc
             )
             faction_directory = slugify(faction_def['faction'])
-            json_path = output_root.joinpath(f'{faction_directory}/{faction_data['timestamp']}.json')
+            json_path = output_root.joinpath(f'{faction_directory}/{faction_data['timestamp'].replace(':', '-')}.json')
             json_path.parent.mkdir(parents=True, exist_ok=True)
 
             perf_diff = time.perf_counter() - perf_start
