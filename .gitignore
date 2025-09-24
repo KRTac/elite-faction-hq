@@ -24,6 +24,7 @@ dist-ssr
 *.sln
 *.sw?
 
+.tanstack
 hq-config.json
 public/faction_data
 public/faction_data_dev
