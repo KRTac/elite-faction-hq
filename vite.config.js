@@ -22,6 +22,7 @@ export default defineConfig(() => {
       updateFactionsMeta()
     ],
     build: {
+      sourcemap: true,
       manifest: true,
       rollupOptions: {
         external: [
