@@ -36,6 +36,7 @@ runs:
     - name: Commit changes
       shell: bash
       run: |
+        git add public/faction_data/meta.js -f
         git add public/faction_data/**/* -f
         git commit -m "Daily factions data import" || echo "No changes to commit"
         git push origin HEAD
