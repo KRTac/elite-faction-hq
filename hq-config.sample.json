@@ -1,5 +1,5 @@
 {
-  "faction_data_path": "public/faction_data",
+  "faction_data_root": "public/faction_data",
   "factions": [
     {
       "faction": "The Dork Wheel",

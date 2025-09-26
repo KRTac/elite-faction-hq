@@ -1,9 +1,11 @@
 import { Link } from '@tanstack/react-router';
-import { generated_at } from '../../assets/factions_meta.json';
+import useFactionsMeta from '../../hooks/useFactionsMeta';
 import DateTimeText from '../data/DateTimeText';
 
 
 function Standard({ children }) {
+  const { generated_at } = useFactionsMeta();
+
   return (
     <>
       <div className="dark:bg-bg2-d">
