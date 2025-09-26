@@ -61,8 +61,6 @@ export const Route = createFileRoute('/$factionDir')({
       dataRoot = `${import.meta.env.BASE_URL}${trimSlashes(dataRoot)}`;
     }
 
-    console.log('dataRoot', dataRoot);
-
     const jsonUrl = `${dataRoot}/${factionDir}/${timestamp}.json`;
     try {
       dataset = await fetch(jsonUrl).then(res => {
