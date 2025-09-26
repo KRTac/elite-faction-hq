@@ -12,6 +12,7 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
 
 # Editor directories and files
 .vscode/*
@@ -32,4 +33,3 @@ faction_data_test
 zmq
 src/routeTree.gen.ts
 src/routeTree.gen.js
-src/assets/factions_meta.json

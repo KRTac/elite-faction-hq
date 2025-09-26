@@ -9,8 +9,7 @@ function filenameToDate(name) {
   return new Date(`${parts[0]}T${parts[1].replaceAll('-', ':')}`);
 }
 
-export function generateFactionsMeta(dataRootPath, allFactions) {
-  const dataRoot = path.join(process.cwd(), dataRootPath);
+export function generateFactionsMeta(dataRoot, allFactions) {
   const factions = [];
 
   if (!fs.existsSync(dataRoot)) {
@@ -111,16 +110,14 @@ export default function updateFactionsMeta() {
     name: 'update_factions_meta',
     buildStart() {
       const config = JSON.parse(fs.readFileSync('hq-config.json', 'utf8'));
+      const data_root = path.join(process.cwd(), config.faction_data_root);
 
-      const meta = generateFactionsMeta(config.faction_data_path, config.factions);
+      const meta = generateFactionsMeta(data_root, config.factions);
 
       const timestamp = (new Date()).toISOString().split('.')[0] + 'Z';
-      let rootPath = path.join('/', config.faction_data_path, '/');
-      rootPath = rootPath.replace(/^\/public/gm, '');
 
-      let metaJson = '{';
+      let metaJson = 'window.factions_meta = {';
       metaJson += `"generated_at":${JSON.stringify(timestamp)},`;
-      metaJson += `"root_path":${JSON.stringify(rootPath)},`;
       metaJson += '"factions":[\n';
 
       for (const i in meta) {
@@ -137,11 +134,7 @@ export default function updateFactionsMeta() {
 
       metaJson += ']}\n';
 
-      if (!fs.existsSync(path.join('src/assets'))) {
-        fs.mkdirSync(path.join('src/assets'));
-      }
-
-      const metaPath = path.join('src/assets/factions_meta.json');
+      const metaPath = path.join(data_root, 'meta.js');
       fs.writeFileSync(metaPath, metaJson);
     }
   };

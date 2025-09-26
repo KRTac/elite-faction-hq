@@ -1,10 +1,11 @@
 import { Link, createLazyFileRoute } from '@tanstack/react-router';
 import StandardLayout from '../components/layouts/Standard';
-
-import { factions } from '../assets/factions_meta.json';
+import useFactionsMeta from '../hooks/useFactionsMeta';
 
 
 function Dashboard() {
+  const { factions } = useFactionsMeta();
+
   return (
     <StandardLayout>
       <div

@@ -1,7 +1,6 @@
 import { lazy } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
 
-import { factions, root_path } from '../../assets/factions_meta.json';
 import StandardPage from '../../components/layouts/Standard';
 
 
@@ -36,7 +35,11 @@ function PendingComponent() {
 
 export const Route = createFileRoute('/$factionDir')({
   loaderDeps: ({ search }) => ({ timestamp: search.dataset }),
-  loader: async ({ params: { factionDir }, deps: { timestamp }}) => {
+  loader: async ({
+    params: { factionDir },
+    deps: { timestamp },
+    context: { factionsMeta: { factions } }
+  }) => {
     const faction = factions.find(f => f.directory === factionDir);
     let dataset;
 
@@ -48,14 +51,14 @@ export const Route = createFileRoute('/$factionDir')({
       timestamp = faction.datasets[0];
     }
 
-    const jsonUrl = `${import.meta.env.BASE_URL}${root_path.replace(/^\/+/, '')}${factionDir}/${timestamp}.json`;
+    const jsonUrl = `${import.meta.env.VITE_FACTION_DATA_CLIENT_ROOT}/${factionDir}/${timestamp}.json`;
     try {
       dataset = await fetch(jsonUrl).then(res => {
         if (import.meta.env.DEV) {
           return new Promise(resolve => {
             setTimeout(() => {
               resolve(res.json());
-            }, 10000);
+            }, 500);
           });
         }
 

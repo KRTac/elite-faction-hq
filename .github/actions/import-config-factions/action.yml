@@ -15,7 +15,16 @@ runs:
 
     - name: Factions data import
       shell: bash
-      run: python py/faction-data.py --config-json hq-config.json --indent 0
+      run: python scripts/faction-data.py --config-json hq-config.json --indent 0
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    - name: Generate factions meta
+      shell: bash
+      run: node scripts/generate-meta.js
 
     - name: Set up Git
       shell: bash
