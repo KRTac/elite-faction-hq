@@ -25,7 +25,10 @@ export default defineConfig(() => {
     plugins.push(VitePluginRadar({
       enableDev: true,
       analytics: {
-        id: process.env.VITE_GA_TAG
+        id: process.env.VITE_GA_TAG,
+        config: {
+          cookie_domain: process.env.VITE_GA_DOMAIN ?? 'auto'
+        }
       }
     }));
   }
