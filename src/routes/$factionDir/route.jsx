@@ -33,6 +33,10 @@ function PendingComponent() {
   );
 }
 
+function trimSlashes(s) {
+  return s.replace(/^\/+|\/+$/g, '');
+}
+
 export const Route = createFileRoute('/$factionDir')({
   loaderDeps: ({ search }) => ({ timestamp: search.dataset }),
   loader: async ({
@@ -51,7 +55,15 @@ export const Route = createFileRoute('/$factionDir')({
       timestamp = faction.datasets[0];
     }
 
-    const jsonUrl = `${import.meta.env.VITE_FACTION_DATA_CLIENT_ROOT}/${factionDir}/${timestamp}.json`;
+    let dataRoot = import.meta.env.VITE_FACTION_DATA_CLIENT_ROOT;
+
+    if (!dataRoot.startsWith('http://') && !dataRoot.startsWith('https://')) {
+      dataRoot = `${import.meta.env.BASE_URL}${trimSlashes(dataRoot)}`;
+    }
+
+    console.log('dataRoot', dataRoot);
+
+    const jsonUrl = `${dataRoot}/${factionDir}/${timestamp}.json`;
     try {
       dataset = await fetch(jsonUrl).then(res => {
         if (import.meta.env.DEV) {
