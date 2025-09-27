@@ -745,6 +745,10 @@ export function useSystemsColumnDefinitions(columns, { shortenedPowers }) {
   }, [ columns, shortenedPowers ]);
 }
 
+export const availableSystemGroups = [
+  'None', 'Controlling power'
+];
+
 function useSystemFilters({ stats, systems }) {
   const filterOptions = useMemo(() => {
     const filterOptions = {
@@ -773,7 +777,7 @@ function useSystemFilters({ stats, systems }) {
   }, [ stats ]);
 
   const [ view, setView ] = useState('map');
-  const [ groupBy, setGroupBy ] = useState('systems');
+  const [ groupBy, setGroupBy ] = useState('');
   const [ activeFilters, setActiveFilters ] = useState({});
 
   const setFilter = useCallback((filter, value) => {
@@ -796,8 +800,50 @@ function useSystemFilters({ stats, systems }) {
   }, []);
 
   return useMemo(() => {
-    const displayGroups = [];
+    let displayGroups = [];
     const filteredSystems = filterSystems(systems, activeFilters);
+    const allSystems = [];
+
+    for (const system of filteredSystems) {
+      if (groupBy === 'Controlling power') {
+        const power = system.power_play.controlling;
+        let groupId = 'None';
+        let didUpdate = false;
+
+        if (power !== null) {
+          groupId = power;
+        }
+
+        for (const i in displayGroups) {
+          if (displayGroups[i].name !== groupId) {
+            continue;
+          }
+
+          didUpdate = true;
+          displayGroups[i].systems.push(system);
+
+          break;
+        }
+
+        if (!didUpdate) {
+          displayGroups.push({
+            name: groupId,
+            systems: [ system ]
+          });
+        }
+      } else {
+        allSystems.push(system);
+      }
+    }
+
+    if (displayGroups.length === 0) {
+      displayGroups = [{
+        name: 'Systems',
+        systems: allSystems
+      }];
+    } else {
+      displayGroups.sort((a, b) => b.systems.length - a.systems.length);
+    }
 
     return {
       isFiltering: Object.keys(activeFilters).length > 0,
@@ -808,6 +854,7 @@ function useSystemFilters({ stats, systems }) {
       setGroupBy,
       view,
       setView,
+      availableSystemGroups,
       filtered: {
         groupBy,
         systems: filteredSystems,

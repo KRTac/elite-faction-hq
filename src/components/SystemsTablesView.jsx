@@ -16,7 +16,7 @@ const selectableColumns = [
   'Influence close', 'Conflict powers'
 ];
 
-function SystemsTablesView({ systems, groups }) {
+function SystemsTablesView({ groups }) {
   const [ showSettings, setShowSettings ] = useState(false);
   const [ tableColumns, setTableColumns ] = useStorageState('systemsTables_columns', {
     defaultValue: [
@@ -34,12 +34,16 @@ function SystemsTablesView({ systems, groups }) {
   });
   const columnDefinitions = useSystemsColumnDefinitions(tableColumns, { shortenedPowers });
 
-  let otherSystems = [];
+  const tableGroups = [];
 
   if (groups.length) {
-
-  } else {
-    otherSystems = systems;
+    if (groups.length === 1 && groups[0].name === 'Systems') {
+      tableGroups.push({ label: '', systems: groups[0].systems });
+    } else {
+      for (const group of groups) {
+        tableGroups.push({ label: group.name, systems: group.systems });
+      }
+    }
   }
 
   return (
@@ -97,19 +101,24 @@ function SystemsTablesView({ systems, groups }) {
           </div>
         )}
       </div>
-      {!otherSystems.length && !groups.length && (
+      {!tableGroups.length && (
         <p className="text-center italic text-neutral-400 text-xl py-5">No systems found</p>
       )}
-      {!!otherSystems.length && (
-        <SystemsTableGroup
-          groupId="others"
-          label={!!groups.length ? 'Uncategorized' : ''}
-          systems={otherSystems}
-          columns={columnDefinitions}
-          withRowCount={showRowCount}
-          shortenedPowers={shortenedPowers}
-        />
-      )}
+      {tableGroups.map(({ label, systems }) => {
+        return (
+          <div className="mb-15">
+          <SystemsTableGroup
+            key={label}
+            groupId={label}
+            label={label}
+            systems={systems}
+            columns={columnDefinitions}
+            withRowCount={showRowCount}
+            shortenedPowers={shortenedPowers}
+          />
+          </div>
+        );
+      })}
     </div>
   );
 }

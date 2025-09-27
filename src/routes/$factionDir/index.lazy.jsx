@@ -19,7 +19,7 @@ function Systems() {
       <SystemsHeader viewType={viewType} setViewType={setViewType} />
       <div className="flex-1 overflow-y-scroll relative">
         {viewType === 'map' && <SystemsMapView systems={systems} debug />}
-        {viewType !== 'map' && <SystemsTablesView systems={systems} groups={groups} />}
+        {viewType !== 'map' && <SystemsTablesView groups={groups} />}
       </div>
     </>
   );
