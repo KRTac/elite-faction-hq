@@ -8,6 +8,7 @@ import numeral from 'numeral';
 import ToClipboard from '../components/ToClipboard';
 import { FactionDatasetContext } from '../hooks/useFactionDataset';
 import DateTimeText, { dateTimeText } from '../components/data/DateTimeText';
+import PowerName from '../components/data/PowerName';
 
 
 export const SystemFiltersContext = createContext(null);
@@ -347,7 +348,7 @@ function NumberOrNull({
   />;
 }
 
-export function useSystemsColumnDefinitions(columns) {
+export function useSystemsColumnDefinitions(columns, { shortenedPowers }) {
   const navigate = useNavigate();
   const factionData = useContext(FactionDatasetContext);
 
@@ -420,7 +421,15 @@ export function useSystemsColumnDefinitions(columns) {
                 : controlling;
             },
             header: 'Controlling power',
-            cell: info => <ValueOrNull value={info.getValue()} nullValue="None" />
+            cell: info => {
+              const power = info.getValue();
+
+              return (
+                power === 'None'
+                  ? <ValueOrNull value={null} />
+                  : <PowerName name={power} short={shortenedPowers} />
+              );
+            }
           });
           break;
 
@@ -687,16 +696,39 @@ export function useSystemsColumnDefinitions(columns) {
           });
           break;
 
-        case 'Conflict power':
+        case 'Conflict powers':
           definitions.push({
-            accessorKey: 'power_play.conflict_power',
             accessorFn: row => {
-              const power = row.power_play.conflict_power;
+              let conflicts = row.power_play.conflicts;
 
-              return power === null ? 'None' : power;
+              if (conflicts === null || conflicts.length < 2) {
+                return null;
+              }
+
+              conflicts = conflicts.sort((a, b) => b.progress - a.progress);
+
+              return [ conflicts[0], conflicts[1] ];
             },
-            header: 'Conflict power',
-            cell: info => <ValueOrNull value={info.getValue()} nullValue="None" />
+            header: 'Conflict powers',
+            enableColumnFilter: false,
+            cell: info => {
+              const powers = info.getValue();
+
+              if (powers === null) {
+                return (
+                  <ValueOrNull value={null} centerText />
+                );
+              }
+
+              return (
+                <div className="grid grid-cols-2 items-center gap-1">
+                  <PowerName name={powers[0].name} short={shortenedPowers} className="text-right" />
+                  <span className="text-sm">{numeral(powers[0].progress).format('0.00%')}</span>
+                  <PowerName name={powers[1].name} short={shortenedPowers} className="text-right" />
+                  <span className="text-sm dark:text-neutral-400">{numeral(powers[1].progress).format('0.00%')}</span>
+                </div>
+              );
+            }
           });
           break;
 
@@ -705,7 +737,7 @@ export function useSystemsColumnDefinitions(columns) {
     }
 
     return definitions;
-  }, [ columns ]);
+  }, [ columns, shortenedPowers ]);
 }
 
 function useSystemFilters({ stats, systems }) {
