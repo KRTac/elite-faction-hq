@@ -709,8 +709,14 @@ export function useSystemsColumnDefinitions(columns, { shortenedPowers }) {
 
               return [ conflicts[0], conflicts[1] ];
             },
-            header: 'Conflict powers',
+            sortingFn: (rowA, rowB, columnId) => {
+              const a = rowA.getValue(columnId) ?? [{ progress: -1 }];
+              const b = rowB.getValue(columnId) ?? [{ progress: -1 }];
+
+              return a[0].progress - b[0].progress;
+            },
             enableColumnFilter: false,
+            header: 'Conflict powers',
             cell: info => {
               const powers = info.getValue();
 
