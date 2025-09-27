@@ -7,13 +7,26 @@ import '@fontsource/inter/600.css';
 import { routeTree } from './routeTree.gen';
 
 
-const factionsMeta = window.factions_meta;
-const router = createRouter({
-  basepath: import.meta.env.BASE_URL,
-  routeTree
-});
+function clientInit() {
+  const factionsMeta = window.factions_meta;
+  const router = createRouter({
+    basepath: import.meta.env.BASE_URL,
+    routeTree
+  });
+
+  return { factionsMeta, router };
+}
+
+const { factionsMeta, router } = import.meta.env.SSR
+  ? { factionsMeta: undefined, router: undefined }
+  : clientInit();
 
 export function App() {
+  if (!factionsMeta) {
+    console.warn('Factions meta not set.');
+    console.warn(`Is SSR: ${import.meta.env.SSR ? 'yes' : 'no'}`);
+  }
+
   return (
     <FactionsMetaContext value={factionsMeta}>
       <RouterProvider router={router} context={{ factionsMeta }} />

@@ -39,7 +39,7 @@ function statByOccurrence(set, values, systemName) {
 }
 
 function occurrenceSort(a, b) {
-  return a.occurrence < b.occurrence;
+  return b.occurrence - a.occurrence;
 }
 
 function systemStats(systems) {
