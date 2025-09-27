@@ -715,6 +715,9 @@ export function useSystemsColumnDefinitions(columns, { shortenedPowers }) {
 
               return a[0].progress - b[0].progress;
             },
+            meta: {
+              alignHeader: 'center'
+            },
             enableColumnFilter: false,
             header: 'Conflict powers',
             cell: info => {
