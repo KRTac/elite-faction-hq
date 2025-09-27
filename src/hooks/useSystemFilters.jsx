@@ -702,32 +702,28 @@ export function useSystemsColumnDefinitions(columns, { shortenedPowers }) {
               let conflicts = row.power_play.conflicts;
 
               if (conflicts === null || conflicts.length < 2) {
-                return null;
+                return -1;
               }
 
               conflicts = conflicts.sort((a, b) => b.progress - a.progress);
 
-              return [ conflicts[0], conflicts[1] ];
+              return Math.round(conflicts[0].progress * 10000) / 100;
             },
-            sortingFn: (rowA, rowB, columnId) => {
-              const a = rowA.getValue(columnId) ?? [{ progress: -1 }];
-              const b = rowB.getValue(columnId) ?? [{ progress: -1 }];
-
-              return a[0].progress - b[0].progress;
-            },
+            header: 'Conflict powers',
             meta: {
+              filterVariant: 'range',
               alignHeader: 'center'
             },
-            enableColumnFilter: false,
-            header: 'Conflict powers',
             cell: info => {
-              const powers = info.getValue();
+              const leadingProgress = info.getValue();
 
-              if (powers === null) {
+              if (leadingProgress === -1) {
                 return (
                   <ValueOrNull value={null} centerText />
                 );
               }
+
+              const powers = info.row.original.power_play.conflicts.sort((a, b) => b.progress - a.progress);
 
               return (
                 <div className="grid grid-cols-2 items-center gap-1">
