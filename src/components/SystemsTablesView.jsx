@@ -106,16 +106,16 @@ function SystemsTablesView({ groups }) {
       )}
       {tableGroups.map(({ label, systems }) => {
         return (
-          <div className="mb-15">
-          <SystemsTableGroup
-            key={label}
-            groupId={label}
-            label={label}
-            systems={systems}
-            columns={columnDefinitions}
-            withRowCount={showRowCount}
-            shortenedPowers={shortenedPowers}
-          />
+          <div key={label} className="mb-15">
+            <SystemsTableGroup
+              key={label}
+              groupId={label}
+              label={label}
+              systems={systems}
+              columns={columnDefinitions}
+              withRowCount={showRowCount}
+              shortenedPowers={shortenedPowers}
+            />
           </div>
         );
       })}
