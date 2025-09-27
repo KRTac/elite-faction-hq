@@ -37,7 +37,7 @@ export const powers = {
   },
   'Pranav Antal': {
     color: '#f3f539',
-    shortened: 'pA'
+    shortened: 'PA'
   },
   'Yuri Grom': {
     color: '#e06530',
