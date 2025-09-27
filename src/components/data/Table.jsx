@@ -245,7 +245,7 @@ function Table({
             return (
               <tr key={row.id} className="dark:even:bg-neutral-800/20 dark:hover:bg-neutral-600/25">
                 {withRowCount && (
-                  <td className="text-center dark:text-neutral-500 pl-1.5">
+                  <td className="text-center dark:text-neutral-500 pl-0.5 text-sm">
                     {index + 1 + pageIndex * pageSize}
                   </td>
                 )}

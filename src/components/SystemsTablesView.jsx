@@ -13,7 +13,7 @@ const selectableColumns = [
   'Security', 'Primary economy', 'Secondary economy', 'Key system',
   'Influence', 'Active states', 'Pending states', 'Recovering states',
   'Last update', 'Control progress', 'Reinforcement', 'Undermining',
-  'Influence close', 'Conflict power', 'Conflict progress'
+  'Influence close', 'Conflict powers'
 ];
 
 function SystemsTablesView({ systems, groups }) {
@@ -28,7 +28,11 @@ function SystemsTablesView({ systems, groups }) {
     defaultValue: true,
     sync: false
   });
-  const columnDefinitions = useSystemsColumnDefinitions(tableColumns);
+  const [ shortenedPowers, setShortenedPowers ] = useStorageState('systemsTables_shortenedPowers', {
+    defaultValue: false,
+    sync: false
+  });
+  const columnDefinitions = useSystemsColumnDefinitions(tableColumns, { shortenedPowers });
 
   let otherSystems = [];
 
@@ -48,14 +52,24 @@ function SystemsTablesView({ systems, groups }) {
         />
         {showSettings && (
           <div className="flex flex-col items-end gap-4 mr-3 mb-1">
-            <Switch
-              checked={showRowCount}
-              onChange={() => {
-                setShowRowCount(!showRowCount);
-              }}
-            >
-              Row numbers
-            </Switch>
+            <div className="flex flex-wrap gap-2.5">
+              <Switch
+                checked={showRowCount}
+                onChange={() => {
+                  setShowRowCount(!showRowCount);
+                }}
+              >
+                Row numbers
+              </Switch>
+              <Switch
+                checked={shortenedPowers}
+                onChange={() => {
+                  setShortenedPowers(!shortenedPowers);
+                }}
+              >
+                Short Power names
+              </Switch>
+            </div>
             <ul className="flex gap-2 flex-wrap justify-end">
               {selectableColumns.map(column => {
                 const isActive = tableColumns.includes(column);
@@ -93,6 +107,7 @@ function SystemsTablesView({ systems, groups }) {
           systems={otherSystems}
           columns={columnDefinitions}
           withRowCount={showRowCount}
+          shortenedPowers={shortenedPowers}
         />
       )}
     </div>
