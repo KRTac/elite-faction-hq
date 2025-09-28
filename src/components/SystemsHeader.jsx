@@ -5,10 +5,15 @@ import { SystemFiltersContext } from '../hooks/useSystemFilters';
 import { FactionDatasetContext } from '../hooks/useFactionDataset';
 import Switch from './inputs/Switch';
 import Button from './inputs/Button';
+import FilterBox from './FilterBox';
 
 
 function SystemsHeader({ viewType, setViewType }) {
-  const { filtered: { systems: filteredSystems }, isFiltering } = useContext(SystemFiltersContext);
+  const {
+    filtered: { systems: filteredSystems, groupBy },
+    isFiltering,
+    availableSystemGroups, setGroupBy
+  } = useContext(SystemFiltersContext);
   const { systems } = useContext(FactionDatasetContext);
   const [ visibleFilters, setVisibleFilters ] = useStorageState('systems_visibleFilters', {
     defaultValue: 'all', // 'all', 'active', ''
@@ -21,6 +26,18 @@ function SystemsHeader({ viewType, setViewType }) {
         {visibleFilters && (
           <div className="mb-3">
             <SystemFilters activeOnly={visibleFilters === 'active'} />
+            <div className="mt-5 w-full max-w-site flex justify-center mx-auto">
+              <div className="w-full max-w-sm mx-auto">
+                <FilterBox
+                  label="Group by"
+                  value={groupBy}
+                  options={availableSystemGroups}
+                  isActive={groupBy !== 'None'}
+                  set={setGroupBy}
+                  reset={() => setGroupBy('None')}
+                />
+              </div>
+            </div>
           </div>
         )}
         <div className="flex flex-row justify-center items-center max-w-7xl mx-auto">

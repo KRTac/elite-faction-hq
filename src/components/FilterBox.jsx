@@ -3,9 +3,22 @@ import ComboBox from './inputs/ComboBox';
 import { useSystemFilter } from '../hooks/useSystemFilters';
 
 
-function FilterBox({ label, filter }) {
+export function SystemsFilterBox({ label, filter }) {
   const { value, options, isActive, set, reset } = useSystemFilter(filter);
 
+  return (
+    <FilterBox
+      label={label}
+      value={value}
+      options={options}
+      isActive={isActive}
+      set={set}
+      reset={reset}
+    />
+  );
+}
+
+function FilterBox({ label, value, options, isActive, set, reset }) {
   const humanizedOptions = useMemo(() => {
     const humanized = [];
 

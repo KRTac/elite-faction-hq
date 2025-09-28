@@ -33,10 +33,14 @@ function SystemsTableGroup({ groupId, label, systems, columns, withRowCount }) {
   }, [ groupId ]);
 
   return (
-    <div>
+    <div
+      className={[
+        label && showTable ? 'mb-10' : 'mb-5'
+      ].join(' ')}
+    >
       {label && (
         <div className="flex flex-row justify-between items-center mb-1 px-5 py-2 rounded-md dark:bg-neutral-700/20">
-          <p className="dark:text-cyan-600 font-bold text-xl">{label}</p>
+          <p className="dark:text-neutral-300 font-bold text-xl">{label}</p>
           <Switch checked={showTable} onChange={() => setShowTable(!showTable)} />
         </div>
       )}

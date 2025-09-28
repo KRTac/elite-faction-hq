@@ -5,6 +5,7 @@ import SystemsTableGroup from './data/SystemsTableGroup';
 import { useSystemsColumnDefinitions } from '../hooks/useSystemFilters';
 import Switch from './inputs/Switch';
 import IconButton from './inputs/IconButton';
+import PowerName from './data/PowerName';
 
 
 const selectableColumns = [
@@ -16,7 +17,7 @@ const selectableColumns = [
   'Influence close', 'Conflict powers'
 ];
 
-function SystemsTablesView({ systems, groups }) {
+function SystemsTablesView({ groups }) {
   const [ showSettings, setShowSettings ] = useState(false);
   const [ tableColumns, setTableColumns ] = useStorageState('systemsTables_columns', {
     defaultValue: [
@@ -34,12 +35,16 @@ function SystemsTablesView({ systems, groups }) {
   });
   const columnDefinitions = useSystemsColumnDefinitions(tableColumns, { shortenedPowers });
 
-  let otherSystems = [];
+  const tableGroups = [];
 
   if (groups.length) {
-
-  } else {
-    otherSystems = systems;
+    if (groups.length === 1 && groups[0].name === 'Systems') {
+      tableGroups.push({ label: '', systems: groups[0].systems });
+    } else {
+      for (const group of groups) {
+        tableGroups.push({ label: group.name, systems: group.systems });
+      }
+    }
   }
 
   return (
@@ -97,19 +102,33 @@ function SystemsTablesView({ systems, groups }) {
           </div>
         )}
       </div>
-      {!otherSystems.length && !groups.length && (
+      {!tableGroups.length && (
         <p className="text-center italic text-neutral-400 text-xl py-5">No systems found</p>
       )}
-      {!!otherSystems.length && (
-        <SystemsTableGroup
-          groupId="others"
-          label={!!groups.length ? 'Uncategorized' : ''}
-          systems={otherSystems}
-          columns={columnDefinitions}
-          withRowCount={showRowCount}
-          shortenedPowers={shortenedPowers}
-        />
-      )}
+      {tableGroups.map(({ label, systems }) => {
+        let labelEl = '';
+
+        if (label) {
+          labelEl = (
+            <>
+              <PowerName name={label} />
+              <span className="dark:text-stone-400 text-base">{` - ${systems.length}`}</span>
+            </>
+          );
+        }
+
+        return (
+          <SystemsTableGroup
+            key={label || '_uncategorized'}
+            groupId={label}
+            label={labelEl}
+            systems={systems}
+            columns={columnDefinitions}
+            withRowCount={showRowCount}
+            shortenedPowers={shortenedPowers}
+          />
+        );
+      })}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import FilterBox from './FilterBox';
+import { SystemsFilterBox } from './FilterBox';
 import { SystemFiltersContext } from '../hooks/useSystemFilters';
 
 
@@ -74,7 +74,7 @@ function SystemFilters({ activeOnly }) {
 
         return (
           <div key={def.filter} className="w-full max-w-sm">
-            <FilterBox label={def.label} filter={def.filter} />
+            <SystemsFilterBox label={def.label} filter={def.filter} />
           </div>
         );
       })}
