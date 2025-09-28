@@ -155,10 +155,7 @@ function Table({
   return (
     <div>
       <table className="w-full mb-2">
-        <thead className={[
-          'dark:bg-neutral-700/20 border-b-2 transition duration-400',
-          columnFilters.length ? 'dark:border-lime-400/85' : 'dark:border-lime-400/25'
-        ].join(' ')}>
+        <thead>
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header, index) => {
@@ -174,7 +171,17 @@ function Table({
                   : header.colSpan;
 
                 return (
-                  <th key={header.id} colSpan={colSpan} className="pb-1">
+                  <th
+                    key={header.id}
+                    colSpan={colSpan}
+                    className={[
+                      'pb-2 transition duration-400',
+                      'dark:bg-neutral-800 sticky top-0',
+                      "after:content-[''] after:block after:h-0.5 after:w-full",
+                      'after:absolute after:bottom-0 after:left-0 z-10',
+                      columnFilters.length ? 'dark:after:bg-lime-500' : 'dark:after:bg-lime-100'
+                    ].join(' ')}
+                  >
                     {header.isPlaceholder ? null : (
                       <>
                         <div
@@ -204,7 +211,15 @@ function Table({
                   </th>
                 )
               })}
-              <th className="dark:bg-neutral-600/50 overflow-hidden w-6">
+              <th
+                className={[
+                  'pb-2 transition duration-400 overflow-hidden w-6',
+                  'dark:bg-neutral-600 sticky top-0',
+                  "after:content-[''] after:block after:h-0.5 after:w-full",
+                  'after:absolute after:bottom-0 after:left-0 z-10',
+                  columnFilters.length ? 'dark:after:bg-lime-500' : 'dark:after:bg-lime-100'
+                ].join(' ')}
+              >
                 <div className="flex flex-col grow justify-evenly max-h-full h-full">
                   <button
                     className={[

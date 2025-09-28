@@ -32,7 +32,7 @@ function SystemsHeader({ viewType, setViewType }) {
                   label="Group by"
                   value={groupBy}
                   options={availableSystemGroups}
-                  isActive={!!groupBy}
+                  isActive={groupBy !== 'None'}
                   set={setGroupBy}
                   reset={() => setGroupBy('None')}
                 />

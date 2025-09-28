@@ -777,7 +777,7 @@ function useSystemFilters({ stats, systems }) {
   }, [ stats ]);
 
   const [ view, setView ] = useState('map');
-  const [ groupBy, setGroupBy ] = useState('');
+  const [ groupBy, setGroupBy ] = useState('None');
   const [ activeFilters, setActiveFilters ] = useState({});
 
   const setFilter = useCallback((filter, value) => {
@@ -820,7 +820,13 @@ function useSystemFilters({ stats, systems }) {
           }
 
           didUpdate = true;
-          displayGroups[i].systems.push(system);
+
+          if (!displayGroups[i].systemNames.includes(system.name)) {
+            displayGroups[i].systems.push(system);
+            displayGroups[i].systemNames.push(system.name);
+          } else {
+            console.warn(`Skipping unexpected repeating system ${system.name} for group ${groupId}.`);
+          }
 
           break;
         }
@@ -828,7 +834,8 @@ function useSystemFilters({ stats, systems }) {
         if (!didUpdate) {
           displayGroups.push({
             name: groupId,
-            systems: [ system ]
+            systems: [ system ],
+            systemNames : [ system.name ]
           });
         }
       } else {

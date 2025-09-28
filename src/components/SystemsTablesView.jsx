@@ -5,6 +5,7 @@ import SystemsTableGroup from './data/SystemsTableGroup';
 import { useSystemsColumnDefinitions } from '../hooks/useSystemFilters';
 import Switch from './inputs/Switch';
 import IconButton from './inputs/IconButton';
+import PowerName from './data/PowerName';
 
 
 const selectableColumns = [
@@ -105,18 +106,27 @@ function SystemsTablesView({ groups }) {
         <p className="text-center italic text-neutral-400 text-xl py-5">No systems found</p>
       )}
       {tableGroups.map(({ label, systems }) => {
+        let labelEl = '';
+
+        if (label) {
+          labelEl = (
+            <>
+              <PowerName name={label} />
+              <span className="dark:text-stone-400 text-base">{` - ${systems.length}`}</span>
+            </>
+          );
+        }
+
         return (
-          <div key={label} className="mb-15">
-            <SystemsTableGroup
-              key={label}
-              groupId={label}
-              label={label}
-              systems={systems}
-              columns={columnDefinitions}
-              withRowCount={showRowCount}
-              shortenedPowers={shortenedPowers}
-            />
-          </div>
+          <SystemsTableGroup
+            key={label || '_uncategorized'}
+            groupId={label}
+            label={labelEl}
+            systems={systems}
+            columns={columnDefinitions}
+            withRowCount={showRowCount}
+            shortenedPowers={shortenedPowers}
+          />
         );
       })}
     </div>
