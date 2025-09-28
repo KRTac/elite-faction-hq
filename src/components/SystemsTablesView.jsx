@@ -54,9 +54,10 @@ function SystemsTablesView({ groups }) {
           onClick={() => setShowSettings(!showSettings)}
           title="Toggle settings"
           as={Cog6ToothIcon}
+          isActive={showSettings}
         />
         {showSettings && (
-          <div className="flex flex-col items-end gap-4 mr-3 mb-1">
+          <div className="flex flex-col items-end gap-4 mr-3 mt-2 mb-5">
             <div className="flex flex-wrap gap-2.5">
               <Switch
                 checked={showRowCount}
