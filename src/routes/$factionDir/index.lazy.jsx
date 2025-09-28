@@ -8,7 +8,7 @@ import { SystemFiltersContext } from '../../hooks/useSystemFilters';
 
 
 function Systems() {
-  const { filtered: { systems, groups }} = useContext(SystemFiltersContext);
+  const { filtered: { groupBy, systems, groups }} = useContext(SystemFiltersContext);
   const [ viewType, setViewType ] = useStorageState('systems_viewType', {
     defaultValue: 'map',
     sync: false
@@ -18,8 +18,19 @@ function Systems() {
     <>
       <SystemsHeader viewType={viewType} setViewType={setViewType} />
       <div className="flex-1 overflow-y-scroll relative">
-        {viewType === 'map' && <SystemsMapView systems={systems} debug />}
-        {viewType !== 'map' && <SystemsTablesView groups={groups} />}
+        {viewType === 'map' && (
+          <SystemsMapView
+            groupBy={groupBy}
+            systems={systems}
+            groups={groups}
+            debug
+          />
+        )}
+        {viewType !== 'map' && (
+          <SystemsTablesView
+            groups={groups}
+          />
+        )}
       </div>
     </>
   );
