@@ -26,7 +26,7 @@ function SystemsMapView({ groupBy, groups, systems, debug = false }) {
       let idx = 1;
 
       for (const system of _groups[0].systems) {
-        mapData.categories['Systems'][idx] = { name: system.name };
+        mapData.categories['Systems'][idx] = { name: system.name, color: 'cccccc' };
         mapData.systems.push({
           cat: [ idx ],
           coords: system.coords,
