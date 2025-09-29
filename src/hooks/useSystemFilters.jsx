@@ -776,7 +776,6 @@ function useSystemFilters({ stats, systems }) {
     return filterOptions;
   }, [ stats ]);
 
-  const [ view, setView ] = useState('map');
   const [ groupBy, setGroupBy ] = useState('None');
   const [ activeFilters, setActiveFilters ] = useState({});
 
@@ -931,8 +930,6 @@ function useSystemFilters({ stats, systems }) {
       setFilter,
       resetFilters,
       setGroupBy,
-      view,
-      setView,
       availableSystemGroups,
       filtered: {
         groupBy,
@@ -940,10 +937,7 @@ function useSystemFilters({ stats, systems }) {
         groups: displayGroups
       }
     };
-  }, [
-    activeFilters, filterOptions, setFilter, systems,
-    groupBy, view
-  ]);
+  }, [ activeFilters, filterOptions, setFilter, systems, groupBy ]);
 }
 
 export default useSystemFilters;
