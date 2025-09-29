@@ -81,6 +81,8 @@ function SystemsMapView({ groupBy, groups, systems, debug = false }) {
 
               if (Object.keys(powers).includes(groupName)) {
                 groupColor = powers[groupName].color.substr(1);
+              } else if (groupName === 'None') {
+                groupColor = 'cccccc';
               }
             }
           } else if (_groupBy === 'Faction priority') {
