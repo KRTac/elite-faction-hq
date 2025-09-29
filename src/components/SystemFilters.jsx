@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { SystemsFilterBox } from './FilterBox';
+import { SystemsFilterBox } from './inputs/FilterBox';
 import { SystemFiltersContext } from '../hooks/useSystemFilters';
 
 

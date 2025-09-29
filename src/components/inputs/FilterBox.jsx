@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import ComboBox from './inputs/ComboBox';
-import { useSystemFilter } from '../hooks/useSystemFilters';
+import ComboBox from './ComboBox';
+import { useSystemFilter } from '../../hooks/useSystemFilters';
 
 
 export function SystemsFilterBox({ label, filter }) {

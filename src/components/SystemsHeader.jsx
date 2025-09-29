@@ -1,19 +1,18 @@
 import { useContext } from 'react';
 import useStorageState from 'use-storage-state';
 import SystemFilters from './SystemFilters';
-import { SystemFiltersContext } from '../hooks/useSystemFilters';
+import { SystemFiltersContext, availableSystemGroups } from '../hooks/useSystemFilters';
 import { FactionDatasetContext } from '../hooks/useFactionDataset';
+import useSystemsGroupBy from '../hooks/useSystemsGroupBy';
 import Switch from './inputs/Switch';
 import Button from './inputs/Button';
-import FilterBox from './FilterBox';
+import FilterBox from './inputs/FilterBox';
+import Range from './inputs/Range';
 
 
 function SystemsHeader({ viewType, setViewType }) {
-  const {
-    filtered: { systems: filteredSystems, groupBy },
-    isFiltering,
-    availableSystemGroups, setGroupBy
-  } = useContext(SystemFiltersContext);
+  const { systems: filteredSystems, isFiltering } = useContext(SystemFiltersContext);
+  const { groupBy, setGroupBy } = useSystemsGroupBy(filteredSystems);
   const { systems } = useContext(FactionDatasetContext);
   const [ visibleFilters, setVisibleFilters ] = useStorageState('systems_visibleFilters', {
     defaultValue: 'all', // 'all', 'active', ''
@@ -37,6 +36,14 @@ function SystemsHeader({ viewType, setViewType }) {
                   reset={() => setGroupBy('None')}
                 />
               </div>
+              {/* <div className="w-full max-w-sm mx-auto">
+                <Range
+                  label="Group system count"
+                  value={[ 2, 5]}
+                  min={0}
+                  max={100}
+                />
+              </div> */}
             </div>
           </div>
         )}
