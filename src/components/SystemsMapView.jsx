@@ -3,12 +3,16 @@ import Button from './inputs/Button';
 import { powers } from './data/PowerName';
 
 
+const postTargetOrigin = import.meta.env.VITE_PROTOCOL_HOSTNAME
+  ? import.meta.env.VITE_PROTOCOL_HOSTNAME
+  : '/';
+
 function SystemsMapView({ groupBy, groups, systems, debug = false }) {
   const iframeRef = useRef(null);
   const iframeLoaded = useRef(false);
 
   const sendDebug = useCallback(() => {
-    iframeRef.current.contentWindow.postMessage({ type: 'debug' }, '/');
+    iframeRef.current.contentWindow.postMessage({ type: 'debug' }, postTargetOrigin);
   }, []);
 
   const sendMapData = useCallback((_groupBy, _groups, _systems) => {
@@ -88,8 +92,8 @@ function SystemsMapView({ groupBy, groups, systems, debug = false }) {
           if (groupName) {
             if (!groupIds[groupName]) {
               const newId = idx++;
-              groupIds[groupName] = newId + '';
-              mapData.categories[_groupBy][newId + ''] = {
+              groupIds[groupName] = newId;
+              mapData.categories[_groupBy][newId] = {
                 name: groupName,
                 color: groupColor
               };
@@ -114,7 +118,7 @@ function SystemsMapView({ groupBy, groups, systems, debug = false }) {
     iframeRef.current.contentWindow.postMessage({
       type: 'update',
       mapData
-    }, '/');
+    }, postTargetOrigin);
   }, []);
 
   useEffect(() => {
