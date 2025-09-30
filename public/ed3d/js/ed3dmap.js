@@ -17,35 +17,38 @@ var lensFlareSel;
 
 var Ed3d = {
 
-  'container'   : null,
-  'basePath'    : './',
-  'jsonPath'    : null,
-  'jsonContainer' : null,
+  'container'           : null,
+  'basePath'            : './',
 
-  'grid1H' : null,
-  'grid1K' : null,
-  'grid1XL' : null,
+  'jsonPath'            : null,
+  'jsonContainer'       : null,
+  'json'                : null,
 
-  'tween' : null,
+  'grid1H'              : null,
+  'grid1K'              : null,
+  'grid1XL'             : null,
 
-  'globalView' : true,
+  'tween'               : null,
+
+  'globalView'          : true,
 
   //-- Fog density save
-  'fogDensity' : null,
+  'fogDensity'          : null,
 
   //-- Defined texts
-  'textSel' : [],
+  'textSel'             : [],
 
   //-- Object list by categories
-  'catObjs' : [],
+  'catObjs'             : [],
+  'catObjsRoutes'       : [],
 
   //-- Materials
-  'material' : {
+  'material'            : {
     'Trd' : new THREE.MeshBasicMaterial({
       color: 0xffffff
     }),
     'line' : new THREE.LineBasicMaterial({
-      color: 0xffffff
+      color: 0xcccccc
     }),
     'white' : new THREE.MeshBasicMaterial({
       color: 0xffffff
@@ -65,53 +68,73 @@ var Ed3d = {
     'selected' : new THREE.MeshPhongMaterial({
       color: 0x0DFFFF
     }),
+    'grey' : new THREE.MeshPhongMaterial({
+      color: 0x7EA0A0
+    }),
     'transparent' : new THREE.MeshBasicMaterial({
       color: 0x000000,
       transparent: true,
       opacity: 0
     }),
-    'glow_1' : null,
-    'custom' : []
-
-
-
+    'glow_1'            : null,
+    'custom'            : []
   },
-  'colors'  : [],
-  'textures' : {},
+
+  'starSprite' : 'textures/lensflare/star_grey2.png',
+
+  'colors'              : [],
+  'textures'            : {},
 
   //-- Default color for system sprite
-  'systemColor'  : '#eeeeee',
+  'systemColor'         : '#eeeeee',
 
   //-- HUD
-  'withHudPanel' : false,
-  'hudMultipleSelect' : true,
+  'withHudPanel'        : false,
+  'withOptionsPanel'    : true,
+  'hudMultipleSelect'   : true,
 
   //-- Systems
-  'systems' : [],
+  'systems'             : [],
 
   //-- Starfield
-  'starfield' : null,
+  'starfield'           : null,
 
   //-- Start animation
-  'startAnim' : true,
+  'startAnim'           : true,
 
   //-- Scale system effect
-  'effectScaleSystem' : [10,800],
+  'effectScaleSystem'   : [10,800],
 
   //-- Graphical Options
-  'optDistObj' : 1500,
+  'optDistObj'          : 1500,
 
   //-- Player position
-  'playerPos' : [0, 0, 0],
+  'playerPos'           : [0, 0, 0],
 
   //-- Initial camera position
-  'cameraPos' : null,
+  'cameraPos'           : null,
 
   //-- Active 2D top view
-  'isTopView' : false,
+  'isTopView'           : false,
 
   //-- Show galaxy infos
-  'showGalaxyInfos' : false,
+  'showGalaxyInfos'     : false,
+
+  //-- Show names near camera
+  'showNameNear'     : false,
+
+  //-- Popup mode for click on detal
+  'popupDetail'      : false,
+
+  //-- Objects
+  'Action' : null,
+  'Galaxy' : null,
+
+  //-- With button to toggle fullscreen
+  'withFullscreenToggle' : false,
+
+  //-- Collapse subcategories (false: don't collapse)
+  'categoryAutoCollapseSize' : false,
 
   /**
    * Init Ed3d map
@@ -120,37 +143,8 @@ var Ed3d = {
 
   'init' : function(options) {
 
-    // Merge options with defaults
-    var options = $.extend({
-        container: Ed3d.container,
-        basePath: Ed3d.basePath,
-        jsonPath: Ed3d.jsonPath,
-        jsonContainer: Ed3d.jsonContainer,
-        withHudPanel: Ed3d.withHudPanel,
-        hudMultipleSelect: Ed3d.hudMultipleSelect,
-        effectScaleSystem: Ed3d.effectScaleSystem,
-        startAnim: Ed3d.startAnim,
-        playerPos: Ed3d.playerPos,
-        cameraPos: Ed3d.cameraPos,
-        systemColor: Ed3d.systemColor,
-        showGalaxyInfos: false
-    }, options);
-
-    Loader.start();
-
-    //-- Set Option
-    this.basePath          = options.basePath;
-    this.container         = options.container;
-    this.jsonPath          = options.jsonPath;
-    this.jsonContainer     = options.jsonContainer;
-    this.withHudPanel      = options.withHudPanel;
-    this.hudMultipleSelect = options.hudMultipleSelect;
-    this.startAnim         = options.startAnim;
-    this.effectScaleSystem = options.effectScaleSystem;
-    this.playerPos         = options.playerPos;
-    this.cameraPos         = options.cameraPos;
-    this.showGalaxyInfos   = options.showGalaxyInfos;
-    this.systemColor       = options.systemColor;
+    // Merge options with defaults Ed3d
+    var options = $.extend(Ed3d, options);
 
     //-- Init 3D map container
     $('#'+Ed3d.container).append('<div id="ed3dmap"></div>');
@@ -176,6 +170,7 @@ var Ed3d = {
         $.getScript(Ed3d.basePath + "js/components/route.class.js"),
         $.getScript(Ed3d.basePath + "js/components/system.class.js"),
         $.getScript(Ed3d.basePath + "js/components/galaxy.class.js"),
+        $.getScript(Ed3d.basePath + "js/components/heat.class.js"),
 
         $.getScript(Ed3d.basePath + "vendor/tween-js/Tween.js"),
 
@@ -193,6 +188,18 @@ var Ed3d = {
   },
 
   /**
+   * Init objects
+   */
+
+  'initObjects' : function(options) {
+
+    //-- Init Object
+    this.Action = Action;
+    this.Galaxy = Galaxy;
+
+  },
+
+  /**
    * Rebuild completely system list and filter (for new JSon content)
    */
 
@@ -201,14 +208,31 @@ var Ed3d = {
     Loader.start();
 
     // Remove System & HUD filters
-    System.remove();
-    HUD.removeFilters();
+    this.destroy();
 
     // Reload from JSon
     if(this.jsonPath != null) Ed3d.loadDatasFromFile();
     else if(this.jsonContainer != null) Ed3d.loadDatasFromContainer();
 
-    Action.moveInitalPosition();
+    this.Action.moveInitalPosition();
+
+    Loader.stop();
+
+  },
+
+  /**
+   * Destroy the 3dmap
+   */
+
+  'destroy' : function() {
+
+    Loader.start();
+
+    // Remove System & HUD filters
+    System.remove();
+    HUD.removeFilters();
+    Route.remove();
+    Galaxy.remove();
 
     Loader.stop();
 
@@ -220,43 +244,63 @@ var Ed3d = {
 
   'launchMap' : function() {
 
+    this.initObjects();
 
-      Loader.update('Textures');
-      Ed3d.loadTextures();
+    Loader.update('Textures');
+    Ed3d.loadTextures();
 
-      Loader.update('Launch scene');
-      Ed3d.initScene();
+    Loader.update('Launch scene');
+    Ed3d.initScene();
 
-      // Create grid
+    // Create grid
 
-      Ed3d.grid1H  = $.extend({}, Grid.init(100, 0x111E23, 0), {});
-      Ed3d.grid1K  = $.extend({}, Grid.init(1000, 0x22323A, 1000), {});
-      Ed3d.grid1XL = $.extend({}, Grid.infos(10000, 0x22323A, 10000), {});
-
-
-      // Add some scene enhancement
-      Ed3d.skyboxStars();
-
-      // Create HUD
-      HUD.create("ed3dmap");
-
-      // Add galaxy center
-      Loader.update('Add Sagittarius A*');
-      Galaxy.addGalaxyCenter();
-
-      // Load systems
-      Loader.update('Loading json file');
-      if(this.jsonPath != null) Ed3d.loadDatasFromFile();
-      else if(this.jsonContainer != null) Ed3d.loadDatasFromContainer();
+    Ed3d.grid1H  = $.extend({}, Grid.init(100, 0x111E23, 0), {});
+    Ed3d.grid1K  = $.extend({}, Grid.init(1000, 0x22323A, 1000), {});
+    Ed3d.grid1XL = $.extend({}, Grid.infos(10000, 0x22323A, 10000), {});
 
 
-      if(!this.startAnim) {
-        Ed3d.grid1XL.hide();
-        Galaxy.milkyway2D.visible = false;
-      }
+    // Add some scene enhancement
+    Ed3d.skyboxStars();
 
-      // Animate
-      animate();
+    // Create HUD
+    HUD.create("ed3dmap");
+
+    // Add galaxy center
+    Loader.update('Add Sagittarius A*');
+    this.Galaxy.addGalaxyCenter();
+
+    // Load systems
+    Loader.update('Loading JSON file');
+    if(this.jsonPath != null)
+    {
+       Ed3d.loadDatasFromFile();
+    }
+    else if(this.jsonContainer != null)
+    {
+       Ed3d.loadDatasFromContainer();
+    }
+    else if($('.ed3d-item').length > 0)
+    {
+       Ed3d.loadDatasFromAttributes();
+    }
+    else if(this.json != null)
+    {
+       Ed3d.loadDatas(this.json);
+       Ed3d.loadDatasComplete();
+       Ed3d.showScene();
+    }
+    else
+    {
+       Loader.update('No JSON found.');
+    }
+
+    if(!this.startAnim) {
+      Ed3d.grid1XL.hide();
+      this.Galaxy.milkyway2D.visible = false;
+    }
+
+    // Animate
+    animate();
 
   },
 
@@ -271,7 +315,7 @@ var Ed3d = {
 
     //-- Load textures
     this.textures.flare_white = texloader.load(Ed3d.basePath + "textures/lensflare/flare2.png");
-    this.textures.flare_yellow = texloader.load(Ed3d.basePath + "textures/lensflare/star_grey2.png");
+    this.textures.flare_yellow = texloader.load(Ed3d.basePath + Ed3d.starSprite);
     this.textures.flare_center = texloader.load(Ed3d.basePath + "textures/lensflare/flare3.png");
 
     //-- Load sprites
@@ -320,6 +364,7 @@ var Ed3d = {
 
     //HemisphereLight
     light = new THREE.HemisphereLight(0xffffff, 0xcccccc);
+    light.position.set(-0.2, 0.5, 0.8).normalize();
     scene.add(light);
 
     //WebGL Renderer
@@ -398,6 +443,27 @@ var Ed3d = {
 
   },
 
+
+  'loadDatasFromAttributes' : function() {
+
+    var content = $('#'+this.jsonContainer).html();
+    var json = [];
+    $('.ed3d-item').each(function(e) {
+      var objName = $(this).html();
+      var coords = $(this).data('coords').split(",");
+      if(coords.length == 3)
+        json.push({name:objName,coords:{x:coords[0],y:coords[1],z:coords[2]}});
+    });
+
+    if(json != null) Ed3d.loadDatas(json);
+
+    Ed3d.loadDatasComplete();
+
+    Ed3d.showScene();
+
+  },
+
+
   'loadDatas' : function(data) {
 
       //-- Init Particle system
@@ -438,6 +504,26 @@ var Ed3d = {
         $.each(data.routes, function(key, route) {
           Route.createRoute(key, route);
         });
+
+      }
+
+      //-- Heatmap
+
+      if(data.heatmap != undefined) {
+        Heatmap.create(data.heatmap);
+      }
+
+      //-- Check start position in JSon
+
+      if(Ed3d.startAnim && data.position != undefined) {
+        Ed3d.playerPos = [data.position.x,data.position.y,data.position.z];
+
+        var camX = (parseInt(data.position.x)-500);
+        var camY = (parseInt(data.position.y)+8500);
+        var camZ = (parseInt(data.position.z)-8500);
+        Ed3d.cameraPos = [camX,camY,camZ];
+
+        Action.moveInitalPosition(4000);
       }
 
   },
@@ -446,7 +532,7 @@ var Ed3d = {
 
       System.endParticleSystem();
       HUD.init();
-      Action.init();
+      this.Action.init();
 
   },
 
@@ -457,7 +543,8 @@ var Ed3d = {
   'addObjToCategories' : function(index, catList) {
 
     $.each(catList, function(keyArr, idCat) {
-      Ed3d.catObjs[idCat].push(index);
+      if(Ed3d.catObjs[idCat] != undefined)
+        Ed3d.catObjs[idCat].push(index);
     });
 
   },
@@ -559,26 +646,18 @@ function animate(time) {
   //-- Change selection cursor size depending on camera distance
 
   var scale = distanceFromTarget(camera)/200;
-  if(Action.cursorSel != null) {
-    if(scale>=0.01 && scale<10) {
-      Action.cursorSel.scale.set(scale, scale, scale);
 
-    }
-    Action.cursorSel.rotation.y =  camera.rotation.y ;
-  }
+  this.Action.updateCursorSize(scale);
 
-  if(Ed3d.textSel['system'] != undefined)
-  if(Ed3d.isTopView) {
-    Ed3d.textSel['system'].rotation.set(-Math.PI/2,0,0);
-  } else {
-    Ed3d.textSel['system'].rotation.set(0,0,0);
-  }
+  HUD.rotateText('system');
+  HUD.rotateText('coords');
+  HUD.rotateText('system_hover');
 
 
   //-- Zoom on on galaxy effect
-  Action.sizeOnScroll(scale);
+  this.Action.sizeOnScroll(scale);
 
-  Galaxy.infosUpdateCallback(scale);
+  this.Galaxy.infosUpdateCallback(scale);
 
   if(scale>25) {
 
@@ -590,6 +669,8 @@ function animate(time) {
 
   }
 
+  this.Action.updatePointClickRadius(scale);
+
   requestAnimationFrame( animate );
 
 
@@ -599,7 +680,7 @@ var isFarView = false;
 
 function enableFarView (scale, withAnim) {
 
-  if(isFarView) return;
+  if(isFarView || this.Galaxy == null) return;
   if(withAnim == undefined) withAnim = true;
 
   isFarView = true;
@@ -609,33 +690,35 @@ function enableFarView (scale, withAnim) {
   var scaleTo = {zoom:500};
   if(withAnim) {
 
+    var obj = this;
+
     //controls.enabled = false;
     Ed3d.tween = new TWEEN.Tween(scaleFrom, {override:true}).to(scaleTo, 500)
       .start()
       .onUpdate(function () {
-        Galaxy.milkyway[0].material.size = scaleFrom.zoom;
-        Galaxy.milkyway[1].material.size = scaleFrom.zoom*4;
+        obj.Galaxy.milkyway[0].material.size = scaleFrom.zoom;
+        obj.Galaxy.milkyway[1].material.size = scaleFrom.zoom*4;
       });
 
   } else {
-    Galaxy.milkyway[0].material.size = scaleTo;
-    Galaxy.milkyway[1].material.size = scaleTo*4;
+    this.Galaxy.milkyway[0].material.size = scaleTo;
+    this.Galaxy.milkyway[1].material.size = scaleTo*4;
   }
 
   //-- Enable 2D galaxy
-  Galaxy.milkyway2D.visible = true;
-  Galaxy.infosShow();
+  this.Galaxy.milkyway2D.visible = true;
+  this.Galaxy.infosShow();
 
 
-  //Galaxy.obj.scale.set(20,20,20);
-  if(Action.cursorSel != null)  Action.cursorSel.scale.set(60,60,60);
+  //this.Galaxy.obj.scale.set(20,20,20);
+
+  this.Action.updateCursorSize(60);
+
   Ed3d.grid1H.hide();
   Ed3d.grid1K.hide();
   Ed3d.grid1XL.show();
   Ed3d.starfield.visible = false;
   scene.fog.density = 0.000009;
-
-
 
 }
 
@@ -654,33 +737,39 @@ function disableFarView(scale, withAnim) {
   var scaleTo = {zoom:64};
   if(withAnim) {
 
+    var obj = this;
+
     //controls.enabled = false;
     Ed3d.tween = new TWEEN.Tween(scaleFrom, {override:true}).to(scaleTo, 500)
       .start()
       .onUpdate(function () {
-        Galaxy.milkyway[0].material.size = scaleFrom.zoom;
-        Galaxy.milkyway[1].material.size = scaleFrom.zoom;
+        obj.Galaxy.milkyway[0].material.size = scaleFrom.zoom;
+        obj.Galaxy.milkyway[1].material.size = scaleFrom.zoom;
       });
 
   } else {
-    Galaxy.milkyway[0].material.size = scaleTo;
-    Galaxy.milkyway[1].material.size = scaleTo;
+    this.Galaxy.milkyway[0].material.size = scaleTo;
+    this.Galaxy.milkyway[1].material.size = scaleTo;
   }
 
   //-- Disable 2D galaxy
-  Galaxy.milkyway2D.visible = false;
-  Galaxy.infosHide();
+  this.Galaxy.milkyway2D.visible = false;
+  this.Galaxy.infosHide();
 
   //-- Show element
-  Galaxy.milkyway[0].material.size = 16;
-//
+  this.Galaxy.milkyway[0].material.size = 16;
+
+  //--
   camera.scale.set(1,1,1);
-  if(Action.cursorSel != null)  Action.cursorSel.scale.set(1,1,1);
+
+  this.Action.updateCursorSize(1);
+
   Ed3d.grid1H.show();
   Ed3d.grid1K.show();
   Ed3d.grid1XL.hide();
   Ed3d.starfield.visible = true;
   scene.fog.density = Ed3d.fogDensity;
+
 }
 
 
@@ -688,8 +777,7 @@ function render() {
   renderer.render(scene, camera);
 }
 
-
-window.addEventListener('resize', function () {
+function refresh3dMapSize () {
   if(renderer != undefined) {
     var width = container.offsetWidth;
     var height = container.offsetHeight;
@@ -699,11 +787,12 @@ window.addEventListener('resize', function () {
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
   }
+}
+
+
+window.addEventListener('resize', function () {
+  refresh3dMapSize();
 });
-
-
-
-
 
 
 
