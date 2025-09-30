@@ -66,6 +66,11 @@ const filterList = [
     id: 'factionInfluence',
     label: 'Faction influence',
     range: true
+  },
+  {
+    id: 'population',
+    label: 'Population',
+    range: true
   }
 ];
 
@@ -73,13 +78,13 @@ const tabData = [
   {
     title: 'General',
     filters: [
-      'factionInfluence', 'governments', 'allegiances', 'primaryEconomies', 'secondaryEconomies'
+      'population', 'governments', 'allegiances', 'primaryEconomies', 'secondaryEconomies'
     ]
   },
   {
-    title: 'Factions',
+    title: 'Faction',
     filters: [
-      'controllingFactions', 'keySystems', 'influenceClose'
+      'controllingFactions', 'factionInfluence', 'keySystems', 'influenceClose'
     ]
   },
   {

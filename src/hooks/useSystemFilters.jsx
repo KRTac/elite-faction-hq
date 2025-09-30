@@ -308,6 +308,25 @@ export function filterSystems(systems, filters) {
       }
     }
 
+    if (
+      (notFiltering || filtersPassed) &&
+      activeFilterKeys.includes('population') &&
+      filters.population.length === 2
+    ) {
+      notFiltering = false;
+      filtersPassed = true;
+      const [ min, max ] = filterRange(filters.population);
+      const population = system.population;
+
+      if (min !== '' && population < min) {
+        filtersPassed = false;
+      }
+
+      if (filtersPassed && max !== '' && population > max) {
+        filtersPassed = false;
+      }
+    }
+
     if (notFiltering || filtersPassed) {
       filteredSystems.push(system);
     }
@@ -774,7 +793,8 @@ function useSystemFilters({ stats, systems }) {
     const filterOptions = {
       keySystems: [ true, false ],
       influenceClose: [ true, false ],
-      factionInfluence: [ 0, 100 ]
+      factionInfluence: [ 0, 100 ],
+      population: [ 0, undefined ]
     };
 
     for (const stat of Object.keys(stats)) {
