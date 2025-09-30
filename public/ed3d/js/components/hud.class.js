@@ -21,18 +21,33 @@ var HUD = {
 
     this.container = container;
 
-    if(!$('#'+this.container+' #controls').length) {
+    if(!$('#'+this.container+' #controls').length && Ed3d.withOptionsPanel == true) {
 
       $('#'+this.container).append(
         '  <div id="controls">'+
         '    <a data-view="3d" class="view selected">3D</a>'+
         '    <a data-view="top" class="view">2D</a>'+
+        //'    <a data-view="top" class="view">RED</a>'+  // TMP route edit button
         '    <a data-view="infos" class="'+(Ed3d.showGalaxyInfos ? 'selected' : '')+'">i</a>'+
         '    <a data-view="options">'+Ico.cog+'</a>'+
         '    <div id="options" style="display:none;"></div>'+
         '  </div>'
       );
       this.createSubOptions();
+
+      //-- Optionnal button to go fuulscreen
+
+      if(Ed3d.withFullscreenToggle) {
+        $( "<a></a>" )
+          .attr("id", "tog-fullscreen" )
+          .html('Fullscreen')
+          .click(function() {
+            $('#'+container).toggleClass('map-fullscreen');
+            refresh3dMapSize();
+          })
+          .prependTo( "#controls" );
+      }
+
 
     }
 
@@ -55,7 +70,9 @@ var HUD = {
       '  </div>'+
       '</div>'
     );
-    $('#'+this.container).append('<div id="systemDetails" style="display:none;"></div>');
+
+    var addClass = (Ed3d.popupDetail ? 'class="popup-detail"' : '');
+    $('#'+this.container).append('<div id="systemDetails" style="display:none;"'+addClass+'></div>');
 
   },
 
@@ -200,10 +217,14 @@ var HUD = {
       var active = $(this).data('active');
       active = (Math.abs(active-1));
 
+      //------------------------------------------------------------------------
+      //-- Single item by once
+
       if(!Ed3d.hudMultipleSelect) {
 
         $('.map_filter').addClass('disabled');
 
+        //-- Toggle systems particles
         $(System.particleGeo.vertices).each(function(index, point) {
           point.visible  = 0;
           point.filtered = 0;
@@ -211,12 +232,45 @@ var HUD = {
           active = 1;
         });
 
+
+        //-- Toggle routes
+        if(Ed3d.catObjsRoutes.length>0)
+        $(Ed3d.catObjsRoutes).each(function(indexCat, listGrpRoutes) {
+          if(listGrpRoutes != undefined)
+            $(listGrpRoutes).each(function(key, indexRoute) {
+              scene.getObjectByName( indexRoute ).visible  = false;
+              if(scene.getObjectByName( indexRoute+'-first' ) != undefined)
+                scene.getObjectByName( indexRoute+'-first' ).visible  = false;
+              if(scene.getObjectByName( indexRoute+'-last' ) != undefined)
+                scene.getObjectByName( indexRoute+'-last' ).visible  = false;
+            });
+        });
+
       }
 
+      //------------------------------------------------------------------------
+      //-- multiple select
 
       var center = null;
       var nbPoint = 0;
       var pointFar = null;
+
+      //-- Toggle routes
+
+      if(Ed3d.catObjsRoutes.length>0)
+      $(Ed3d.catObjsRoutes[idCat]).each(function(key, indexRoute) {
+        var isVisible = scene.getObjectByName( indexRoute ).visible;
+        if(isVisible == undefined) isVisible = true;
+        isVisible = (isVisible ? false : true);
+        scene.getObjectByName( indexRoute ).visible  = isVisible;
+        if(scene.getObjectByName( indexRoute+'-first' ) != undefined)
+          scene.getObjectByName( indexRoute+'-first' ).visible  = isVisible;
+        if(scene.getObjectByName( indexRoute+'-last' ) != undefined)
+          scene.getObjectByName( indexRoute+'-last' ).visible  = isVisible;
+      });
+
+      //-- Toggle systems particles
+
       $(Ed3d.catObjs[idCat]).each(function(key, indexPoint) {
 
         obj = System.particleGeo.vertices[indexPoint];
@@ -252,13 +306,16 @@ var HUD = {
 
       });
 
+      if(nbPoint==0) return;
+
+      //------------------------------------------------------------------------
       //-- Calc center of all selected points
+
       center.set(
         Math.round(center.x/nbPoint),
         Math.round(center.y/nbPoint),
         -Math.round(center.z/nbPoint)
       );
-      console.log(center);
 
       $(this).data('active',active);
       $(this).toggleClass('disabled');
@@ -268,7 +325,6 @@ var HUD = {
 
       //-- Calc max distance from center of selection
       var distance = pointFar.distanceTo( center )+200;
-      console.log(distance);
 
       //-- Set new camera & target position
       Ed3d.playerPos = [center.x,center.y,center.z];
@@ -300,6 +356,11 @@ var HUD = {
 
   },
 
+
+  /**
+   * Init filter list
+   */
+
   'initFilters' : function(categories) {
 
     Loader.update('HUD Filter...');
@@ -308,19 +369,66 @@ var HUD = {
     $.each(categories, function(typeFilter, values) {
 
       if(typeof values === "object" ) {
+
         var groupId = 'group_'+grpNb;
+        var nbFilters = values.length;
+        var count = 0;
+        var visible = true;
 
         $('#filters').append('<h2>'+typeFilter+'</h2>');
         $('#filters').append('<div id="'+groupId+'"></div>');
 
         $.each(values, function(key, val) {
-          HUD.addFilter(groupId, key, val);
-          Ed3d.catObjs[key] = []
+
+          visible = true;
+
+          //-- Manage view limit if activated
+
+          if(Ed3d.categoryAutoCollapseSize !== false) {
+            count++;
+            if(count>Ed3d.categoryAutoCollapseSize) visible = false;
+          }
+
+          //-- Add filter
+
+          HUD.addFilter(groupId, key, val, visible);
+          Ed3d.catObjs[key] = [];
+
         });
+
         grpNb++;
+
+        //-- If more childs than 'categoryAutoCollapseSize' value
+        //-- add the button to toggle items
+
+        if(visible==false) {
+
+          $('#'+groupId).append(
+            '<a class="show_childs">'+
+            '+ See more' +
+            '</a>'
+          ).click(function(){
+            HUD.expandFilters(groupId);
+          });
+
+        }
       }
 
     });
+
+
+  },
+
+  /**
+   * Expand filter
+   */
+
+  'expandFilters' : function(groupId) {
+
+    $('#'+groupId)
+      .addClass('open');
+
+    $('#hud').addClass('enlarge');
 
 
   },
@@ -339,19 +447,26 @@ var HUD = {
   /**
    *
    */
-  'addFilter' : function(groupId, idCat, val) {
+  'addFilter' : function(groupId, idCat, val, visible) {
 
     //-- Add material, if custom color defined, use it
     var back = '#fff';
+    var addClass = '';
+
     if(val.color != undefined) {
       Ed3d.addCustomMaterial(idCat, val.color);
       back = '#'+val.color;
     }
 
+    if(!visible) {
+      addClass += ' hidden';
+    }
+
     //-- Add html link
     $('#'+groupId).append(
-      '<a class="map_filter" data-active="1" data-filter="' + idCat + '">'+
-      '<span class="check" style="background:'+back+'"> </span>' + val.name + '</a>'
+      '<a class="map_filter'+addClass+'" data-active="1" data-filter="' + idCat + '">'+
+      '<span class="check" style="background:'+back+'"> </span>' + val.name +
+      '</a>'
     );
   },
 
@@ -423,9 +538,10 @@ var HUD = {
    * Add Shape text
    */
 
-  'addText' : function(id, textShow, x, y, z, size, addToObj) {
+  'addText' : function(id, textShow, x, y, z, size, addToObj, isPoint) {
 
     if(addToObj == undefined) addToObj = scene;
+    if(isPoint == undefined) isPoint = false;
 
     var textShapes = THREE.FontUtils.generateShapes(textShow, {
       'font': 'helvetiker',
@@ -448,12 +564,35 @@ var HUD = {
     textMesh.geometry = textGeo;
     textMesh.geometry.needsUpdate = true;
 
-    textMesh.position.set(x, y, z);
+    if(isPoint) {
+      textMesh.position.set(addToObj.x, addToObj.y, addToObj.z);
+      textMesh.name = id;
+      scene.add(textMesh);
+    } else {
+      textMesh.position.set(x, y, z);
+      addToObj.add(textMesh);
+    }
 
     Ed3d.textSel[id] = textMesh;
-    addToObj.add(textMesh);
 
+  },
+
+  /**
+   * Add Shape text
+   */
+
+  'rotateText' : function(id) {
+
+    //y = -Math.abs(y);
+
+    if(Ed3d.textSel[id] != undefined)
+      if(Ed3d.isTopView) {
+        Ed3d.textSel[id].rotation.set(-Math.PI/2,0,0);
+      } else {
+        Ed3d.textSel[id].rotation.x = 0;
+        Ed3d.textSel[id].rotation.y = camera.rotation.y;
+        Ed3d.textSel[id].rotation.z = 0;
+      }
 
   }
-
 }

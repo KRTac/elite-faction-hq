@@ -2,14 +2,28 @@
 var Action = {
 
   'cursorSel' : null,
+  'cursorHover' : null,
+  'cursorScale' : 1,
+
+
+  'cursor' : {
+    'selection' : null,
+    'hover' : null,
+  },
+
   'mouseVector' : null,
   'raycaster' : null,
   'oldSel' : null,
   'objHover' : null,
   'mouseUpDownTimer' : null,
+  'mouseHoverTimer' : null,
   'animPosition' : null,
 
   'prevScale' : null,
+
+  'pointCastRadius' : 2,
+
+  'pointsHighlight' : [],
 
   /**
    * Init Raycaster for events on Systems
@@ -20,12 +34,22 @@ var Action = {
     this.mouseVector = new THREE.Vector3();
     this.raycaster = new THREE.Raycaster();
 
-    container.addEventListener('mousedown', this.onMouseDown, false);
-    container.addEventListener('mouseup', this.onMouseUp, false);
+    var obj = this;
 
-    container.addEventListener( 'mousewheel', this.stopWinScroll, false );
-    container.addEventListener( 'DOMMouseScroll', this.stopWinScroll, false ); // FF
-    //container.addEventListener('mousemove', this.onMouseHover, false);
+    container.addEventListener('mousedown', function(e){obj.onMouseDown(e,obj);}, false);
+    container.addEventListener('mouseup', function(e){obj.onMouseUp(e,obj);}, false);
+    container.addEventListener('mousemove', function(e){obj.onMouseHover(e,obj);}, false);
+
+    container.addEventListener('mousewheel', this.stopWinScroll, false );
+    container.addEventListener('DOMMouseScroll', this.stopWinScroll, false ); // FF
+
+
+    if(Ed3d.showNameNear) {
+      console.log('Launch EXPERIMENTAL func');
+      window.setInterval(function(){
+        obj.highlightAroundCamera(obj);
+      }, 1000);
+    }
   },
 
   /**
@@ -37,6 +61,16 @@ var Action = {
     event.stopPropagation();
   },
 
+  /**
+   * Update point click radius: increase radius with distance
+   */
+
+  'updatePointClickRadius' : function (radius) {
+    radius = Math.round(radius);
+    if(radius<2) radius = 2;
+    if(this.pointCastRadius == radius) return;
+    this.pointCastRadius = radius;
+  },
 
   /**
    * Update particle size on zoom in/out
@@ -63,25 +97,93 @@ var Action = {
   },
 
   /**
+   * Highlight selection around camera target (EXPERIMENTAL)
+   */
+
+  'highlightAroundCamera' : function (obj) {
+
+    if(isFarView == true) return;
+
+    var newSel = [];
+    var limit = 50;
+    var count = 0;
+
+    var raycaster = new THREE.Raycaster(camera.position, camera.position);
+    raycaster.params.Points.threshold = 100;
+
+    var intersects = raycaster.intersectObjects(scene.children);
+    if (intersects.length > 0) {
+
+      //-- Highlight new selection
+
+      for( var i = 0; i < intersects.length; i++ ) {
+
+        if(count>limit) return;
+
+        var intersection = intersects[ i ];
+        if(intersection.object.clickable) {
+
+          var indexPoint = intersection.index;
+          var selPoint = intersection.object.geometry.vertices[indexPoint];
+
+          if(selPoint.visible) {
+            var textAdd = selPoint.name;
+            var textId = 'highlight_'+indexPoint
+            if(obj.pointsHighlight.indexOf(textId) == -1) {
+
+              HUD.addText(textId,  textAdd, 0, 4, 0, 1, selPoint, true);
+
+              obj.pointsHighlight.push(textId);
+            }
+            newSel[textId] = textId;
+          }
+
+          count++;
+
+        }
+      }
+
+    }
+
+    //-- Remove old selection
+
+    $.each(obj.pointsHighlight, function(key, item) {
+      if(newSel[item] == undefined) {
+        var object = Ed3d.textSel[item];
+        if(object != undefined) {
+          scene.remove(object);
+          Ed3d.textSel.splice(item, 1);
+          obj.pointsHighlight.splice(key, 1);
+        }
+      }
+    });
+
+  },
+
+
+  /**
    * Mouse Hover
    */
 
-  'onMouseHover' : function (e) {
+  'onMouseHover' : function (e, obj) {
 
     e.preventDefault();
-    var position = $('#ed3dmap').offset();
 
-    this.mouseVector = new THREE.Vector3(
+    var position = $('#ed3dmap').offset();
+    var scrollPos = $(window).scrollTop();
+    position.top -= scrollPos;
+
+    obj.mouseVector = new THREE.Vector3(
       ( ( e.clientX - position.left ) / renderer.domElement.width ) * 2 - 1,
       - ( ( e.clientY - position.top ) / renderer.domElement.height ) * 2 + 1,
       1);
 
-    this.mouseVector.unproject(camera);
-    this.raycaster = new THREE.Raycaster(camera.position, this.mouseVector.sub(camera.position).normalize());
-    this.raycaster.params.Points.threshold = 5;
+    obj.mouseVector.unproject(camera);
+    obj.raycaster = new THREE.Raycaster(camera.position, obj.mouseVector.sub(camera.position).normalize());
+    obj.raycaster.params.Points.threshold = obj.pointCastRadius;
 
     // create an array containing all objects in the scene with which the ray intersects
-    var intersects = this.raycaster.intersectObjects(scene.children);
+    var intersects = obj.raycaster.intersectObjects(scene.children);
     if (intersects.length > 0) {
 
       for( var i = 0; i < intersects.length; i++ ) {
@@ -89,8 +191,12 @@ var Action = {
         if(intersection.object.clickable) {
 
           var indexPoint = intersection.index;
+          var selPoint = intersection.object.geometry.vertices[indexPoint];
 
-          Action.hoverOnObj(indexPoint);
+          if(selPoint.visible) {
+            Action.hoverOnObj(indexPoint);
+            return;
+          }
         }
       }
 
@@ -107,10 +213,10 @@ var Action = {
     if(this.objHover == indexPoint) return;
     this.outOnObj();
 
-    System.particleGeo.colors[indexPoint] = new THREE.Color('#00ff00');
-    System.particleGeo.colorsNeedUpdate = true;
-
     this.objHover = indexPoint;
+
+    var sel = System.particleGeo.vertices[indexPoint];
+    this.addCursorOnHover(sel);
 
   },
 
@@ -119,12 +225,8 @@ var Action = {
     if(this.objHover === null || System.particleGeo.vertices[this.objHover] == undefined)
       return;
 
-    obj = System.particleGeo.vertices[this.objHover];
-
-    System.particleGeo.colors[this.objHover] = obj.color;
-    System.particleGeo.colorsNeedUpdate = true;
-
     this.objHover = null;
+    this.cursor.hover.visible = false;
 
   },
 
@@ -132,9 +234,9 @@ var Action = {
    * On system click
    */
 
-  'onMouseDown' : function (e) {
+  'onMouseDown' : function (e, obj) {
 
-    this.mouseUpDownTimer = Date.now();
+    obj.mouseUpDownTimer = Date.now();
 
   },
 
@@ -143,34 +245,38 @@ var Action = {
    * On system click
    */
 
-  'onMouseUp' : function (e) {
+  'onMouseUp' : function (e, obj) {
 
     e.preventDefault();
 
     //-- If long clic down, don't do anything
-    var difference = (Date.now()-this.mouseUpDownTimer)/1000;
+
+    var difference = (Date.now()-obj.mouseUpDownTimer)/1000;
     if (difference > 0.2) {
-      this.mouseUpDownTimer = null;
+      obj.mouseUpDownTimer = null;
       return;
     }
-    this.mouseUpDownTimer = null;
+    obj.mouseUpDownTimer = null;
 
     //-- Raycast object
 
     var position = $('#ed3dmap').offset();
+    var scrollPos = $(window).scrollTop();
+    position.top -= scrollPos;
 
-    this.mouseVector = new THREE.Vector3(
+    obj.mouseVector = new THREE.Vector3(
       ( ( e.clientX - position.left ) / renderer.domElement.width ) * 2 - 1,
       - ( ( e.clientY - position.top ) / renderer.domElement.height ) * 2 + 1,
       1);
 
-    this.mouseVector.unproject(camera);
-    this.raycaster = new THREE.Raycaster(camera.position, this.mouseVector.sub(camera.position).normalize());
-    this.raycaster.params.Points.threshold = 2;
+
+    obj.mouseVector.unproject(camera);
+    obj.raycaster = new THREE.Raycaster(camera.position, obj.mouseVector.sub(camera.position).normalize());
+    obj.raycaster.params.Points.threshold = obj.pointCastRadius;
 
 
     // create an array containing all objects in the scene with which the ray intersects
-    var intersects = this.raycaster.intersectObjects(scene.children);
+    var intersects = obj.raycaster.intersectObjects(scene.children);
     if (intersects.length > 0) {
 
       for( var i = 0; i < intersects.length; i++ ) {
@@ -185,7 +291,14 @@ var Action = {
               "<h2>"+selPoint.name+"</h2>"
             );
 
-            var isMove = Action.moveToObj(indexPoint, selPoint);
+            var isMove = obj.moveToObj(indexPoint, selPoint);
+
+            var opt = [ selPoint.name ];
+
+            var optInfos = (selPoint.infos != undefined) ? selPoint.infos : null;
+            var optUrl   = (selPoint.url != undefined) ? selPoint.url : null;
+
+            $(document).trigger( "systemClick", [ selPoint.name, optInfos, optUrl ] );
 
             if(isMove) return;
           }
@@ -196,12 +309,14 @@ var Action = {
 
           $('#debug').html(Math.round(intersection.point.x)+' , '+Math.round(-intersection.point.z));
 
-          Route.addPoint(Math.round(intersection.point.x),0,Math.round(-intersection.point.z));
+          //Route.addPointToRoute(Math.round(intersection.point.x),0,Math.round(-intersection.point.z));
 
         }
       }
 
     }
+
+    obj.disableSelection();
 
   },
 
@@ -230,7 +345,7 @@ var Action = {
 
     //-- Move to
     var selPoint = System.particleGeo.vertices[indexPoint];
-    Action.moveToObj(indexPoint, selPoint);
+    this.moveToObj(indexPoint, selPoint);
 
   },
 
@@ -240,10 +355,10 @@ var Action = {
 
   'disableSelection' : function () {
 
-    if(this.cursorSel == null) return;
+    if(this.cursor.selection == null) return;
 
     this.oldSel = null;
-    this.cursorSel.visible = false;
+    this.cursor.selection.visible = false;
 
     $('#hud #infos').html('');
 
@@ -254,7 +369,7 @@ var Action = {
    */
   'moveInitalPositionNoAnim' : function (timer) {
 
-    var cam = [Ed3d.playerPos[0], Ed3d.playerPos[1]+500, Ed3d.playerPos[2]+500]
+    var cam = [Ed3d.playerPos[0], Ed3d.playerPos[1]+500, -Ed3d.playerPos[2]+500];
     if(Ed3d.cameraPos != null) {
       cam = [Ed3d.cameraPos[0], Ed3d.cameraPos[1], -Ed3d.cameraPos[2]];
     }
@@ -285,7 +400,7 @@ var Action = {
     };
 
     //-- Move to player position if defined, else move to Sol
-    var cam = [Ed3d.playerPos[0], Ed3d.playerPos[1]+500, Ed3d.playerPos[2]+500]
+    var cam = [Ed3d.playerPos[0], Ed3d.playerPos[1]+500, -Ed3d.playerPos[2]+500]
     if(Ed3d.cameraPos != null) {
       cam = [Ed3d.cameraPos[0], Ed3d.cameraPos[1], -Ed3d.cameraPos[2]];
     }
@@ -331,7 +446,9 @@ var Action = {
     controls.enabled = false;
 
     HUD.setInfoPanel(index, obj);
-    HUD.openHudDetails();
+
+    if(obj.infos != undefined) HUD.openHudDetails();
+
 
     this.oldSel = index;
     var goX = obj.x;
@@ -369,67 +486,120 @@ var Action = {
 
     obj.material = Ed3d.material.selected;
 
-    this.addCusorOnSelect(goX, goY, goZ);
+    this.addCursorOnSelect(goX, goY, goZ);
 
     //-- Add text
     var textAdd = obj.name;
     var textAddC = Math.round(goX) + ', ' + Math.round(goY) + ', ' + Math.round(-goZ);
 
-    HUD.addText('system',  textAdd, 8, 20, 0, 6, this.cursorSel);
-    HUD.addText('coords',  textAddC, 8, 15, 0, 3, this.cursorSel);
+    HUD.addText('system',  textAdd, 8, 20, 0, 6, this.cursor.selection);
+    HUD.addText('coords',  textAddC, 8, 15, 0, 3, this.cursor.selection);
 
     controls.enabled = true;
-
-    console.log('moveToObj')
 
     return true;
 
   },
 
   /**
-   * Create a cusros on selected system
+   * Create a cursor on selected system
    *
    * @param {number} x
    * @param {number} y
    * @param {number} z
    */
 
-  'addCusorOnSelect' : function (x, y, z) {
+  'addCursorOnSelect' : function (x, y, z) {
 
-    if(this.cursorSel == null) {
-      this.cursorSel = new THREE.Object3D();
+    if(this.cursor.selection == null) {
+      this.cursor.selection = new THREE.Object3D();
 
       //-- Ring around the system
-      var geometryL = new THREE.TorusGeometry( 12, 0.4, 3, 30 );
+      var geometryL = new THREE.TorusGeometry( 8, 0.4, 3, 20 );
 
       var selection = new THREE.Mesh(geometryL, Ed3d.material.selected);
       //selection.position.set(x, y, z);
       selection.rotation.x = Math.PI / 2;
 
-      this.cursorSel.add(selection);
+      this.cursor.selection.add(selection);
 
       //-- Create a cone on the selection
       var geometryCone = new THREE.CylinderGeometry(0, 5, 16, 4, 1, false);
       var cone = new THREE.Mesh(geometryCone, Ed3d.material.selected);
       cone.position.set(0, 20, 0);
       cone.rotation.x = Math.PI;
-      this.cursorSel.add(cone);
+      this.cursor.selection.add(cone);
 
       //-- Inner cone
       var geometryConeInner = new THREE.CylinderGeometry(0, 3.6, 16, 4, 1, false);
       var coneInner = new THREE.Mesh(geometryConeInner, Ed3d.material.black);
       coneInner.position.set(0, 20.2, 0);
       coneInner.rotation.x = Math.PI;
-      this.cursorSel.add(coneInner);
+      this.cursor.selection.add(coneInner);
 
 
 
-      scene.add(this.cursorSel);
+      scene.add(this.cursor.selection);
     }
 
-    this.cursorSel.visible = true;
-    this.cursorSel.position.set(x, y, z);
-    this.cursorSel.scale.set(1, 1, 1);
+    this.cursor.selection.visible = true;
+    this.cursor.selection.position.set(x, y, z);
+    this.cursor.hover.scale.set(this.cursorScale, this.cursorScale, this.cursorScale);
+
+  },
+
+  /**
+   * Create a cursor on hover
+   *
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   */
+
+  'addCursorOnHover' : function (obj) {
+
+    if(this.cursor.hover == null) {
+      this.cursor.hover = new THREE.Object3D();
+
+      //-- Ring around the system
+      var geometryL = new THREE.TorusGeometry( 6, 0.4, 3, 20 );
+
+      var selection = new THREE.Mesh(geometryL, Ed3d.material.grey);
+      selection.rotation.x = Math.PI / 2;
+
+      this.cursor.hover.add(selection);
+
+      scene.add(this.cursor.hover);
+    }
+
+    this.cursor.hover.position.set(obj.x, obj.y, obj.z);
+    this.cursor.hover.visible = true;
+    this.cursor.hover.scale.set(this.cursorScale, this.cursorScale, this.cursorScale);
+
+    //-- Add text
+
+    var textAdd = obj.name;
+    HUD.addText('system_hover',  textAdd, 0, 4, 0, 3, this.cursor.hover);
+
+  },
+
+  /**
+   * Update cursor size with camera distance
+   *
+   * @param {number} distance
+   */
+
+  'updateCursorSize' : function (scale) {
+
+    var obj = this;
+
+    $.each(this.cursor, function(key, cur) {
+      if(cur != null) {
+        cur.scale.set(scale, scale, scale);
+      }
+    });
+
+    this.cursorScale = scale
 
   },
 
