@@ -9,6 +9,10 @@ export function useCreateSystemsGroupBy(systems) {
     defaultValue: 'None',
     sync: false
   });
+  const [ systemCountRange, setSystemCountRange ] = useStorageState('systems_groupByRange', {
+    defaultValue: [ '', '' ],
+    sync: false
+  });
 
   return useMemo(() => {
     let displayGroups = [];
@@ -136,12 +140,33 @@ export function useCreateSystemsGroupBy(systems) {
       }
     }
 
+    if (groupBy !== 'None' && systemCountRange.length === 2) {
+      let min = Number(systemCountRange[0]);
+      let max = Number(systemCountRange[1]);
+
+      if (!isNaN(min) && min > 0) {
+        displayGroups = displayGroups.filter(({ systems }) => systems.length >= min);
+      } else {
+        min = undefined;
+      }
+
+      if (
+        !isNaN(max) &&
+        max > 0 &&
+        (min === undefined || max >= min)
+      ) {
+        displayGroups = displayGroups.filter(({ systems }) => systems.length <= max);
+      }
+    }
+
     return {
       groupBy,
       setGroupBy,
-      groups: displayGroups
+      groups: displayGroups,
+      systemCountRange,
+      setSystemCountRange
     };
-  }, [ groupBy, systems ]);
+  }, [ groupBy, systemCountRange, systems ]);
 }
 
 function useSystemsGroupBy() {

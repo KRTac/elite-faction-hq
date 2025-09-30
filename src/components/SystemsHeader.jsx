@@ -12,10 +12,12 @@ import Range from './inputs/Range';
 
 function SystemsHeader({ viewType, setViewType }) {
   const { systems: filteredSystems, isFiltering } = useContext(SystemFiltersContext);
-  const { groupBy, setGroupBy } = useSystemsGroupBy(filteredSystems);
+  const {
+    groupBy, setGroupBy, systemCountRange, setSystemCountRange
+  } = useSystemsGroupBy(filteredSystems);
   const { systems } = useContext(FactionDatasetContext);
   const [ visibleFilters, setVisibleFilters ] = useStorageState('systems_visibleFilters', {
-    defaultValue: 'all', // 'all', 'active', ''
+    defaultValue: 'all',
     sync: false
   });
 
@@ -25,8 +27,8 @@ function SystemsHeader({ viewType, setViewType }) {
         {visibleFilters && (
           <div className="mb-3">
             <SystemFilters activeOnly={visibleFilters === 'active'} />
-            <div className="mt-5 w-full max-w-site flex justify-center mx-auto">
-              <div className="w-full max-w-sm mx-auto">
+            <div className="mt-7 w-full max-w-site flex justify-center mx-auto gap-3">
+              <div className="w-full max-w-sm">
                 <FilterBox
                   label="Group by"
                   value={groupBy}
@@ -36,14 +38,19 @@ function SystemsHeader({ viewType, setViewType }) {
                   reset={() => setGroupBy('None')}
                 />
               </div>
-              {/* <div className="w-full max-w-sm mx-auto">
+              <div className="w-full max-w-sm">
                 <Range
                   label="Group system count"
-                  value={[ 2, 5]}
-                  min={0}
-                  max={100}
+                  value={systemCountRange}
+                  isActive={(
+                    groupBy !== 'None' &&
+                    systemCountRange.length === 2 &&
+                    (systemCountRange[0] !== '' || systemCountRange[1] !== '')
+                  )}
+                  set={setSystemCountRange}
+                  disabled={groupBy === 'None'}
                 />
-              </div> */}
+              </div>
             </div>
           </div>
         )}
