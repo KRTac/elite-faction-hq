@@ -178,7 +178,7 @@ function Table({
                       'pb-2 transition duration-400',
                       'dark:bg-neutral-800 sticky top-0',
                       "after:content-[''] after:block after:h-0.5 after:w-full",
-                      'after:absolute after:bottom-0 after:left-0 z-10',
+                      'after:absolute after:bottom-0 after:left-0',
                       columnFilters.length ? 'dark:after:bg-lime-500' : 'dark:after:bg-lime-100'
                     ].join(' ')}
                   >
