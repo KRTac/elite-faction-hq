@@ -544,7 +544,7 @@ export function useSystemsColumnDefinitions(columns, { shortenedPowers }) {
               const isKeySystem = info.getValue();
 
               return (
-                <span className="inline-flex w-full justify-center items-start relative overflow-hidden h-3">
+                <span className="inline-flex w-full justify-center items-start relative overflow-hidden h-3 -z-10">
                   {isKeySystem && <CheckIcon className="size-5 fill-lime-400 -mt-1" />}
                   {!isKeySystem && <XMarkIcon className="size-5 fill-rose-700 -mt-1" />}
                 </span>
