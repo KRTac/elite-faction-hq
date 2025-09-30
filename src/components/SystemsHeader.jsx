@@ -28,7 +28,7 @@ function SystemsHeader({ viewType, setViewType }) {
       (filteredRange[0] !== '' && filteredRange[0] !== 0) ||
       (filteredRange[1] !== '' && filteredRange[1] !== 0)
     )
-  )
+  );
 
   return (
     <div className="p-3">
@@ -53,6 +53,7 @@ function SystemsHeader({ viewType, setViewType }) {
                   value={systemCountRange}
                   isActive={groupRangeActive}
                   set={setSystemCountRange}
+                  reset={() => setSystemCountRange([ '', '' ])}
                   disabled={groupBy === 'None'}
                 />
               </div>

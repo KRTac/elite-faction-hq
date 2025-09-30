@@ -5,10 +5,7 @@ import { filterRange } from '../components/inputs/Range';
 
 export const SystemsGroupByContext = createContext(null);
 
-export function filterGroupSystemsRange(
-  groups,
-  range
-) {
+export function filterGroupSystemsRange(groups, range) {
   const min = Number(range[0]);
   const max = Number(range[1]);
 

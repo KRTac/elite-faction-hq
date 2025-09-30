@@ -1,3 +1,4 @@
+import { useSystemFilter } from '../../hooks/useSystemFilters';
 import Input from './Input';
 
 
@@ -31,9 +32,32 @@ export function filterRange(
   return [ min, max ];
 }
 
+const emptyRange = [ '', '' ];
+
+export function SystemsFilterRange({ label, filter }) {
+  const { value: filterValue, options, set, reset } = useSystemFilter(filter);
+
+  const value = Array.isArray(filterValue) && filterValue.length === 2
+    ? filterValue
+    : emptyRange;
+
+  return (
+    <Range
+      label={label}
+      filter={filter.id}
+      value={value}
+      isActive={value[0] !== '' || value[1] !== ''}
+      set={val => set(val)}
+      reset={reset}
+      min={options[0]}
+      max={options[1]}
+    />
+  );
+}
+
 function Range({
-  label, value, isActive, set, reset, min = 0,
-  disabled
+  label, value, isActive, set, reset,
+  min = 0, max, disabled
 }) {
   return (
     <div
@@ -68,6 +92,7 @@ function Range({
           disabled={!!disabled}
           onChange={ev => set([ ev.target.value, value[1] ])}
           min={min}
+          max={max}
           className="max-w-20 dark:bg-white/5 py-0.5 px-2 rounded-lg text-neutral-300"
         />
         <span className="dark:text-neutral-400 text-lg">-</span>
@@ -78,6 +103,7 @@ function Range({
           disabled={!!disabled}
           onChange={ev => set([ value[0], ev.target.value ])}
           min={min}
+          max={max}
           className="max-w-20 dark:bg-white/5 py-0.5 px-2 rounded-lg text-neutral-300"
         />
       </div>

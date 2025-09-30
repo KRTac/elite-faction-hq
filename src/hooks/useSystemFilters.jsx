@@ -9,6 +9,7 @@ import ToClipboard from '../components/ToClipboard';
 import { FactionDatasetContext } from '../hooks/useFactionDataset';
 import DateTimeText, { dateTimeText } from '../components/data/DateTimeText';
 import PowerName from '../components/data/PowerName';
+import { filterRange } from '../components/inputs/Range';
 
 
 export const SystemFiltersContext = createContext(null);
@@ -285,6 +286,25 @@ export function filterSystems(systems, filters) {
           filtersPassed = true;
           break;
         }
+      }
+    }
+
+    if (
+      (notFiltering || filtersPassed) &&
+      activeFilterKeys.includes('factionInfluence') &&
+      filters.factionInfluence.length === 2
+    ) {
+      notFiltering = false;
+      filtersPassed = true;
+      const [ min, max ] = filterRange(filters.factionInfluence);
+      const influence = system.faction_influence * 100;
+
+      if (min !== '' && influence < min) {
+        filtersPassed = false;
+      }
+
+      if (filtersPassed && max !== '' && influence > max) {
+        filtersPassed = false;
       }
     }
 
@@ -753,7 +773,8 @@ function useSystemFilters({ stats, systems }) {
   const filterOptions = useMemo(() => {
     const filterOptions = {
       keySystems: [ true, false ],
-      influenceClose: [ true, false ]
+      influenceClose: [ true, false ],
+      factionInfluence: [ 0, 100 ]
     };
 
     for (const stat of Object.keys(stats)) {
