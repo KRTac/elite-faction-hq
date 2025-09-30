@@ -1,8 +1,27 @@
 import { createContext, useContext, useMemo } from 'react';
 import useStorageState from 'use-storage-state';
+import { filterRange } from '../components/inputs/Range';
 
 
 export const SystemsGroupByContext = createContext(null);
+
+export function filterGroupSystemsRange(
+  groups,
+  range
+) {
+  const min = Number(range[0]);
+  const max = Number(range[1]);
+
+  if (range[0]) {
+    groups = groups.filter(({ systems }) => systems.length >= min);
+  }
+
+  if (range[1]) {
+    groups = groups.filter(({ systems }) => systems.length <= max);
+  }
+
+  return groups;
+}
 
 export function useCreateSystemsGroupBy(systems) {
   const [ groupBy, setGroupBy ] = useStorageState('systems_groupBy', {
@@ -140,23 +159,8 @@ export function useCreateSystemsGroupBy(systems) {
       }
     }
 
-    if (groupBy !== 'None' && systemCountRange.length === 2) {
-      let min = Number(systemCountRange[0]);
-      let max = Number(systemCountRange[1]);
-
-      if (!isNaN(min) && min > 0) {
-        displayGroups = displayGroups.filter(({ systems }) => systems.length >= min);
-      } else {
-        min = undefined;
-      }
-
-      if (
-        !isNaN(max) &&
-        max > 0 &&
-        (min === undefined || max >= min)
-      ) {
-        displayGroups = displayGroups.filter(({ systems }) => systems.length <= max);
-      }
+    if (groupBy !== 'None') {
+      displayGroups = filterGroupSystemsRange(displayGroups, filterRange(systemCountRange));
     }
 
     return {

@@ -7,7 +7,7 @@ import useSystemsGroupBy from '../hooks/useSystemsGroupBy';
 import Switch from './inputs/Switch';
 import Button from './inputs/Button';
 import FilterBox from './inputs/FilterBox';
-import Range from './inputs/Range';
+import Range, { filterRange } from './inputs/Range';
 
 
 function SystemsHeader({ viewType, setViewType }) {
@@ -19,7 +19,16 @@ function SystemsHeader({ viewType, setViewType }) {
   const [ visibleFilters, setVisibleFilters ] = useStorageState('systems_visibleFilters', {
     defaultValue: 'all',
     sync: false
-  });
+  }); 
+
+  const filteredRange = filterRange(systemCountRange);
+  const groupRangeActive = (
+    groupBy !== 'None' &&
+    (
+      (filteredRange[0] !== '' && filteredRange[0] !== 0) ||
+      (filteredRange[1] !== '' && filteredRange[1] !== 0)
+    )
+  )
 
   return (
     <div className="p-3">
@@ -42,11 +51,7 @@ function SystemsHeader({ viewType, setViewType }) {
                 <Range
                   label="Group system count"
                   value={systemCountRange}
-                  isActive={(
-                    groupBy !== 'None' &&
-                    systemCountRange.length === 2 &&
-                    (systemCountRange[0] !== '' || systemCountRange[1] !== '')
-                  )}
+                  isActive={groupRangeActive}
                   set={setSystemCountRange}
                   disabled={groupBy === 'None'}
                 />
