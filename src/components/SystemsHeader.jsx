@@ -34,7 +34,7 @@ function SystemsHeader({ viewType, setViewType }) {
     <div className="p-3">
       <div className="dark:bg-neutral-900 m-auto p-2 rounded-md">
         {visibleFilters && (
-          <div className="mb-3">
+          <div className="mb-3 mx-auto max-w-site">
             <SystemFilters activeOnly={visibleFilters === 'active'} />
             <div className="mt-7 w-full max-w-site flex justify-center mx-auto gap-3">
               <div className="w-full max-w-sm">

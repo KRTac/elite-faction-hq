@@ -1,84 +1,122 @@
 import { useContext } from 'react';
 import { SystemsFilterBox } from './inputs/FilterBox';
 import { SystemFiltersContext } from '../hooks/useSystemFilters';
+import Tabs, { TabPanel } from './data/Tabs';
 
 
 const filterList = [
   {
-    filter: 'controllingFactions',
+    id: 'controllingFactions',
     label: 'Controlling faction'
   },
   {
-    filter: 'controllingPowers',
+    id: 'controllingPowers',
     label: 'Controlling power'
   },
   {
-    filter: 'powerStates',
+    id: 'powerStates',
     label: 'Power states'
   },
   {
-    filter: 'powers',
+    id: 'powers',
     label: 'Power present'
   },
   {
-    filter: 'governments',
+    id: 'governments',
     label: 'Governments'
   },
   {
-    filter: 'allegiances',
+    id: 'allegiances',
     label: 'Allegiances'
   },
   {
-    filter: 'primaryEconomies',
+    id: 'primaryEconomies',
     label: 'Primary economies'
   },
   {
-    filter: 'secondaryEconomies',
+    id: 'secondaryEconomies',
     label: 'Secondary economies'
   },
   {
-    filter: 'securityStates',
+    id: 'securityStates',
     label: 'Security states'
   },
   {
-    filter: 'keySystems',
+    id: 'keySystems',
     label: 'Key systems'
   },
   {
-    filter: 'influenceClose',
+    id: 'influenceClose',
     label: 'Influence close'
   },
   {
-    filter: 'activeStates',
+    id: 'activeStates',
     label: 'Active states'
   },
   {
-    filter: 'pendingStates',
+    id: 'pendingStates',
     label: 'Pending states'
   },
   {
-    filter: 'recoveringStates',
+    id: 'recoveringStates',
     label: 'Recovering states'
   }
 ];
 
-function SystemFilters({ activeOnly }) {
+const tabData = [
+  {
+    title: 'General',
+    filters: [
+      'governments', 'allegiances', 'primaryEconomies', 'secondaryEconomies'
+    ]
+  },
+  {
+    title: 'Factions',
+    filters: [
+      'controllingFactions', 'keySystems', 'influenceClose'
+    ]
+  },
+  {
+    title: 'Powers',
+    filters: [
+      'controllingPowers', 'powers', 'powerStates'
+    ]
+  },
+  {
+    title: 'System states',
+    filters: [
+      'activeStates', 'pendingStates', 'recoveringStates', 'securityStates'
+    ]
+  }
+];
+
+function SystemFilters() {
   const activeFilters = Object.keys(useContext(SystemFiltersContext).values);
 
   return (
-    <div className="flex flex-wrap justify-center gap-3">
-      {filterList.map(def => {
-        if (activeOnly && !activeFilters.includes(def.filter)) {
-          return null;
-        }
-
+    <Tabs data={tabData} activeTabs={activeFilters}>
+      {tabData.map(({ title, filters }) => {
         return (
-          <div key={def.filter} className="w-full max-w-sm">
-            <SystemsFilterBox label={def.label} filter={def.filter} />
-          </div>
+          <TabPanel key={title}>
+            <div className="grid gap-2 grid-cols-[repeat(auto-fill,_minmax(350px,_1fr))] justify-center content-center">
+            {filters.map(filterId => {
+              const filter = filterList.find(({ id }) => id === filterId)
+
+              if (!filter) {
+                return null;
+              }
+
+              return (
+                <div className="w-full">
+                  <SystemsFilterBox key={filter.id} label={filter.label} filter={filter.id} />
+                </div>
+              );
+            })}
+            </div>
+          </TabPanel>
         );
       })}
-    </div>
+    </Tabs>
   );
 }
 
