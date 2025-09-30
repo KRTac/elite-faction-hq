@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { SystemsFilterBox } from './inputs/FilterBox';
 import { SystemFiltersContext } from '../hooks/useSystemFilters';
 import Tabs, { TabPanel } from './data/Tabs';
+import { SystemsFilterRange } from './inputs/Range';
 
 
 const filterList = [
@@ -60,6 +61,11 @@ const filterList = [
   {
     id: 'recoveringStates',
     label: 'Recovering states'
+  },
+  {
+    id: 'factionInfluence',
+    label: 'Faction influence',
+    range: true
   }
 ];
 
@@ -67,7 +73,7 @@ const tabData = [
   {
     title: 'General',
     filters: [
-      'governments', 'allegiances', 'primaryEconomies', 'secondaryEconomies'
+      'factionInfluence', 'governments', 'allegiances', 'primaryEconomies', 'secondaryEconomies'
     ]
   },
   {
@@ -99,19 +105,33 @@ function SystemFilters() {
         return (
           <TabPanel key={title}>
             <div className="grid gap-2 grid-cols-[repeat(auto-fill,_minmax(350px,_1fr))] justify-center content-center">
-            {filters.map(filterId => {
-              const filter = filterList.find(({ id }) => id === filterId)
+              {filters.map(filterId => {
+                const filter = filterList.find(({ id }) => id === filterId)
 
-              if (!filter) {
-                return null;
-              }
+                if (!filter) {
+                  return null;
+                }
 
-              return (
-                <div className="w-full">
-                  <SystemsFilterBox key={filter.id} label={filter.label} filter={filter.id} />
-                </div>
-              );
-            })}
+                if (filter.range) {
+                  return (
+                    <div key={filter.id} className="w-full">
+                      <SystemsFilterRange
+                        label={filter.label}
+                        filter={filter.id}
+                      />
+                    </div>
+                  );
+                }
+
+                return (
+                  <div key={filter.id} className="w-full">
+                    <SystemsFilterBox
+                      label={filter.label}
+                      filter={filter.id}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </TabPanel>
         );
