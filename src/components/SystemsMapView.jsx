@@ -109,12 +109,25 @@ function SystemsMapView({ groupBy, groups, systems, debug = false }) {
           }
         }
 
-        mapData.systems.push({
-          cat: systemGIds,
-          coords: system.coords,
-          name: system.name
-        });
+        if (systemGIds.length) {
+          mapData.systems.push({
+            cat: systemGIds,
+            coords: system.coords,
+            name: system.name
+          });
+        }
       }
+
+      const filteredGroupCategories = {};
+      for (const catId of Object.keys(mapData.categories[_groupBy])) {
+        const catSystem = mapData.systems.find(sys => sys.cat.includes(Number(catId)));
+
+        if (catSystem) {
+          filteredGroupCategories[catId] = mapData.categories[_groupBy][catId];
+        }
+      }
+
+      mapData.categories[_groupBy] = filteredGroupCategories;
     }
 
     iframeRef.current.contentWindow.postMessage({
