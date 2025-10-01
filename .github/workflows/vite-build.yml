@@ -11,6 +11,7 @@ permissions:
   id-token: write
 
 env:
+  VITE_PROTOCOL_HOSTNAME: ${{ vars.VITE_PROTOCOL_HOSTNAME }}
   VITE_BASE_PATH: ${{ vars.VITE_BASE_PATH }}
   VITE_GA_TAG: ${{ vars.VITE_GA_TAG }}
   VITE_GA_DOMAIN: ${{ vars.VITE_GA_DOMAIN }}
