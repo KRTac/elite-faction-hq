@@ -40,6 +40,17 @@
     let mapInitialized = false;
 
     window.addEventListener('message', ev => {
+      const siteUrl = '%VITE_PROTOCOL_HOSTNAME%';
+      console.log('ev.origin', ev.origin, siteUrl);
+
+      if (ev.data.type === 'debug') {
+        console.log('Map debug');
+      }
+
+      if (siteUrl !== '/' && ev.origin !== siteUrl) {
+        return;
+      }
+
       if (ev.data.type === 'update') {
         document.getElementById('json_data').innerText = JSON.stringify(ev.data.mapData);
 
@@ -64,12 +75,6 @@
         });
 
         mapInitialized = true;
-
-        return;
-      }
-
-      if (ev.data.type === 'debug') {
-        console.log('Map debug');
       }
     });
   </script>
