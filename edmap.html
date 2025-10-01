@@ -41,10 +41,11 @@
 
     window.addEventListener('message', ev => {
       const siteUrl = '%VITE_PROTOCOL_HOSTNAME%';
-      console.log('ev.origin', ev.origin, siteUrl);
 
       if (ev.data.type === 'debug') {
         console.log('Map debug');
+        console.log('VITE_PROTOCOL_HOSTNAME', siteUrl);
+        console.log('event.origin', ev.origin);
       }
 
       if (siteUrl !== '/' && ev.origin !== siteUrl) {
