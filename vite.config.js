@@ -7,7 +7,8 @@ import { VitePluginRadar } from 'vite-plugin-radar'
 import updateFactionsMeta from './plugins/update_factions_meta';
 
 
-process.env.VITE_BASE_PATH = process.env.VITE_BASE_PATH || '/';
+process.env.VITE_BASE_PATH = process.env.VITE_BASE_PATH ?? '/';
+process.env.VITE_PROTOCOL_HOSTNAME = process.env.VITE_PROTOCOL_HOSTNAME ?? '/';
 
 // https://vite.dev/config/
 export default defineConfig(() => {

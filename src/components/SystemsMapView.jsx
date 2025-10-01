@@ -3,9 +3,7 @@ import Button from './inputs/Button';
 import { powers } from './data/PowerName';
 
 
-const postTargetOrigin = import.meta.env.VITE_PROTOCOL_HOSTNAME
-  ? import.meta.env.VITE_PROTOCOL_HOSTNAME
-  : '/';
+const postTargetOrigin = import.meta.env.VITE_PROTOCOL_HOSTNAME;
 
 function SystemsMapView({ groupBy, groups, systems, debug = false }) {
   const iframeRef = useRef(null);
