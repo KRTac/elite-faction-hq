@@ -6,7 +6,7 @@ import { CheckIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid';
 import numeral from 'numeral';
 import ToClipboard from '../components/ToClipboard';
-import { FactionDatasetContext } from '../hooks/useFactionDataset';
+import useFactionDataset from '../hooks/useFactionDataset';
 import DateTimeText, { dateTimeText } from '../components/data/DateTimeText';
 import PowerName from '../components/data/PowerName';
 import { filterRange } from '../components/inputs/Range';
@@ -389,7 +389,7 @@ function NumberOrNull({
 
 export function useSystemsColumnDefinitions(columns, { shortenedPowers }) {
   const navigate = useNavigate();
-  const factionData = useContext(FactionDatasetContext);
+  const factionData = useFactionDataset();
 
   return useMemo(() => {
     const definitions = [];

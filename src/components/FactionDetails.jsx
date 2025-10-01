@@ -1,6 +1,5 @@
-import { useContext } from 'react';
 import numeral from 'numeral';
-import { FactionDatasetContext } from '../hooks/useFactionDataset';
+import useFactionDataset from '../hooks/useFactionDataset';
 import DateTimeText from './data/DateTimeText';
 
 
@@ -25,7 +24,7 @@ function FactionDetails() {
   const {
     stats, originSystem, inaraFactionId, timestamp,
     importDuration
-  } = useContext(FactionDatasetContext);
+  } = useFactionDataset();
 
   return (
     <div

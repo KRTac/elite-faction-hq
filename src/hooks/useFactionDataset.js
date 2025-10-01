@@ -135,7 +135,7 @@ export function useSystemByName(systemName) {
   return system;
 }
 
-function useFactionDataset(dataset) {
+export function useCreateFactionDataset(dataset) {
   const {
     timestamp, import_duration, faction,
     inara_faction_id, origin_system, systems
@@ -158,6 +158,10 @@ function useFactionDataset(dataset) {
     timestamp, import_duration, faction,
     inara_faction_id, origin_system, stats
   ]);
+}
+
+function useFactionDataset() {
+  return useContext(FactionDatasetContext);
 }
 
 export default useFactionDataset;

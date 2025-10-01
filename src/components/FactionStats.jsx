@@ -1,9 +1,9 @@
 import { useContext } from 'react';
-import { FactionDatasetContext } from '../hooks/useFactionDataset';
+import useFactionDataset from '../hooks/useFactionDataset';
 
 
 function StatsItem({ stat, ...rest }) {
-  const { systems } = useContext(FactionDatasetContext);
+  const { systems } = useFactionDataset();
 
   return (
     <li className="relative px-2 py-0.5 my-1 hover:bg-neutral-800 rounded-md" { ...rest }>
@@ -31,7 +31,7 @@ function StatsBox({ label, items, ...rest }) {
 }
 
 function FactionStats() {
-  const { stats } = useContext(FactionDatasetContext);
+  const { stats } = useFactionDataset();
 
   return (
     <div
