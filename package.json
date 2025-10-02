@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build-gh": "vite build --base=/elite-faction-hq/",
     "lint": "eslint .",
     "preview": "vite preview",
     "import-factions": "./scripts/faction-data.py --config-json hq-config.json --indent 0",

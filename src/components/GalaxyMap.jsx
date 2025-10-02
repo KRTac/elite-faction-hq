@@ -1,0 +1,59 @@
+import { useCallback, useEffect, useRef } from 'react';
+import Button from './inputs/Button';
+
+
+const postTargetOrigin = import.meta.env.VITE_PROTOCOL_HOSTNAME;
+
+function GalaxyMap({ data, debug = false }) {
+  const iframeRef = useRef(null);
+  const iframeLoaded = useRef(false);
+
+  const sendDebug = useCallback(() => {
+    iframeRef.current.contentWindow.postMessage(
+      { type: 'debug' },
+      postTargetOrigin
+    );
+  }, []);
+
+  const sendData = useCallback(mapData => {
+    iframeRef.current.contentWindow.postMessage(
+      { type: 'update', mapData },
+      postTargetOrigin
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!iframeLoaded.current) {
+      return;
+    }
+
+    sendData(data);
+  }, [ data ]);
+
+  const handleLoad = iframeLoaded.current
+    ? undefined
+    : () => {
+      sendData(data);
+
+      iframeLoaded.current = true;
+    };
+
+  return (
+    <>
+      <iframe
+        ref={iframeRef}
+        src={`${import.meta.env.BASE_URL}edmap.html`}
+        title="Galaxy map"
+        className="border-0 absolute top-0 left-0 w-full h-full"
+        onLoad={handleLoad}
+      />
+      {import.meta.env.DEV && debug && (
+        <div className="border-0 absolute bottom-0 right-0 mb-3 mr-3">
+          <Button onClick={sendDebug}>Debug</Button>
+        </div>
+      )}
+    </>
+  );
+}
+
+export default GalaxyMap;
