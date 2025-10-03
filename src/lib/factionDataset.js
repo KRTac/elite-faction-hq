@@ -1,5 +1,6 @@
 import { subDays, parseISO, isValid } from 'date-fns';
 import { trimSlashes } from './string';
+import { systemsStats } from './starSystems';
 
 
 export function datasetUrl(factionDirectory, datasetName) {
@@ -12,7 +13,7 @@ export function datasetUrl(factionDirectory, datasetName) {
   return `${dataRoot}/${factionDirectory}/${datasetName}.json`;
 }
 
-export function timeQueryToDate(query) {
+export function timeQueryToDate(query, refDate) {
   let date = undefined;
   const num = Number(query);
 
@@ -28,10 +29,39 @@ export function timeQueryToDate(query) {
       date = d;
     }
   } else if (num >= 0) {
-    date = subDays(new Date(), num);
+    date = subDays(refDate ?? new Date(), num);
   }
 
   return date;
+}
+
+export function dateToName(date) {
+  if (typeof date === 'string') {
+    date = new Date(date);
+  }
+
+  const parts = [
+    (date.getUTCMonth() + 1) + '',
+    date.getUTCDate() + '',
+    date.getUTCHours() + '',
+    date.getUTCMinutes() + '',
+    date.getUTCSeconds() + ''
+  ];
+
+  for (const idx in parts) {
+    if (parts[idx].length < 2) {
+      parts[idx] = '0' + parts[idx];
+    }
+  }
+
+  return [
+    `${date.getUTCFullYear()}-`,
+    `${parts[0]}-`,
+    `${parts[1]}T`,
+    `${parts[2]}-`,
+    `${parts[3]}-`,
+    `${parts[4]}Z`,
+  ].join('');
 }
 
 export function nameToDate(name) {
@@ -88,6 +118,31 @@ export function urlByTimeQuery(query, factions, fallbackFactionDir) {
   return datasetUrl(faction.directory, datasetName);
 }
 
+export function previousDataset(current, datasets, daysOld = 0) {
+  const currentIdx = datasets.indexOf(current);
+
+  if (currentIdx === -1) {
+    throw new Error('Can\'t lookup previous faction for non-existing reference.');
+  }
+
+  if (currentIdx === datasets.length - 1) {
+    return null;
+  }
+
+  let targetIdx = currentIdx + 1;
+
+  if (daysOld > 0) {
+    const compareDate = timeQueryToDate(daysOld, nameToDate(current));
+    const compareName = closestDataset(compareDate, datasets);
+
+    if (current !== compareName) {
+      targetIdx = datasets.indexOf(compareName);
+    }
+  }
+
+  return datasets[targetIdx];
+}
+
 export async function fetchDataset(url) {
   let resp;
 
@@ -102,4 +157,23 @@ export async function fetchDataset(url) {
   } catch (ex) {
     throw new Error('Requested faction data not in the correct format.');
   }
+}
+
+export function createFactionDataset(dataset) {
+  const {
+    timestamp, import_duration, faction,
+    inara_faction_id, origin_system, systems
+  } = dataset;
+
+  const stats = systemsStats(systems ?? []);
+
+  return {
+    isSet: !!timestamp,
+    timestamp, faction,
+    importDuration: import_duration,
+    inaraFactionId: inara_faction_id,
+    originSystem: origin_system,
+    systems: stats.proccessedSystems,
+    stats
+  };
 }

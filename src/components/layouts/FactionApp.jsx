@@ -5,33 +5,38 @@ import { FactionContext } from '../../hooks/useFaction';
 import { useCreateFactionDataset, FactionDatasetContext } from '../../hooks/useFactionDataset';
 import useSystemFilters, { SystemFiltersContext } from '../../hooks/useSystemFilters';
 import { SystemsGroupByContext, useCreateSystemsGroupBy } from '../../hooks/useSystemsGroupBy';
+import { DatasetComparisonContext, useCreateDatasetComparison } from '../../hooks/useDatasetComparison';
 
 
 function FactionAppRoute() {
-  const { faction, dataset } = useLoaderData({ from: '/$factionDir' });
+  const { faction, dataset, compareTo } = useLoaderData({ from: '/$factionDir' });
 
-  return <FactionApp faction={faction} dataset={dataset} />;
+  return <FactionApp faction={faction} dataset={dataset} compareTo={compareTo} />;
 }
 
-export function FactionApp({ faction, dataset }) {
+export function FactionApp({ faction, dataset, compareTo }) {
   const factionDataset = useCreateFactionDataset(dataset);
+  const compareDataset = useCreateFactionDataset(compareTo);
+  const datasetComparison = useCreateDatasetComparison(factionDataset, compareDataset);
   const systemFilters = useSystemFilters(factionDataset);
   const groupBy = useCreateSystemsGroupBy(systemFilters.systems);
 
   return (
     <FactionContext value={faction}>
       <FactionDatasetContext value={factionDataset}>
-        <SystemFiltersContext value={systemFilters}>
-          <SystemsGroupByContext value={groupBy}>
-            <div className="flex flex-col h-screen">
-              <Header
-                factionName={faction.name}
-              />
-              <Outlet />
-            </div>
-            <SystemModal />
-          </SystemsGroupByContext>
-        </SystemFiltersContext>
+        <DatasetComparisonContext value={datasetComparison}>
+          <SystemFiltersContext value={systemFilters}>
+            <SystemsGroupByContext value={groupBy}>
+              <div className="flex flex-col h-screen">
+                <Header
+                  factionName={faction.name}
+                />
+                <Outlet />
+              </div>
+              <SystemModal />
+            </SystemsGroupByContext>
+          </SystemFiltersContext>
+        </DatasetComparisonContext>
       </FactionDatasetContext>
     </FactionContext>
   );

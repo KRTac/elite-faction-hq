@@ -2,7 +2,7 @@ import { lazy } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
 
 import StandardPage from '../../components/layouts/Standard';
-import { datasetUrl, fetchDataset } from '../../lib/factionDataset';
+import { datasetUrl, fetchDataset, previousDataset } from '../../lib/factionDataset';
 
 
 const FactionAppRoute = lazy(() => import('../../components/layouts/FactionApp'));
@@ -54,7 +54,20 @@ export const Route = createFileRoute('/$factionDir')({
     const jsonUrl = datasetUrl(factionDir, timestamp);
     const dataset = await fetchDataset(jsonUrl);
 
-    return { faction, dataset };
+    let compareDaysOld = 1;
+
+    if (!import.meta.env.SSR) {
+      compareDaysOld = localStorage.getItem('compareDataset_daysOld') ?? compareDaysOld;
+    }
+
+    let compareTo = null;
+
+    if (compareDaysOld > 0) {
+      const compareName = previousDataset(timestamp, faction.datasets, compareDaysOld);
+      compareTo = await fetchDataset(datasetUrl(factionDir, compareName));
+    }
+
+    return { faction, dataset, compareTo };
   },
   component: FactionAppRoute,
   pendingComponent: PendingComponent,
