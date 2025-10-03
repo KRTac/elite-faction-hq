@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
 
 import StandardPage from '../../components/layouts/Standard';
+import { datasetUrl, fetchDataset, previousDataset } from '../../lib/factionDataset';
 
 
 const FactionAppRoute = lazy(() => import('../../components/layouts/FactionApp'));
@@ -33,10 +34,6 @@ function PendingComponent() {
   );
 }
 
-function trimSlashes(s) {
-  return s.replace(/^\/+|\/+$/g, '');
-}
-
 export const Route = createFileRoute('/$factionDir')({
   loaderDeps: ({ search }) => ({ timestamp: search.dataset }),
   loader: async ({
@@ -45,7 +42,6 @@ export const Route = createFileRoute('/$factionDir')({
     context: { factionsMeta: { factions } }
   }) => {
     const faction = factions.find(f => f.directory === factionDir);
-    let dataset;
 
     if (!faction) {
       throw new Error('Faction not found');
@@ -55,30 +51,23 @@ export const Route = createFileRoute('/$factionDir')({
       timestamp = faction.datasets[0];
     }
 
-    let dataRoot = import.meta.env.VITE_FACTION_DATA_CLIENT_ROOT;
+    const jsonUrl = datasetUrl(factionDir, timestamp);
+    const dataset = await fetchDataset(jsonUrl);
 
-    if (!dataRoot.startsWith('http://') && !dataRoot.startsWith('https://')) {
-      dataRoot = `${import.meta.env.BASE_URL}${trimSlashes(dataRoot)}`;
+    let compareDaysOld = 1;
+
+    if (!import.meta.env.SSR) {
+      compareDaysOld = localStorage.getItem('compareDataset_daysOld') ?? compareDaysOld;
     }
 
-    const jsonUrl = `${dataRoot}/${factionDir}/${timestamp}.json`;
-    try {
-      dataset = await fetch(jsonUrl).then(res => {
-        if (import.meta.env.DEV) {
-          return new Promise(resolve => {
-            setTimeout(() => {
-              resolve(res.json());
-            }, 500);
-          });
-        }
+    let compareTo = null;
 
-        return res.json();
-      });
-    } catch (ex) {
-      throw new Error('Requested faction data doesn\'t exist');
+    if (compareDaysOld > 0) {
+      const compareName = previousDataset(timestamp, faction.datasets, compareDaysOld);
+      compareTo = await fetchDataset(datasetUrl(factionDir, compareName));
     }
 
-    return { faction, dataset };
+    return { faction, dataset, compareTo };
   },
   component: FactionAppRoute,
   pendingComponent: PendingComponent,

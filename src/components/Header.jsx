@@ -4,6 +4,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
 import NavLink from './NavLink';
 import useFaction from '../hooks/useFaction';
 import DateTimeText from './data/DateTimeText';
+import CompareSelector from './CompareSelector';
 
 
 function HeaderButton({ to, children, matchExact }) {
@@ -109,6 +110,7 @@ function Header({ factionName }) {
           <HeaderButton to="/$factionDir/details">Details</HeaderButton>
         </div>
         <DatasetSelector />
+        <CompareSelector />
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import useStorageState from 'use-storage-state';
 import SystemFilters from './SystemFilters';
 import { SystemFiltersContext, availableSystemGroups } from '../hooks/useSystemFilters';
-import { FactionDatasetContext } from '../hooks/useFactionDataset';
+import useFactionDataset from '../hooks/useFactionDataset';
 import useSystemsGroupBy from '../hooks/useSystemsGroupBy';
 import Switch from './inputs/Switch';
 import Button from './inputs/Button';
@@ -15,7 +15,7 @@ function SystemsHeader({ viewType, setViewType }) {
   const {
     groupBy, setGroupBy, systemCountRange, setSystemCountRange
   } = useSystemsGroupBy(filteredSystems);
-  const { systems } = useContext(FactionDatasetContext);
+  const { systems } = useFactionDataset();
   const [ visibleFilters, setVisibleFilters ] = useStorageState('systems_visibleFilters', {
     defaultValue: 'all',
     sync: false
