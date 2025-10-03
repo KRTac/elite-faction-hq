@@ -1,11 +1,12 @@
-import { useCombineMapData, useCreateFactionDataset } from "../../hooks/useFactionDataset";
+import { useCreateFactionDataset } from "../../hooks/useFactionDataset";
+import { combineMapData } from "../../lib/starSystems";
 import GalaxyMap from "../GalaxyMap";
 
 
 function CompareDatasets({ datasetA, datasetB }) {
   const factionA = useCreateFactionDataset(datasetA);
   const factionB = useCreateFactionDataset(datasetB);
-  const mapData = useCombineMapData([ factionA, factionB ]);
+  const mapData = combineMapData([ factionA, factionB ]);
   const sameFaction = factionA.faction === factionB.faction;
 
   if (sameFaction && new Date(factionA.timestamp) - new Date(factionB.timestamp <= 0)) {

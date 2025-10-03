@@ -8,10 +8,17 @@ export function useCreateDatasetComparison(refDataset, initialDataset = null) {
   const [ dataset, setDataset ] = useState(initialDataset);
 
   return useMemo(() => {
+    let comparison = null;
+
+    if (dataset.isSet) {
+      comparison = compareDatasets(refDataset, dataset);
+    }
+
     return {
       isActive,
       isAvailable: dataset.isSet,
       dataset,
+      comparison,
       setIsActive,
       setDataset
     };

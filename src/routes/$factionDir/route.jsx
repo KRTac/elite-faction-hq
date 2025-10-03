@@ -51,8 +51,7 @@ export const Route = createFileRoute('/$factionDir')({
       timestamp = faction.datasets[0];
     }
 
-    const jsonUrl = datasetUrl(factionDir, timestamp);
-    const dataset = await fetchDataset(jsonUrl);
+    const data = await fetchDataset(datasetUrl(factionDir, timestamp));
 
     let compareDaysOld = 1;
 
@@ -60,14 +59,14 @@ export const Route = createFileRoute('/$factionDir')({
       compareDaysOld = localStorage.getItem('compareDataset_daysOld') ?? compareDaysOld;
     }
 
-    let compareTo = null;
+    let compareData = null;
 
     if (compareDaysOld > 0) {
       const compareName = previousDataset(timestamp, faction.datasets, compareDaysOld);
-      compareTo = await fetchDataset(datasetUrl(factionDir, compareName));
+      compareData = await fetchDataset(datasetUrl(factionDir, compareName));
     }
 
-    return { faction, dataset, compareTo };
+    return { faction, data, compareData };
   },
   component: FactionAppRoute,
   pendingComponent: PendingComponent,

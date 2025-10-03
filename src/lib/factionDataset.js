@@ -177,3 +177,9 @@ export function createFactionDataset(dataset) {
     stats
   };
 }
+
+export function compareDatasets(primary, secondary) {
+  return {
+    
+  };
+}
