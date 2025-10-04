@@ -177,3 +177,60 @@ export function createFactionDataset(dataset) {
     stats
   };
 }
+
+export function compareDatasets(primary, secondary) {
+  let newSystems = primary.systems.map(s => s.name);
+  let removedSystems = secondary.systems.map(s => s.name);
+
+  const primSysNames = [ ...newSystems ];
+
+  for (const name of primSysNames) {
+    if (removedSystems.includes(name)) {
+      newSystems = newSystems.filter(n => n !== name);
+      removedSystems = removedSystems.filter(n => n !== name);
+    }
+  }
+
+  const infChangeThreshold = 0.02;
+  const influenceChanged = [];
+  const controllingFactionChanged = [];
+  const colonisationFinished = [];
+  const changedSystems = [ ...newSystems, ...removedSystems ];
+
+  for (const system of primary.systems) {
+    if (newSystems.includes(system.name) || removedSystems.includes(system.name)) {
+      continue;
+    }
+
+    const oldSystem = secondary.systems.find(s => s.name === system.name);
+    const inluenceChange = system.faction_influence - oldSystem.faction_influence;
+    let hasChanged = false;
+
+    if (Math.abs(inluenceChange) >= infChangeThreshold) {
+      influenceChanged.push(system.name);
+      hasChanged = true;
+    }
+
+    if (system.is_controlling_faction !== oldSystem.is_controlling_faction) {
+      controllingFactionChanged.push(system.name);
+      hasChanged = true;
+    }
+
+    if (system.is_being_colonised !== oldSystem.is_being_colonised && !system.is_being_colonised) {
+      colonisationFinished.push(system.name);
+      hasChanged = true;
+    }
+
+    if (hasChanged) {
+      changedSystems.push(system.name);
+    }
+  }
+
+  return {
+    changedSystems,
+    influenceChanged,
+    controllingFactionChanged,
+    colonisationFinished,
+    newSystems, removedSystems
+  };
+}

@@ -6,6 +6,7 @@ import SystemsTablesView from '../../components/SystemsTablesView';
 import SystemsHeader from '../../components/SystemsHeader';
 import { SystemFiltersContext } from '../../hooks/useSystemFilters';
 import useSystemsGroupBy from '../../hooks/useSystemsGroupBy';
+import useDatasetComparison from '../../hooks/useDatasetComparison';
 
 
 function Systems() {
@@ -15,6 +16,7 @@ function Systems() {
     defaultValue: 'map',
     sync: false
   });
+  const { isActive: isComparing, displayGroups: compareGroups } = useDatasetComparison();
 
   return (
     <>
@@ -30,7 +32,8 @@ function Systems() {
         )}
         {viewType !== 'map' && (
           <SystemsTablesView
-            groups={groups}
+            groups={isComparing ? compareGroups : groups}
+            emptyText={isComparing ? 'No changes to report' : undefined}
           />
         )}
       </div>
