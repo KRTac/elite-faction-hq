@@ -20,7 +20,7 @@ function DebouncedInput({
     }, debounce);
 
     return () => clearTimeout(timeout);
-  }, [ value, debounce ]);
+  }, [ value, debounce, onChange ]);
 
   return <NativeInput {...props} value={value} onChange={e => setValue(e.target.value)} />;
 }

@@ -29,7 +29,7 @@ function Filter({ column }) {
       : Array.from(column.getFacetedUniqueValues().keys())
           .sort()
           .slice(0, 5000);
-  }, [ column.getFacetedUniqueValues(), filterVariant ]);
+  }, [ column, filterVariant ]);
 
   if (filterVariant === 'range') {
     return (

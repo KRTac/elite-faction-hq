@@ -6,6 +6,8 @@ import ToClipboard from '../components/ToClipboard';
 import DateTimeText, { dateTimeText } from '../components/data/DateTimeText';
 import PowerName from '../components/data/PowerName';
 import { filterRange } from '../components/inputs/Range';
+import ValueOrNull from '../components/data/ValueOrNull';
+import NumberOrNull from '../components/data/NumberOrNull';
 
 
 function statByOccurrence(set, values, systemName) {
@@ -269,45 +271,6 @@ export function comparisonDisplayGroups(comparison, primarySystems, secondarySys
   }
 
   return groups;
-}
-
-function ValueOrNull({
-  value, nullValue = null, nullText = '-',
-  centerText = false, displayValue, className = ''
-}) {
-  const additionalClasses = centerText
-    ? ' inline-block w-full text-center'
-    : '';
-
-  if (value === nullValue) {
-    return (
-      <span className={`italic dark:text-neutral-500${additionalClasses}`}>
-        {nullText}
-      </span>
-    );
-  }
-  
-  return (
-    <span className={className + additionalClasses}>
-      {displayValue === undefined ? value : displayValue}
-    </span>
-  );
-}
-
-function NumberOrNull({
-  value, nullValue = -1, centerText = true,
-  format = '0.00', prefix = null, suffix = null,
-  ...rest
-}) {
-  return <ValueOrNull
-    value={value}
-    nullValue={nullValue}
-    centerText={centerText}
-    displayValue={(
-      <>{prefix}{numeral(value).format(format)}{suffix}</>
-    )}
-    {...rest}
-  />;
 }
 
 export function tableColumnDefinition(

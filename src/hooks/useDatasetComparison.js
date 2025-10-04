@@ -31,6 +31,7 @@ export function useCreateDatasetComparison(refDataset, initialDataset = null) {
       setIsActive,
       setDataset
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ isActive, refDataset, dataset ]);
 }
 

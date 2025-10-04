@@ -107,7 +107,10 @@ function useSystemFilters({ stats, systems }) {
       availableSystemGroups,
       systems: filterSystems(systems, activeFilters)
     };
-  }, [ activeFilters, filterOptions, setFilter, systems ]);
+  }, [
+    activeFilters, filterOptions, setFilter, systems,
+    resetFilters
+  ]);
 }
 
 export default useSystemFilters;

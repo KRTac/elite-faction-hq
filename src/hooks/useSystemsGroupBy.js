@@ -167,6 +167,8 @@ export function useCreateSystemsGroupBy(systems) {
       systemCountRange,
       setSystemCountRange
     };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ groupBy, systemCountRange, systems ]);
 }
 

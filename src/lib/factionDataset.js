@@ -148,13 +148,13 @@ export async function fetchDataset(url) {
 
   try {
     resp = await fetch(url);
-  } catch (ex) {
+  } catch {
     throw new Error('Requested faction data doesn\'t exist.');
   }
 
   try {
     return await resp.json();
-  } catch (ex) {
+  } catch {
     throw new Error('Requested faction data not in the correct format.');
   }
 }

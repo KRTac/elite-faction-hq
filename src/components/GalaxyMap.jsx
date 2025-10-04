@@ -28,6 +28,7 @@ function GalaxyMap({ data, debug = false }) {
     }
 
     sendData(data);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ data ]);
 
   const handleLoad = iframeLoaded.current

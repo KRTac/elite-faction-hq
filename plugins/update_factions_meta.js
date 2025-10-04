@@ -110,6 +110,7 @@ export default function updateFactionsMeta() {
     name: 'update_factions_meta',
     buildStart() {
       const config = JSON.parse(fs.readFileSync('hq-config.json', 'utf8'));
+      // eslint-disable-next-line no-undef
       const data_root = path.join(process.cwd(), config.faction_data_root);
 
       const meta = generateFactionsMeta(data_root, config.factions);
