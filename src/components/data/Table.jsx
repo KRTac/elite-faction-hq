@@ -10,7 +10,8 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table';
-import { MagnifyingGlassIcon, ArrowPathIcon } from '@heroicons/react/16/solid';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import { MagnifyingGlassIcon, ArrowPathIcon, ChevronDownIcon } from '@heroicons/react/16/solid';
 import Input from '../inputs/Input';
 import DebouncedInput from '../inputs/DebouncedInput';
 
@@ -216,7 +217,7 @@ function Table({
                   'pb-2 transition duration-400 overflow-hidden w-6',
                   'dark:bg-neutral-600 sticky top-0',
                   "after:content-[''] after:block after:h-0.5 after:w-full",
-                  'after:absolute after:bottom-0 after:left-0 z-10',
+                  'after:absolute after:bottom-0 after:left-0',
                   columnFilters.length ? 'dark:after:bg-lime-500' : 'dark:after:bg-lime-100'
                 ].join(' ')}
               >
@@ -334,25 +335,35 @@ function Table({
             className="border p-1 rounded w-16"
           />
         </span>
-        <select
-          value={pageSize}
-          onChange={e => {
-            const value = Number(e.target.value);
+        <Menu>
+          <MenuButton
+             className="flex items-center gap-1 ml-auto rounded-md dark:bg-neutral-900 pl-3 pr-2 py-1 text-sm/6 font-semibold dark:text-neutral-300 shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white dark:data-hover:bg-neutral-700 dark:data-open:bg-neutral-700"
+          >
+            Show {pageSize} <ChevronDownIcon className="size-4" />
+          </MenuButton>
+          <MenuItems
+            transition
+            anchor="bottom end"
+            className="w-32 origin-top-right rounded-xl border dark:border-white/5 dark:bg-bg2-d p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0"
+          >
+            {[10, 25, 50, 100, 200].map(pageSize => (
+              <MenuItem
+                key={pageSize}
+                onClick={() => {
+                  table.setPageSize(pageSize)
 
-            table.setPageSize(value)
-
-            if (onPerPageUpdate) {
-              onPerPageUpdate(value)
-            }
-          }}
-          className="ml-auto"
-        >
-          {[10, 25, 50, 100, 200].map(pageSize => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
+                  if (onPerPageUpdate) {
+                    onPerPageUpdate(pageSize)
+                  }
+                }}
+              >
+                <button className="group flex w-full items-center gap-2 rounded-lg px-3 py-1.5 data-focus:bg-white/10">
+                  Show {pageSize}
+                </button>
+              </MenuItem>
+            ))}
+          </MenuItems>
+        </Menu>
       </div>
     </div>
   );
