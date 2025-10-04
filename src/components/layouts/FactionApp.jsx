@@ -24,7 +24,7 @@ export function FactionApp({ faction, data, compareData }) {
 
   useEffect(() => {
     datasetComparison.setDataset(compareDataset);
-  }, [ compareDataset, datasetComparison.setDataset ]);
+  }, [ compareDataset, datasetComparison ]);
 
   return (
     <FactionContext value={faction}>

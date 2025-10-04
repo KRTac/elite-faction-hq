@@ -7,9 +7,10 @@ import useSystemsGroupBy from '../hooks/useSystemsGroupBy';
 import Switch from './inputs/Switch';
 import Button from './inputs/Button';
 import FilterBox from './inputs/FilterBox';
-import Range, { filterRange } from './inputs/Range';
+import Range from './inputs/Range';
 import useDatasetComparison from '../hooks/useDatasetComparison';
-import { dateTimeText } from './data/DateTimeText';
+import { dateTimeText } from '../lib/string';
+import { filterRange } from '../lib/input';
 
 
 function SystemsHeader({ viewType, setViewType }) {

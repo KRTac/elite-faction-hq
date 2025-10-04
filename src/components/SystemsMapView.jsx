@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import Button from './inputs/Button';
-import { powers } from './data/PowerName';
+import { powers } from '../lib/elite';
 
 
 const postTargetOrigin = import.meta.env.VITE_PROTOCOL_HOSTNAME;
@@ -140,6 +140,7 @@ function SystemsMapView({ groupBy, groups, systems, debug = false }) {
     }
 
     sendMapData(groupBy, groups, systems);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ groupBy, groups, systems ]);
 
   const handleLoad = iframeLoaded.current
