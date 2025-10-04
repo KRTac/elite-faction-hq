@@ -3,11 +3,12 @@ import numeral from 'numeral';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid';
 import ToClipboard from '../components/ToClipboard';
-import DateTimeText, { dateTimeText } from '../components/data/DateTimeText';
+import DateTimeText from '../components/data/DateTimeText';
 import PowerName from '../components/data/PowerName';
-import { filterRange } from '../components/inputs/Range';
 import ValueOrNull from '../components/data/ValueOrNull';
 import NumberOrNull from '../components/data/NumberOrNull';
+import { dateTimeText } from './string';
+import { filterRange } from './input';
 
 
 function statByOccurrence(set, values, systemName) {

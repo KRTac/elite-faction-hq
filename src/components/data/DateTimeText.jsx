@@ -1,27 +1,6 @@
 import { useEffect, useState } from 'react';
-import { format, formatDistanceToNow } from 'date-fns';
+import { dateTimeText, defaultDateFormat } from '../../lib/string';
 
-
-export const defaultDateFormat = "do MMM y' at 'HH:mm";
-
-export function dateTimeText(
-  date,
-  showDate = false,
-  dateFormat = defaultDateFormat,
-  addSuffix = true
-) {
-  try {
-    if (showDate) {
-      return format(date, dateFormat);
-    }
-
-    return formatDistanceToNow(date, { addSuffix });
-  } catch (ex) {
-    console.log(ex);
-
-    return 'invalid time';
-  }
-}
 
 function DateTimeText({
   date, showDate = false, dateFormat = defaultDateFormat,

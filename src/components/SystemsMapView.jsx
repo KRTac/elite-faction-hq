@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import Button from './inputs/Button';
-import { powers } from './data/PowerName';
+import { powers } from '../lib/elite';
 
 
 const postTargetOrigin = import.meta.env.VITE_PROTOCOL_HOSTNAME;

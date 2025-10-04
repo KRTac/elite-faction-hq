@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo } from 'react';
 import useStorageState from 'use-storage-state';
-import { filterRange } from '../components/inputs/Range';
+import { filterRange } from '../lib/input';
 
 
 export const SystemsGroupByContext = createContext(null);
