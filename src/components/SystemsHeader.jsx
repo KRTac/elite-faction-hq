@@ -9,6 +9,7 @@ import Button from './inputs/Button';
 import FilterBox from './inputs/FilterBox';
 import Range, { filterRange } from './inputs/Range';
 import useDatasetComparison from '../hooks/useDatasetComparison';
+import { dateTimeText } from './data/DateTimeText';
 
 
 function SystemsHeader({ viewType, setViewType }) {
@@ -24,7 +25,8 @@ function SystemsHeader({ viewType, setViewType }) {
   const {
     isActive: isComparing,
     setIsActive: setIsComparing,
-    result: { changedSystems }
+    result: { changedSystems },
+    dataset: { timestamp: comparisonTimestamp }
   } = useDatasetComparison();
 
   const filteredRange = filterRange(systemCountRange);
@@ -81,10 +83,13 @@ function SystemsHeader({ viewType, setViewType }) {
             Compare view
           </button>
           {isComparing && (
-            <p className="dark:text-neutral-400 text-sm">
-              <strong className="dark:text-neutral-300">{changedSystems.length}</strong>
-              {` change${changedSystems.length === 1 ? '' : 's'}`}
-            </p>
+            <>
+              <p className="dark:text-neutral-400 text-sm" title={dateTimeText(comparisonTimestamp, true)}>
+                <strong className="dark:text-neutral-300">{changedSystems.length}</strong>
+                {` change${changedSystems.length === 1 ? '' : 's'}`}
+                {` from ${dateTimeText(comparisonTimestamp)}`}
+              </p>
+            </>
           )}
           {!isComparing && (
             <p className="dark:text-neutral-400 text-sm">
