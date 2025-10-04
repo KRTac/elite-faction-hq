@@ -1,4 +1,5 @@
 import { Outlet, useLoaderData } from '@tanstack/react-router';
+import { useEffect } from 'react';
 import Header from '../Header';
 import SystemModal from '../SystemModal';
 import { FactionContext } from '../../hooks/useFaction';
@@ -20,6 +21,10 @@ export function FactionApp({ faction, data, compareData }) {
   const datasetComparison = useCreateDatasetComparison(factionDataset, compareDataset);
   const systemFilters = useSystemFilters(factionDataset);
   const groupBy = useCreateSystemsGroupBy(systemFilters.systems);
+
+  useEffect(() => {
+    datasetComparison.setDataset(compareDataset);
+  }, [ compareDataset, datasetComparison.setDataset ]);
 
   return (
     <FactionContext value={faction}>
