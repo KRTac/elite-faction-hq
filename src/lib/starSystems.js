@@ -207,3 +207,56 @@ export function combineMapData(datasets) {
 
   return { categories, systems };
 }
+
+export function comparisonDisplayGroups(comparison, primarySystems, secondarySystems) {
+  const {
+    influenceChanged,
+    controllingFactionChanged,
+    colonisationFinished,
+    newSystems, removedSystems
+  } = comparison;
+
+  const groups = [];
+
+  if (newSystems.length) {
+    groups.push({
+      name: 'Added systems',
+      systemNames: newSystems,
+      systems: primarySystems.filter(s => newSystems.includes(s.name))
+    });
+  }
+
+  if (removedSystems.length) {
+    groups.push({
+      name: 'Removed systems',
+      systemNames: removedSystems,
+      systems: secondarySystems.filter(s => removedSystems.includes(s.name))
+    });
+  }
+
+  if (influenceChanged.length) {
+    groups.push({
+      name: 'Influence changed',
+      systemNames: influenceChanged,
+      systems: primarySystems.filter(s => influenceChanged.includes(s.name))
+    });
+  }
+
+  if (controllingFactionChanged.length) {
+    groups.push({
+      name: 'Controlling faction changed',
+      systemNames: controllingFactionChanged,
+      systems: primarySystems.filter(s => controllingFactionChanged.includes(s.name))
+    });
+  }
+
+  if (colonisationFinished.length) {
+    groups.push({
+      name: 'Colonisation finished',
+      systemNames: colonisationFinished,
+      systems: primarySystems.filter(s => colonisationFinished.includes(s.name))
+    });
+  }
+
+  return groups;
+}

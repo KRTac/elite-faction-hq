@@ -8,6 +8,7 @@ import Switch from './inputs/Switch';
 import Button from './inputs/Button';
 import FilterBox from './inputs/FilterBox';
 import Range, { filterRange } from './inputs/Range';
+import useDatasetComparison from '../hooks/useDatasetComparison';
 
 
 function SystemsHeader({ viewType, setViewType }) {
@@ -19,7 +20,12 @@ function SystemsHeader({ viewType, setViewType }) {
   const [ visibleFilters, setVisibleFilters ] = useStorageState('systems_visibleFilters', {
     defaultValue: 'all',
     sync: false
-  }); 
+  });
+  const {
+    isActive: isComparing,
+    setIsActive: setIsComparing,
+    result: { changedSystems }
+  } = useDatasetComparison();
 
   const filteredRange = filterRange(systemCountRange);
   const groupRangeActive = (
@@ -61,17 +67,38 @@ function SystemsHeader({ viewType, setViewType }) {
           </div>
         )}
         <div className="flex flex-row justify-center items-center max-w-7xl mx-auto">
-          <p className="dark:text-neutral-400 mr-auto text-sm">
-            {isFiltering && <>
-              <strong className="dark:text-neutral-300">{filteredSystems.length} </strong>
-              systems filtered from
-              <strong className="dark:text-neutral-300"> {systems.length} </strong>  
-            </>}
-            {!isFiltering && <>
-              <strong className="dark:text-neutral-300">{systems.length}</strong> systems  
-            </>}
-          </p>
-          <div className="dark:text-neutral-200 flex gap-3 items-center">
+          <button
+            className={[
+              'py-1 pl-1 pr-1 mr-2 text-sm',
+              'transition duration-200',
+              'cursor-pointer flex gap-1 items-center',
+              isComparing ? '' : 'opacity-65 hover:opacity-100',
+              'dark:text-yellow-400'
+            ].join(' ')}
+            onClick={() => setIsComparing(!isComparing)}
+          >
+            <input type="checkbox" checked={isComparing} readOnly />
+            Compare view
+          </button>
+          {isComparing && (
+            <p className="dark:text-neutral-400 text-sm">
+              <strong className="dark:text-neutral-300">{changedSystems.length}</strong>
+              {` change${changedSystems.length === 1 ? '' : 's'}`}
+            </p>
+          )}
+          {!isComparing && (
+            <p className="dark:text-neutral-400 text-sm">
+              {isFiltering && <>
+                <strong className="dark:text-neutral-300">{filteredSystems.length} </strong>
+                systems filtered from
+                <strong className="dark:text-neutral-300"> {systems.length} </strong>
+              </>}
+              {!isFiltering && <>
+                <strong className="dark:text-neutral-300">{systems.length}</strong> systems
+              </>}
+            </p>
+          )}
+          <div className="dark:text-neutral-200 flex gap-3 items-center ml-auto">
             <Switch
               checked={viewType === 'map'}
               onChange={() => {

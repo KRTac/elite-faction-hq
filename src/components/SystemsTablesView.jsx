@@ -17,7 +17,7 @@ const selectableColumns = [
   'Influence close', 'Conflict powers'
 ];
 
-function SystemsTablesView({ groups }) {
+function SystemsTablesView({ groups, emptyText = 'No systems found' }) {
   const [ showSettings, setShowSettings ] = useState(false);
   const [ tableColumns, setTableColumns ] = useStorageState('systemsTables_columns', {
     defaultValue: [
@@ -104,7 +104,7 @@ function SystemsTablesView({ groups }) {
         )}
       </div>
       {!tableGroups.length && (
-        <p className="text-center italic text-neutral-400 text-xl py-5">No systems found</p>
+        <p className="text-center italic text-neutral-400 text-xl py-5">{emptyText}</p>
       )}
       {tableGroups.map(({ label, systems }) => {
         let labelEl = '';
@@ -121,7 +121,7 @@ function SystemsTablesView({ groups }) {
         return (
           <SystemsTableGroup
             key={label || '_uncategorized'}
-            groupId={label}
+            groupId={label || 'uncategorized'}
             label={labelEl}
             systems={systems}
             columns={columnDefinitions}
