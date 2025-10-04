@@ -8,7 +8,7 @@ export const DatasetComparisonContext = createContext(null);
 
 export function useCreateDatasetComparison(refDataset, initialDataset = null) {
   const [ isActive, setIsActive ] = useStorageState('systems_comparisonActive', {
-    defaultValue: !!initialDataset,
+    defaultValue: false,
     sync: false
   });
   const [ dataset, setDataset ] = useState(initialDataset);
