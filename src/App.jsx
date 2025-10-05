@@ -22,9 +22,11 @@ const { factionsMeta, router } = import.meta.env.SSR
   : clientInit();
 
 if (!import.meta.env.SSR) {
-  router.subscribe('onLoad', () => {
+  router.subscribe('onLoad', ({ toLocation }) => {
     if (typeof window.gtag === 'function') {
-      // window.gtag('event', 'page_view');
+      window.gtag('event', 'page_view', {
+        page_location: toLocation.href
+      });
     }
   });
 }

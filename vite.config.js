@@ -29,7 +29,7 @@ export default defineConfig(() => {
         id: process.env.VITE_GA_TAG,
         config: {
           cookie_domain: process.env.VITE_GA_DOMAIN ?? 'auto',
-          send_page_view: false
+          send_page_view: true
         }
       }
     }));
