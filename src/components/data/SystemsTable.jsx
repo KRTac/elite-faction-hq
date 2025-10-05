@@ -8,7 +8,7 @@ function renderNumOfSystems(rowCount) {
   return <><strong>{rowCount}</strong> systems filtered</>;
 }
 
-function SystemsTableGroup({ groupId, label, systems, columns, withRowCount }) {
+function SystemsTable({ groupId, label, systems, columns, withRowCount }) {
   const [ showTable, setShowTable ] = useStorageState(
     `systemsTable_${groupId}_show`,
     {
@@ -61,4 +61,4 @@ function SystemsTableGroup({ groupId, label, systems, columns, withRowCount }) {
   );
 }
 
-export default SystemsTableGroup;
+export default SystemsTable;

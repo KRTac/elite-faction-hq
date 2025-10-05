@@ -1,8 +1,8 @@
-import { powers } from '../../lib/elite';
+import { powers, isPower } from '../../lib/elite';
 
 
 function PowerName({ name, short, ...rest }) {
-  if (name && powers[name]) {
+  if (isPower(name)) {
     const power = powers[name];
 
     return (

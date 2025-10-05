@@ -115,6 +115,7 @@ function SystemsHeader({ viewType, setViewType }) {
               {viewType === 'map' ? 'Map' : 'Table'}
             </Switch>
             <Button
+              smaller
               onClick={() => {
                 setVisibleFilters(visibleFilters === 'all' ? '' : 'all');
               }}
