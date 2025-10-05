@@ -27,7 +27,6 @@ if (!import.meta.env.SSR) {
     // return;
     if (typeof window.gtag === 'function') {
       window.gtag('event', 'page_view', {
-        page_title: 'Elite Faction HQ',
         page_location: window.location.href
       });
     }
