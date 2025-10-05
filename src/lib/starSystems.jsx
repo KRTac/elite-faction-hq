@@ -247,14 +247,6 @@ export function comparisonDisplayGroups(comparison, primarySystems, secondarySys
     });
   }
 
-  if (influenceChanged.length) {
-    groups.push({
-      name: 'Influence changed',
-      systemNames: influenceChanged,
-      systems: primarySystems.filter(s => influenceChanged.includes(s.name))
-    });
-  }
-
   if (controllingFactionChanged.length) {
     groups.push({
       name: 'Controlling faction changed',
@@ -268,6 +260,14 @@ export function comparisonDisplayGroups(comparison, primarySystems, secondarySys
       name: 'Colonisation finished',
       systemNames: colonisationFinished,
       systems: primarySystems.filter(s => colonisationFinished.includes(s.name))
+    });
+  }
+
+  if (influenceChanged.length) {
+    groups.push({
+      name: 'Influence changed',
+      systemNames: influenceChanged,
+      systems: primarySystems.filter(s => influenceChanged.includes(s.name))
     });
   }
 

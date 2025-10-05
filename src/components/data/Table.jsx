@@ -119,6 +119,8 @@ function defaultNumOfRows(rowCount) {
   );
 }
 
+const perPageOptions = [10, 25, 50, 100, 200];
+
 function Table({
   data, columns, renderNumberOfRows = defaultNumOfRows,
   columnFilters, setColumnFilters, resetFilters,
@@ -288,7 +290,7 @@ function Table({
         {renderNumberOfRows(table.getPrePaginationRowModel().rows.length)}
       </p>}
       <div className="flex flex-row items-center justify-center gap-2 mb-3">
-        {table.getPageCount() > 2 && (
+        {table.getPageCount() > 1 && (
           <>
             <button
               className="border rounded p-1 disabled:opacity-50"
@@ -318,14 +320,14 @@ function Table({
             >
               {'>>'}
             </button>
+            <p className="ml-auto text-sm text-neutral-400">
+              <span>Page</span>
+              <strong>
+                {` ${pageIndex + 1} of ${table.getPageCount()}`}
+              </strong>
+            </p>
           </>
         )}
-        <p className="ml-auto text-sm text-neutral-400">
-          <span>Page</span>
-          <strong>
-             {` ${pageIndex + 1} of ${table.getPageCount()}`}
-          </strong>
-        </p>
         {table.getPageCount() > 2 && (
           <div className="flex items-center gap-1 ml-2 text-sm text-neutral-400">
             Go to page:
@@ -340,35 +342,37 @@ function Table({
             />
           </div>
         )}
-        <Menu>
-          <MenuButton
-             className="flex items-center gap-1 ml-auto rounded-md dark:bg-neutral-900 pl-3 pr-2 py-1 text-sm/6 font-semibold dark:text-neutral-300 shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white dark:data-hover:bg-neutral-700 dark:data-open:bg-neutral-700"
-          >
-            Show {pageSize} <ChevronDownIcon className="size-4" />
-          </MenuButton>
-          <MenuItems
-            transition
-            anchor="bottom end"
-            className="w-32 origin-top-right rounded-xl border dark:border-white/5 dark:bg-bg2-d p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0"
-          >
-            {[10, 25, 50, 100, 200].map(pageSize => (
-              <MenuItem
-                key={pageSize}
-                onClick={() => {
-                  table.setPageSize(pageSize)
+        {data.length > perPageOptions[0] && (
+          <Menu>
+            <MenuButton
+              className="flex items-center gap-1 ml-auto rounded-md dark:bg-neutral-900 pl-3 pr-2 py-1 text-sm/6 font-semibold dark:text-neutral-300 shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white dark:data-hover:bg-neutral-700 dark:data-open:bg-neutral-700"
+            >
+              Show {pageSize} <ChevronDownIcon className="size-4" />
+            </MenuButton>
+            <MenuItems
+              transition
+              anchor="bottom end"
+              className="w-32 origin-top-right rounded-xl border dark:border-white/5 dark:bg-bg2-d p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0"
+            >
+              {perPageOptions.map(pageSize => (
+                <MenuItem
+                  key={pageSize}
+                  onClick={() => {
+                    table.setPageSize(pageSize)
 
-                  if (onPerPageUpdate) {
-                    onPerPageUpdate(pageSize)
-                  }
-                }}
-              >
-                <button className="group flex w-full items-center gap-2 rounded-lg px-3 py-1.5 data-focus:bg-white/10">
-                  Show {pageSize}
-                </button>
-              </MenuItem>
-            ))}
-          </MenuItems>
-        </Menu>
+                    if (onPerPageUpdate) {
+                      onPerPageUpdate(pageSize)
+                    }
+                  }}
+                >
+                  <button className="group flex w-full items-center gap-2 rounded-lg px-3 py-1.5 data-focus:bg-white/10">
+                    Show {pageSize}
+                  </button>
+                </MenuItem>
+              ))}
+            </MenuItems>
+          </Menu>
+        )}
       </div>
     </div>
   );
