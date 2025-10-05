@@ -1,4 +1,4 @@
-import { Button, Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ScaleIcon } from '@heroicons/react/24/solid';
 import useDatasetComparison from '../hooks/useDatasetComparison';
 import { createFactionDataset, datasetUrl, dateToName, fetchDataset, previousDataset } from '../lib/factionDataset';
@@ -24,11 +24,11 @@ function CompareSelector() {
   }
 
   return (
-    <div className="ml-3">
-      <Popover>
-        <PopoverButton
+    <div className="ml-2">
+      <Menu>
+        <MenuButton
           className={[
-            'flex justify-center flex-col items-center px-1 transition duration-200 w-13',
+            'flex justify-center flex-col items-center transition duration-200 px-1',
             'cursor-pointer',
             isActive
               ? 'dark:data-active:text-accent-d/75 dark:data-active:data-hover:text-accent-d'
@@ -37,25 +37,24 @@ function CompareSelector() {
           ].join(' ')}
         >
           <ScaleIcon className="size-6" />
-        </PopoverButton>
-        <PopoverPanel
+        </MenuButton>
+        <MenuItems
           transition
-          anchor="bottom"
-          className="rounded-xl dark:bg-bg-d/85 text-sm/6 transition duration-200 ease-in-out [--anchor-gap:--spacing(2)] data-closed:-translate-y-1 data-closed:opacity-0 z-10"
+          anchor="bottom end"
+          className="w-32 origin-top-right rounded-xl border dark:border-white/5 dark:bg-bg2-d p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0"
         >
-          <div className="p-3">
-            {[ 0, 1, 7, 10 ].map(d => (
-              <Button
-                key={`btn-${d}`}
-                className="block text-right min-w-20 rounded-lg px-3 py-2 transition dark:hover:bg-white/5 dark:text-neutral-300"
-                onClick={() => d === 0 ? setIsActive(false) : fetchDaysOld(d)}
-              >
+          {[ 0, 1, 7, 10 ].map(d => (
+            <MenuItem
+              key={`btn-${d}`}
+              onClick={() => d === 0 ? setIsActive(false) : fetchDaysOld(d)}
+            >
+              <button className="group flex w-full items-center gap-2 rounded-lg px-3 py-1.5 data-focus:bg-white/10">
                 {d === 0 ? 'Off' : `${d} day${d > 1 ? 's' : ''}`}
-              </Button>
-            ))}
-          </div>
-        </PopoverPanel>
-      </Popover>
+              </button>
+            </MenuItem>
+          ))}
+        </MenuItems>
+      </Menu>
     </div>
   );
 }
