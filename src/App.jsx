@@ -24,7 +24,7 @@ const { factionsMeta, router } = import.meta.env.SSR
 if (!import.meta.env.SSR) {
   router.subscribe('onLoad', () => {
     if (typeof window.gtag === 'function') {
-      window.gtag('event', 'page_view');
+      // window.gtag('event', 'page_view');
     }
   });
 }
