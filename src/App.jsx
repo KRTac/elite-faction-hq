@@ -21,11 +21,13 @@ const { factionsMeta, router } = import.meta.env.SSR
   ? { factionsMeta: undefined, router: undefined }
   : clientInit();
 
-router.subscribe('onLoad', () => {
-  if (typeof window.gtag === 'function') {
-    window.gtag('event', 'page_view');
-  }
-});
+if (!import.meta.env.SSR) {
+  router.subscribe('onLoad', () => {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'page_view');
+    }
+  });
+}
 
 export function App() {
   if (!factionsMeta) {
