@@ -77,7 +77,10 @@ export const Route = createFileRoute('/$factionDir')({
 
     if (compareDaysOld > 0) {
       const compareName = previousDataset(timestamp, faction.datasets, compareDaysOld);
-      compareData = await fetchDataset(datasetUrl(factionDir, compareName));
+
+      if (compareName) {
+        compareData = await fetchDataset(datasetUrl(factionDir, compareName));
+      }
     }
 
     return { faction, data, compareData };

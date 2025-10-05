@@ -28,10 +28,11 @@ function SystemsHeader({ viewType, setViewType }) {
     isActive: isComparing,
     isAvailable: comparisonAvailable,
     setIsActive: setIsComparing,
-    result: { changedSystems },
-    dataset: { timestamp: comparisonTimestamp }
+    result, dataset
   } = useDatasetComparison();
   const { timestamp: refTimestamp } = useFactionDataset();
+  const numOfChanges = comparisonAvailable ? result.changedSystems : [];
+  const compareWith = isComparing ? dataset.timestamp : '';
 
   const filteredRange = filterRange(systemCountRange);
   const groupRangeActive = (
@@ -92,10 +93,10 @@ function SystemsHeader({ viewType, setViewType }) {
           </button>
           {isComparing && (
             <>
-              <p className="dark:text-neutral-400 text-sm" title={dateTimeText(comparisonTimestamp, true)}>
-                <strong className="dark:text-neutral-300">{changedSystems.length}</strong>
-                {` change${changedSystems.length === 1 ? '' : 's'}`}
-                {` in ${formatDistance(refTimestamp, comparisonTimestamp)}`}
+              <p className="dark:text-neutral-400 text-sm" title={dateTimeText(compareWith, true)}>
+                <strong className="dark:text-neutral-300">{numOfChanges.length}</strong>
+                {` change${numOfChanges.length === 1 ? '' : 's'}`}
+                {` in ${formatDistance(refTimestamp, compareWith)}`}
               </p>
             </>
           )}
