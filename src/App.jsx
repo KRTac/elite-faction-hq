@@ -21,10 +21,8 @@ const { factionsMeta, router } = import.meta.env.SSR
   ? { factionsMeta: undefined, router: undefined }
   : clientInit();
 
-if (!import.meta.env.SSR) {
+if (!import.meta.env.SSR && import.meta.env.VITE_GA_TAG) {
   router.subscribe('onResolved', () => {
-    // console.log(typeof window.gtag, window.location.href);
-    // return;
     if (typeof window.gtag === 'function') {
       window.gtag('event', 'page_view', {
         page_title: document.title,
