@@ -105,15 +105,16 @@ function SystemsHeader({ viewType, setViewType }) {
             </p>
           )}
           <div className="dark:text-neutral-200 flex gap-3 items-center ml-auto">
-            <Switch
-              checked={viewType === 'map'}
-              onChange={() => {
-                setViewType(viewType === 'map' ? 'table' : 'map');
-              }}
-              labelFlip
-            >
-              {viewType === 'map' ? 'Map' : 'Table'}
-            </Switch>
+            <div className="w-20">
+              <Switch
+                checked={viewType === 'map'}
+                onChange={() => {
+                  setViewType(viewType === 'map' ? 'table' : 'map');
+                }}
+              >
+                {viewType === 'map' ? 'Map' : 'Table'}
+              </Switch>
+            </div>
             <Button
               smaller
               onClick={() => {

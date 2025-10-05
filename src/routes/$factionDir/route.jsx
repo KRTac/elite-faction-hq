@@ -15,11 +15,11 @@ function ErrorComponent({ error }) {
         <p className="text-xl text-center">{error.message}</p>
         <div className="flex justify-center gap-3">
           <Button
+            alt
             onClick={() => {
               localStorage.clear();
               window.location.reload();
             }}
-            alt
           >
             Attempt reset and reload
           </Button>
