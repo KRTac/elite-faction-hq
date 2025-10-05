@@ -24,11 +24,12 @@ export default defineConfig(() => {
 
   if (process.env.VITE_GA_TAG) {
     plugins.push(VitePluginRadar({
-      enableDev: true,
+      enableDev: import.meta.env.DEV,
       analytics: {
         id: process.env.VITE_GA_TAG,
         config: {
-          cookie_domain: process.env.VITE_GA_DOMAIN ?? 'auto'
+          cookie_domain: process.env.VITE_GA_DOMAIN ?? 'auto',
+          send_page_view: false
         }
       }
     }));
