@@ -288,53 +288,58 @@ function Table({
         {renderNumberOfRows(table.getPrePaginationRowModel().rows.length)}
       </p>}
       <div className="flex flex-row items-center justify-center gap-2 mb-3">
-        <button
-          className="border rounded p-1 disabled:opacity-50"
-          onClick={() => table.setPageIndex(0)}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {'<<'}
-        </button>
-        <button
-          className="border rounded p-1 disabled:opacity-50"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {'<'}
-        </button>
-        <button
-          className="border rounded p-1 disabled:opacity-50"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {'>'}
-        </button>
-        <button
-          className="border rounded p-1 disabled:opacity-50 mr-auto"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
-        >
-          {'>>'}
-        </button>
-        <span className="flex items-center gap-1 mr-2">
-          <div>Page</div>
+        {table.getPageCount() > 2 && (
+          <>
+            <button
+              className="border rounded p-1 disabled:opacity-50"
+              onClick={() => table.setPageIndex(0)}
+              disabled={!table.getCanPreviousPage()}
+            >
+              {'<<'}
+            </button>
+            <button
+              className="border rounded p-1 disabled:opacity-50"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              {'<'}
+            </button>
+            <button
+              className="border rounded p-1 disabled:opacity-50"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              {'>'}
+            </button>
+            <button
+              className="border rounded p-1 disabled:opacity-50"
+              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+              disabled={!table.getCanNextPage()}
+            >
+              {'>>'}
+            </button>
+          </>
+        )}
+        <p className="ml-auto text-sm text-neutral-400">
+          <span>Page</span>
           <strong>
-            {pageIndex + 1} of{' '}
-            {table.getPageCount()}
+             {` ${pageIndex + 1} of ${table.getPageCount()}`}
           </strong>
-        </span>
-        <span className="flex items-center gap-1">
-          Go to page:
-          <Input
-            type="number"
-            value={pageIndex + 1}
-            onChange={e => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              table.setPageIndex(page)
-            }}
-            className="border p-1 rounded w-16"
-          />
-        </span>
+        </p>
+        {table.getPageCount() > 2 && (
+          <div className="flex items-center gap-1 ml-2 text-sm text-neutral-400">
+            Go to page:
+            <Input
+              type="number"
+              value={pageIndex + 1}
+              onChange={e => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0
+                table.setPageIndex(page)
+              }}
+              className="border p-1 rounded w-16"
+            />
+          </div>
+        )}
         <Menu>
           <MenuButton
              className="flex items-center gap-1 ml-auto rounded-md dark:bg-neutral-900 pl-3 pr-2 py-1 text-sm/6 font-semibold dark:text-neutral-300 shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white dark:data-hover:bg-neutral-700 dark:data-open:bg-neutral-700"
