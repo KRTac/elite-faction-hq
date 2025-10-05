@@ -44,33 +44,36 @@ function SystemsHeader({ viewType, setViewType }) {
   return (
     <div className="p-3">
       <div className="dark:bg-neutral-900 m-auto p-2 rounded-md">
-        {visibleFilters && !isComparing && (
-          <div className="mb-3 mx-auto max-w-site">
-            <SystemFilters activeOnly={visibleFilters === 'active'} />
-            <div className="mt-7 w-full max-w-site flex justify-center mx-auto gap-3">
-              <div className="w-full max-w-sm">
-                <FilterBox
-                  label="Group by"
-                  value={groupBy}
-                  options={availableSystemGroups}
-                  isActive={groupBy !== 'None'}
-                  set={setGroupBy}
-                  reset={() => setGroupBy('None')}
-                />
-              </div>
-              <div className="w-full max-w-sm">
-                <Range
-                  label="Group system count"
-                  value={systemCountRange}
-                  isActive={groupRangeActive}
-                  set={setSystemCountRange}
-                  reset={() => setSystemCountRange([ '', '' ])}
-                  disabled={groupBy === 'None'}
-                />
-              </div>
+        <div
+          className={[
+            'mb-3 mx-auto max-w-site',
+            visibleFilters && !isComparing ? 'hidden' : 'block'
+          ].join(' ')}
+        >
+          <SystemFilters activeOnly={visibleFilters === 'active'} />
+          <div className="mt-7 w-full max-w-site flex justify-center mx-auto gap-3">
+            <div className="w-full max-w-sm">
+              <FilterBox
+                label="Group by"
+                value={groupBy}
+                options={availableSystemGroups}
+                isActive={groupBy !== 'None'}
+                set={setGroupBy}
+                reset={() => setGroupBy('None')}
+              />
+            </div>
+            <div className="w-full max-w-sm">
+              <Range
+                label="Group system count"
+                value={systemCountRange}
+                isActive={groupRangeActive}
+                set={setSystemCountRange}
+                reset={() => setSystemCountRange([ '', '' ])}
+                disabled={groupBy === 'None'}
+              />
             </div>
           </div>
-        )}
+        </div>
         <div className="flex flex-row justify-center items-center max-w-7xl mx-auto">
           <button
             className={[
