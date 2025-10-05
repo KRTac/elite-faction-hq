@@ -26,6 +26,7 @@ function SystemsHeader({ viewType, setViewType }) {
   });
   const {
     isActive: isComparing,
+    isAvailable: comparisonAvailable,
     setIsActive: setIsComparing,
     result: { changedSystems },
     dataset: { timestamp: comparisonTimestamp }
@@ -47,7 +48,7 @@ function SystemsHeader({ viewType, setViewType }) {
         <div
           className={[
             'mb-3 mx-auto max-w-site',
-            visibleFilters && !isComparing ? 'hidden' : 'block'
+            visibleFilters && !isComparing ? 'block' : 'hidden'
           ].join(' ')}
         >
           <SystemFilters activeOnly={visibleFilters === 'active'} />
@@ -77,6 +78,7 @@ function SystemsHeader({ viewType, setViewType }) {
         <div className="flex flex-row justify-center items-center max-w-7xl mx-auto">
           <button
             className={[
+              comparisonAvailable ? 'block' : 'hidden',
               'py-1 pl-1 pr-1 mr-2 text-sm',
               'transition duration-200',
               'cursor-pointer flex gap-1 items-center',
