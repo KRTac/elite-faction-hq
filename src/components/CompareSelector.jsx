@@ -31,9 +31,9 @@ function CompareSelector() {
             'flex justify-center flex-col items-center transition duration-200 px-1',
             'cursor-pointer',
             isActive
-              ? 'dark:data-active:text-accent-d/75 dark:data-active:data-hover:text-accent-d'
-              : 'dark:text-neutral-400 dark:data-hover:text-neutral-200',
-            'dark:data-active:text-accent-d/75 dark:data-active:data-hover:text-accent-d'
+              ? 'dark:text-accent-d/85 dark:data-hover:text-accent-d'
+              : 'dark:text-neutral-300 dark:data-hover:text-neutral-100',
+            'dark:data-active:text-accent-d/85 dark:data-active:data-hover:text-accent-d'
           ].join(' ')}
         >
           <ScaleIcon className="size-6" />
@@ -41,14 +41,14 @@ function CompareSelector() {
         <MenuItems
           transition
           anchor="bottom end"
-          className="w-32 origin-top-right rounded-xl border dark:border-white/5 dark:bg-bg2-d p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0"
+          className="w-24 origin-top-right rounded-xl border dark:border-white/5 dark:bg-bg2-d px-1 py-2 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0"
         >
           {[ 0, 1, 7, 10 ].map(d => (
             <MenuItem
               key={`btn-${d}`}
               onClick={() => d === 0 ? setIsActive(false) : fetchDaysOld(d)}
             >
-              <button className="group flex w-full items-center gap-2 rounded-lg px-3 py-1.5 data-focus:bg-white/10">
+              <button className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 data-focus:bg-white/10">
                 {d === 0 ? 'Off' : `${d} day${d > 1 ? 's' : ''}`}
               </button>
             </MenuItem>
