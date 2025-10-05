@@ -1,5 +1,6 @@
 import { lazy } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
+import * as Sentry from '@sentry/browser';
 
 import StandardPage from '../../components/layouts/Standard';
 import { datasetUrl, fetchDataset, previousDataset } from '../../lib/factionDataset';
@@ -9,6 +10,8 @@ import Button from '../../components/inputs/Button';
 const FactionAppRoute = lazy(() => import('../../components/layouts/FactionApp'));
 
 function ErrorComponent({ error }) {
+  Sentry.captureException(error);
+
   return (
     <StandardPage>
       <div className="flex flex-col justify-center items-center gap-10 p-3 pt-10 max-w-2xl mx-auto">
