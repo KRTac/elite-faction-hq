@@ -352,7 +352,7 @@ function Table({
             <MenuItems
               transition
               anchor="bottom end"
-              className="w-32 origin-top-right rounded-xl border dark:border-white/5 dark:bg-bg2-d p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0"
+              className="w-22 origin-top-right rounded-xl border dark:border-white/5 dark:bg-bg2-d p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0"
             >
               {perPageOptions.map(pageSize => (
                 <MenuItem
@@ -365,8 +365,8 @@ function Table({
                     }
                   }}
                 >
-                  <button className="group flex w-full items-center gap-2 rounded-lg px-3 py-1.5 data-focus:bg-white/10">
-                    Show {pageSize}
+                  <button className="group flex w-full items-center gap-2 rounded-lg px-1.5 py-1.5 data-focus:bg-white/10">
+                    {pageSize}
                   </button>
                 </MenuItem>
               ))}
