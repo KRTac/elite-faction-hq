@@ -131,7 +131,7 @@ function SystemsHeader({ viewType, setViewType }) {
             >
               {visibleFilters === 'all' && !isComparing
                 ? 'Hide'
-                : 'Show'
+                : 'Filters'
               }
             </Button>
           </div>
