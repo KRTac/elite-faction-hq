@@ -60,6 +60,7 @@ export const Route = createFileRoute('/$factionDir')({
     if (!faction) {
       throw new Error('Faction not found');
     }
+      throw new Error('Faction not found');
 
     if (!timestamp) {
       timestamp = faction.datasets[0];
