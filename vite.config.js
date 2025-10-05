@@ -24,7 +24,7 @@ export default defineConfig(() => {
 
   if (process.env.VITE_GA_TAG) {
     plugins.push(VitePluginRadar({
-      enableDev: import.meta.env.DEV,
+      enableDev: false,
       analytics: {
         id: process.env.VITE_GA_TAG,
         config: {
