@@ -24,6 +24,7 @@ const { factionsMeta, router } = import.meta.env.SSR
 if (!import.meta.env.SSR) {
   router.subscribe('onResolved', () => {
     console.log(typeof window.gtag, window.location.pathname + window.location.search);
+    return;
     if (typeof window.gtag === 'function') {
       window.gtag('event', 'page_view', {
         page_location: window.location.pathname + window.location.search
