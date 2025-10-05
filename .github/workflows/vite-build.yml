@@ -16,6 +16,7 @@ env:
   VITE_GA_TAG: ${{ vars.VITE_GA_TAG }}
   VITE_GA_DOMAIN: ${{ vars.VITE_GA_DOMAIN }}
   VITE_FACTION_DATA_CLIENT_ROOT: ${{ vars.VITE_FACTION_DATA_CLIENT_ROOT }}
+  VITE_SENTRY_DSN: ${{ vars.VITE_SENTRY_DSN }}
 
 jobs:
   build:
