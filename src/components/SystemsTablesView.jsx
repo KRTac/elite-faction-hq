@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useStorageState from 'use-storage-state';
 import { Cog6ToothIcon } from '@heroicons/react/20/solid';
-import SystemsTableGroup from './data/SystemsTableGroup';
+import SystemsTable from './data/SystemsTable';
 import { useSystemsColumnDefinitions } from '../hooks/useSystemFilters';
 import Switch from './inputs/Switch';
 import IconButton from './inputs/IconButton';
@@ -119,14 +119,13 @@ function SystemsTablesView({ groups, emptyText = 'No systems found' }) {
         }
 
         return (
-          <SystemsTableGroup
+          <SystemsTable
             key={label || '_uncategorized'}
             groupId={label || 'uncategorized'}
             label={labelEl}
             systems={systems}
             columns={columnDefinitions}
             withRowCount={showRowCount}
-            shortenedPowers={shortenedPowers}
           />
         );
       })}

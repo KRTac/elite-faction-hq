@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import useStorageState from 'use-storage-state';
+import { formatDistance } from 'date-fns';
 import SystemFilters from './SystemFilters';
 import { SystemFiltersContext, availableSystemGroups } from '../hooks/useSystemFilters';
 import useFactionDataset from '../hooks/useFactionDataset';
@@ -29,6 +30,7 @@ function SystemsHeader({ viewType, setViewType }) {
     result: { changedSystems },
     dataset: { timestamp: comparisonTimestamp }
   } = useDatasetComparison();
+  const { timestamp: refTimestamp } = useFactionDataset();
 
   const filteredRange = filterRange(systemCountRange);
   const groupRangeActive = (
@@ -42,7 +44,7 @@ function SystemsHeader({ viewType, setViewType }) {
   return (
     <div className="p-3">
       <div className="dark:bg-neutral-900 m-auto p-2 rounded-md">
-        {visibleFilters && (
+        {visibleFilters && !isComparing && (
           <div className="mb-3 mx-auto max-w-site">
             <SystemFilters activeOnly={visibleFilters === 'active'} />
             <div className="mt-7 w-full max-w-site flex justify-center mx-auto gap-3">
@@ -88,7 +90,7 @@ function SystemsHeader({ viewType, setViewType }) {
               <p className="dark:text-neutral-400 text-sm" title={dateTimeText(comparisonTimestamp, true)}>
                 <strong className="dark:text-neutral-300">{changedSystems.length}</strong>
                 {` change${changedSystems.length === 1 ? '' : 's'}`}
-                {` from ${dateTimeText(comparisonTimestamp)}`}
+                {` in ${formatDistance(refTimestamp, comparisonTimestamp)}`}
               </p>
             </>
           )}
@@ -105,21 +107,24 @@ function SystemsHeader({ viewType, setViewType }) {
             </p>
           )}
           <div className="dark:text-neutral-200 flex gap-3 items-center ml-auto">
-            <Switch
-              checked={viewType === 'map'}
-              onChange={() => {
-                setViewType(viewType === 'map' ? 'table' : 'map');
-              }}
-              labelFlip
-            >
-              {viewType === 'map' ? 'Map' : 'Table'}
-            </Switch>
+            <div className="w-20">
+              <Switch
+                checked={viewType === 'map'}
+                onChange={() => {
+                  setViewType(viewType === 'map' ? 'table' : 'map');
+                }}
+              >
+                {viewType === 'map' ? 'Map' : 'Table'}
+              </Switch>
+            </div>
             <Button
+              smaller
+              disabled={isComparing}
               onClick={() => {
                 setVisibleFilters(visibleFilters === 'all' ? '' : 'all');
               }}
             >
-              {visibleFilters === 'all'
+              {visibleFilters === 'all' && !isComparing
                 ? 'Hide'
                 : 'Show'
               }

@@ -162,7 +162,7 @@ function SystemsMapView({ groupBy, groups, systems, debug = false }) {
       />
       {import.meta.env.DEV && debug && (
         <div className="border-0 absolute bottom-0 right-0 mb-3 mr-3">
-          <Button onClick={sendDebug}>Debug</Button>
+          <Button onClick={sendDebug} smaller>Debug</Button>
         </div>
       )}
     </>

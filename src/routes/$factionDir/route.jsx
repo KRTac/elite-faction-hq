@@ -3,6 +3,7 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 
 import StandardPage from '../../components/layouts/Standard';
 import { datasetUrl, fetchDataset, previousDataset } from '../../lib/factionDataset';
+import Button from '../../components/inputs/Button';
 
 
 const FactionAppRoute = lazy(() => import('../../components/layouts/FactionApp'));
@@ -10,9 +11,22 @@ const FactionAppRoute = lazy(() => import('../../components/layouts/FactionApp')
 function ErrorComponent({ error }) {
   return (
     <StandardPage>
-      <div className="min-h-48 flex flex-col justify-center items-center gap-3 p-3">
-        <p className="text-2xl text-center">{error.message}</p>
-        <Link to="/">To Faction list</Link>
+      <div className="flex flex-col justify-center items-center gap-10 p-3 pt-10 max-w-2xl mx-auto">
+        <p className="text-xl text-center">{error.message}</p>
+        <div className="flex justify-center gap-3">
+          <Button
+            alt
+            onClick={() => {
+              localStorage.clear();
+              window.location.reload();
+            }}
+          >
+            Attempt reset and reload
+          </Button>
+          <Button as={Link} to="/">
+            To Faction list
+          </Button>
+        </div>
       </div>
     </StandardPage>
   );
@@ -70,5 +84,6 @@ export const Route = createFileRoute('/$factionDir')({
   },
   component: FactionAppRoute,
   pendingComponent: PendingComponent,
-  errorComponent: ErrorComponent
+  errorComponent: ErrorComponent,
+  pendingMs: 100
 });

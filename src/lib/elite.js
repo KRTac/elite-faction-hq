@@ -48,3 +48,9 @@ export const powers = {
     shortened: 'ZT'
   }
 };
+
+const allPowers = Object.keys(powers);
+
+export function isPower(s) {
+  return allPowers.includes(s);
+}

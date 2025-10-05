@@ -22,9 +22,11 @@ export function FactionApp({ faction, data, compareData }) {
   const systemFilters = useSystemFilters(factionDataset);
   const groupBy = useCreateSystemsGroupBy(systemFilters.systems);
 
+  const { setDataset } = datasetComparison;
+
   useEffect(() => {
-    datasetComparison.setDataset(compareDataset);
-  }, [ compareDataset, datasetComparison ]);
+    setDataset(compareDataset);
+  }, [ compareDataset, setDataset ]);
 
   return (
     <FactionContext value={faction}>

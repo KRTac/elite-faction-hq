@@ -11,7 +11,7 @@ function HeaderButton({ to, children, matchExact }) {
   return (
     <NavLink
       className={[
-        'text-lg transition-all duration-200',
+        'text-lg transition-all duration-200 no-underline',
         'dark:text-stone-300 dark:data-active:text-lime-500',
         'dark:hover:text-lime-100 dark:data-active:hover:text-lime-300'
       ].join(' ')}
