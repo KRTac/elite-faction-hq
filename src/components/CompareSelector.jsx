@@ -40,7 +40,7 @@ function CompareSelector() {
         </MenuButton>
         <MenuItems
           transition
-          anchor="bottom end"
+          anchor="bottom center"
           className="w-24 origin-top-right rounded-xl border dark:border-white/5 dark:bg-bg2-d px-1 py-2 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0"
         >
           {[ 0, 1, 7, 10 ].map(d => (
