@@ -1,32 +1,24 @@
-import { useCallback, useEffect, useRef } from 'react';
-import Button from './inputs/Button';
+import { useEffect, useState } from 'react';
 import { powers } from '../lib/elite';
 import { useFactionTitle } from '../hooks/usePageTitle';
+import GalaxyMap from './GalaxyMap';
 
 
-const postTargetOrigin = import.meta.env.VITE_PROTOCOL_HOSTNAME;
-
-function SystemsMapView({ groupBy, groups, systems, debug = false }) {
+function SystemsMapView({ groupBy, groups, systems }) {
   useFactionTitle('Map');
+  const [ mapData, setMapData ] = useState({});
 
-  const iframeRef = useRef(null);
-  const iframeLoaded = useRef(false);
-
-  const sendDebug = useCallback(() => {
-    iframeRef.current.contentWindow.postMessage({ type: 'debug' }, postTargetOrigin);
-  }, []);
-
-  const sendMapData = useCallback((_groupBy, _groups, _systems) => {
+  useEffect(() => {
     const mapData = {
       categories: {},
       systems: []
     };
 
-    if (_groups.length === 1 && _groups[0].name === 'Systems') {
+    if (groups.length === 1 && groups[0].name === 'Systems') {
       mapData.categories['Systems'] = {}
       let idx = 1;
 
-      for (const system of _groups[0].systems) {
+      for (const system of groups[0].systems) {
         mapData.categories['Systems'][idx] = { name: system.name, color: 'cccccc' };
         mapData.systems.push({
           cat: [ idx ],
@@ -38,23 +30,23 @@ function SystemsMapView({ groupBy, groups, systems, debug = false }) {
       }
     } else {
       let idx = 1;
-      mapData.categories[_groupBy] = {}
+      mapData.categories[groupBy] = {}
       let groupIds = {};
 
-      if (_groupBy === 'Faction priority') {
-        mapData.categories[_groupBy][1] = {
+      if (groupBy === 'Faction priority') {
+        mapData.categories[groupBy][1] = {
           name: 'Key systems',
           color: 'f54900'
         };
-        mapData.categories[_groupBy][2] = {
+        mapData.categories[groupBy][2] = {
           name: 'Controlled',
           color: '7ccf00'
         };
-        mapData.categories[_groupBy][3] = {
+        mapData.categories[groupBy][3] = {
           name: 'Uncontrolled',
           color: '74d4ff'
         };
-        mapData.categories[_groupBy][4] = {
+        mapData.categories[groupBy][4] = {
           name: 'Colonies',
           color: 'cccccc'
         };
@@ -66,14 +58,14 @@ function SystemsMapView({ groupBy, groups, systems, debug = false }) {
         };
       }
 
-      for (const system of _systems) {
+      for (const system of systems) {
         const systemGIds = [];
 
-        for (const group of _groups) {
+        for (const group of groups) {
           let groupName;
           let groupColor;
 
-          if (_groupBy === 'Controlling power') {
+          if (groupBy === 'Controlling power') {
             if (
               group.name === system.power_play.controlling ||
               (system.power_play.controlling === null && group.name === 'None')
@@ -86,7 +78,7 @@ function SystemsMapView({ groupBy, groups, systems, debug = false }) {
                 groupColor = 'cccccc';
               }
             }
-          } else if (_groupBy === 'Faction priority') {
+          } else if (groupBy === 'Faction priority') {
             if (group.systemNames.includes(system.name)) {
               groupName = group.name;
             }
@@ -96,7 +88,7 @@ function SystemsMapView({ groupBy, groups, systems, debug = false }) {
             if (!groupIds[groupName]) {
               const newId = idx++;
               groupIds[groupName] = newId;
-              mapData.categories[_groupBy][newId] = {
+              mapData.categories[groupBy][newId] = {
                 name: groupName,
                 color: groupColor
               };
@@ -104,7 +96,7 @@ function SystemsMapView({ groupBy, groups, systems, debug = false }) {
 
             systemGIds.push(groupIds[groupName]);
 
-            if (_groupBy === 'Controlling power') {
+            if (groupBy === 'Controlling power') {
               break;
             }
           }
@@ -120,55 +112,24 @@ function SystemsMapView({ groupBy, groups, systems, debug = false }) {
       }
 
       const filteredGroupCategories = {};
-      for (const catId of Object.keys(mapData.categories[_groupBy])) {
+      for (const catId of Object.keys(mapData.categories[groupBy])) {
         const catSystem = mapData.systems.find(sys => sys.cat.includes(Number(catId)));
 
         if (catSystem) {
-          filteredGroupCategories[catId] = mapData.categories[_groupBy][catId];
+          filteredGroupCategories[catId] = mapData.categories[groupBy][catId];
         }
       }
 
-      mapData.categories[_groupBy] = filteredGroupCategories;
+      mapData.categories[groupBy] = filteredGroupCategories;
     }
 
-    iframeRef.current.contentWindow.postMessage({
-      type: 'update',
-      mapData
-    }, postTargetOrigin);
-  }, []);
-
-  useEffect(() => {
-    if (!iframeLoaded.current) {
-      return;
-    }
-
-    sendMapData(groupBy, groups, systems);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    setMapData(mapData);
   }, [ groupBy, groups, systems ]);
 
-  const handleLoad = iframeLoaded.current
-    ? undefined
-    : () => {
-      sendMapData(groupBy, groups, systems);
-
-      iframeLoaded.current = true;
-    };
-
   return (
-    <>
-      <iframe
-        ref={iframeRef}
-        src={`${import.meta.env.BASE_URL}edmap.html`}
-        title="Galaxy map"
-        className="border-0 absolute top-0 left-0 w-full h-full"
-        onLoad={handleLoad}
-      />
-      {import.meta.env.DEV && debug && (
-        <div className="border-0 absolute bottom-0 right-0 mb-3 mr-3">
-          <Button onClick={sendDebug} smaller>Debug</Button>
-        </div>
-      )}
-    </>
+    <div className="relative h-full">
+      <GalaxyMap data={mapData} />
+    </div>
   );
 }
 

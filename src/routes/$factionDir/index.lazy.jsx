@@ -21,13 +21,12 @@ function Systems() {
   return (
     <>
       <SystemsHeader viewType={viewType} setViewType={setViewType} />
-      <div className="flex-1 overflow-y-scroll relative">
+      <div className="flex-1 overflow-y-scroll">
         {viewType === 'map' && (
           <SystemsMapView
             groupBy={groupBy}
             systems={systems}
             groups={groups}
-            debug
           />
         )}
         {viewType !== 'map' && (
