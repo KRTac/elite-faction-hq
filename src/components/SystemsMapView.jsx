@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useRef } from 'react';
 import Button from './inputs/Button';
 import { powers } from '../lib/elite';
+import { useFactionTitle } from '../hooks/usePageTitle';
 
 
 const postTargetOrigin = import.meta.env.VITE_PROTOCOL_HOSTNAME;
 
 function SystemsMapView({ groupBy, groups, systems, debug = false }) {
+  useFactionTitle('Map');
+
   const iframeRef = useRef(null);
   const iframeLoaded = useRef(false);
 

@@ -25,3 +25,7 @@ export function dateTimeText(
 export function trimSlashes(s) {
   return s.replace(/^\/+|\/+$/g, '');
 }
+
+export function joinTitle(parts = []) {
+  return parts.join(import.meta.env.VITE_SITE_TITLE_DELIMITER);
+}

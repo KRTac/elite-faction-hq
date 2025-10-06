@@ -19,7 +19,7 @@ function Standard({ children }) {
               'max-w-site m-auto px-4 py-4 my-1'
             ].join(' ')}
           >
-            Elite Faction HQ
+            {import.meta.env.VITE_SITE_TITLE}
           </Link>
           <p className="flex flex-col items-end text-sm">
             <span>Updated <DateTimeText date={generated_at} /></span>
