@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { powers } from '../lib/elite';
 import { useFactionTitle } from '../hooks/usePageTitle';
 import GalaxyMap from './GalaxyMap';
@@ -6,9 +6,7 @@ import GalaxyMap from './GalaxyMap';
 
 function SystemsMapView({ groupBy, groups, systems }) {
   useFactionTitle('Map');
-  const [ mapData, setMapData ] = useState({});
-
-  useEffect(() => {
+  const mapData = useMemo(() => {
     const mapData = {
       categories: {},
       systems: []
@@ -123,7 +121,7 @@ function SystemsMapView({ groupBy, groups, systems }) {
       mapData.categories[groupBy] = filteredGroupCategories;
     }
 
-    setMapData(mapData);
+    return mapData;
   }, [ groupBy, groups, systems ]);
 
   return (
