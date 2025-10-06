@@ -7,7 +7,6 @@ import { useCreateFactionDataset, FactionDatasetContext } from '../../hooks/useF
 import useSystemFilters, { SystemFiltersContext } from '../../hooks/useSystemFilters';
 import { SystemsGroupByContext, useCreateSystemsGroupBy } from '../../hooks/useSystemsGroupBy';
 import { DatasetComparisonContext, useCreateDatasetComparison } from '../../hooks/useDatasetComparison';
-import usePageTitle from '../../hooks/usePageTitle';
 
 
 function FactionAppRoute() {
