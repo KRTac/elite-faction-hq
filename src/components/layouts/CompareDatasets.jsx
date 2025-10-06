@@ -1,5 +1,5 @@
 import { useCreateFactionDataset } from "../../hooks/useFactionDataset";
-import { combineMapData } from "../../lib/starSystems";
+import { combineMapData } from "../../lib/ed3d";
 import GalaxyMap from "../GalaxyMap";
 
 
