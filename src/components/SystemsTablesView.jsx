@@ -6,6 +6,7 @@ import { useSystemsColumnDefinitions } from '../hooks/useSystemFilters';
 import Switch from './inputs/Switch';
 import IconButton from './inputs/IconButton';
 import PowerName from './data/PowerName';
+import { useFactionTitle } from '../hooks/usePageTitle';
 
 
 const selectableColumns = [
@@ -18,6 +19,8 @@ const selectableColumns = [
 ];
 
 function SystemsTablesView({ groups, emptyText = 'No systems found' }) {
+  useFactionTitle();
+
   const [ showSettings, setShowSettings ] = useState(false);
   const [ tableColumns, setTableColumns ] = useStorageState('systemsTables_columns', {
     defaultValue: [

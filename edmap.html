@@ -37,11 +37,10 @@
   <link href="/ed3d/css/styles.css" rel="stylesheet" type="text/css" />
   <script src="/ed3d/js/ed3dmap.min.js"></script>
   <script type="text/javascript">
+    const siteUrl = '%VITE_PROTOCOL_HOSTNAME%';
     let mapInitialized = false;
 
     window.addEventListener('message', ev => {
-      const siteUrl = '%VITE_PROTOCOL_HOSTNAME%';
-
       if (ev.data.type === 'debug') {
         console.log('Map debug');
         console.log('VITE_PROTOCOL_HOSTNAME', siteUrl);
