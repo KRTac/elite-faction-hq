@@ -1,16 +1,13 @@
-import { useContext } from 'react';
 import useStorageState from 'use-storage-state';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import SystemsMapView from '../../components/SystemsMapView';
 import SystemsTablesView from '../../components/SystemsTablesView';
 import SystemsHeader from '../../components/SystemsHeader';
-import { SystemFiltersContext } from '../../hooks/useSystemFilters';
 import useSystemsGroupBy from '../../hooks/useSystemsGroupBy';
 import useDatasetComparison from '../../hooks/useDatasetComparison';
 
 
 function Systems() {
-  const { systems } = useContext(SystemFiltersContext);
   const { groupBy, groups } = useSystemsGroupBy();
   const [ viewType, setViewType ] = useStorageState('systems_viewType', {
     defaultValue: 'map',
@@ -21,13 +18,11 @@ function Systems() {
   return (
     <>
       <SystemsHeader viewType={viewType} setViewType={setViewType} />
-      <div className="flex-1 overflow-y-scroll relative">
+      <div className="flex-1 overflow-y-scroll">
         {viewType === 'map' && (
           <SystemsMapView
-            groupBy={groupBy}
-            systems={systems}
-            groups={groups}
-            debug
+            groupBy={isComparing ? 'Comparison' : groupBy}
+            groups={isComparing ? compareGroups : groups}
           />
         )}
         {viewType !== 'map' && (

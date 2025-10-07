@@ -6,7 +6,13 @@ import useFactionDataset from './useFactionDataset';
 export function useFactionTitle(title) {
   const { faction } = useFactionDataset();
 
-  usePageTitle(title ? [ title, faction ] : faction);
+  usePageTitle(title
+    ? [
+      ...Array.isArray(title) ? title : [ title ],
+      faction
+    ]
+    : faction
+  );
 }
 
 function usePageTitle(title) {
