@@ -1,20 +1,12 @@
-import { useMemo } from 'react';
 import { useFactionTitle } from '../hooks/usePageTitle';
-import GalaxyMap from './GalaxyMap';
-import { generateMapData } from '../lib/ed3d';
+import GalaxyMapPlus from './GalaxyMapPlus';
 
 
-function SystemsMapView({ groupBy, groups, systems }) {
+function SystemsMapView({ groupBy, groups }) {
   useFactionTitle('Map');
-  const mapData = useMemo(
-    () => generateMapData(groupBy, groups, systems),
-    [ groupBy, groups, systems ]
-  );
 
   return (
-    <div className="relative h-full">
-      <GalaxyMap data={mapData} />
-    </div>
+    <GalaxyMapPlus groupBy={groupBy} groups={groups} />
   );
 }
 

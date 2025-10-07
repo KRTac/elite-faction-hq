@@ -1,5 +1,113 @@
-import { powers } from './elite';
+import { powerColor } from './elite';
 
+
+export function generateMapData(categories) {
+  const _categories = {};
+  const systems = [];
+  const addedSystems = {};
+  let idx = 1;
+
+  for (const groupBy of Object.keys(categories)) {
+    _categories[groupBy] = {};
+
+    for (const group of categories[groupBy]) {
+      const groupName = group.name;
+      let groupColor;
+
+      switch (groupBy) {
+        case 'Controlling power':
+          groupColor = powerColor(groupName);
+          break;
+
+        case 'Faction priority':
+          switch (groupName) {
+            case 'Key systems':
+              groupColor = '#f54900';
+              break;
+
+            case 'Controlled':
+              groupColor = '#7ccf00';
+              break;
+
+            case 'Uncontrolled':
+              groupColor = '#74d4ff';
+              break;
+
+            case 'Colonies':
+              groupColor = '#cccccc';
+              break;
+
+            default:
+          }
+          break;
+
+        case 'Comparison':
+          switch (groupName) {
+            case 'Added systems':
+              groupColor = '#7ccf00';
+              break;
+
+            case 'Removed systems':
+              groupColor = '#e7000b';
+              break;
+
+            case 'Controlling faction changed':
+              groupColor = '#c800de';
+              break;
+
+            case 'Colonisation finished':
+              groupColor = '#fdc700';
+              break;
+
+            case 'Influence changed':
+              groupColor = '#a2f4fd';
+              break;
+
+            default:
+          }
+          break;
+
+        case 'References':
+          groupColor = '#bbbbbb';
+          break;
+
+        default:
+          groupColor = '#cccccc';
+      }
+
+      _categories[groupBy][idx++] = {
+        name: groupName,
+        color: toMapColor(groupColor)
+      };
+
+      for (const system of group.systems) {
+        let systemIdx = addedSystems[system.name];
+
+        if (systemIdx === undefined) {
+          systemIdx = systems.length;
+          addedSystems[system.name] = systemIdx;
+
+          systems.push({
+            cat: [],
+            coords: system.coords,
+            name: system.name
+          });
+        }
+
+        systems[systemIdx].cat.push(idx - 1);
+      }
+    }
+  }
+
+  return {
+    categories: _categories,
+    systems
+  };
+}
+
+export function toMapColor(c) {
+  return c.substr(1);
+}
 
 export function combineMapData(datasets) {
   const existing = [];
@@ -87,122 +195,4 @@ export function combineMapData(datasets) {
   }
 
   return { categories, systems };
-}
-
-export function generateMapData(groupBy, groups, systems) {
-  const mapData = {
-    categories: {},
-    systems: []
-  };
-
-  if (groups.length === 1 && groups[0].name === 'Systems') {
-    mapData.categories['Systems'] = {}
-    let idx = 1;
-
-    for (const system of groups[0].systems) {
-      mapData.categories['Systems'][idx] = { name: system.name, color: 'cccccc' };
-      mapData.systems.push({
-        cat: [ idx ],
-        coords: system.coords,
-        name: system.name
-      });
-
-      idx += 1;
-    }
-  } else {
-    let idx = 1;
-    mapData.categories[groupBy] = {}
-    let groupIds = {};
-
-    if (groupBy === 'Faction priority') {
-      mapData.categories[groupBy][1] = {
-        name: 'Key systems',
-        color: 'f54900'
-      };
-      mapData.categories[groupBy][2] = {
-        name: 'Controlled',
-        color: '7ccf00'
-      };
-      mapData.categories[groupBy][3] = {
-        name: 'Uncontrolled',
-        color: '74d4ff'
-      };
-      mapData.categories[groupBy][4] = {
-        name: 'Colonies',
-        color: 'cccccc'
-      };
-      groupIds = {
-        'Key systems': 1,
-        'Controlled': 2,
-        'Uncontrolled': 3,
-        'Colonies': 4
-      };
-    }
-
-    for (const system of systems) {
-      const systemGIds = [];
-
-      for (const group of groups) {
-        let groupName;
-        let groupColor;
-
-        if (groupBy === 'Controlling power') {
-          if (
-            group.name === system.power_play.controlling ||
-            (system.power_play.controlling === null && group.name === 'None')
-          ) {
-            groupName = group.name;
-
-            if (Object.keys(powers).includes(groupName)) {
-              groupColor = powers[groupName].color.substr(1);
-            } else if (groupName === 'None') {
-              groupColor = 'cccccc';
-            }
-          }
-        } else if (groupBy === 'Faction priority') {
-          if (group.systemNames.includes(system.name)) {
-            groupName = group.name;
-          }
-        }
-
-        if (groupName) {
-          if (!groupIds[groupName]) {
-            const newId = idx++;
-            groupIds[groupName] = newId;
-            mapData.categories[groupBy][newId] = {
-              name: groupName,
-              color: groupColor
-            };
-          }
-
-          systemGIds.push(groupIds[groupName]);
-
-          if (groupBy === 'Controlling power') {
-            break;
-          }
-        }
-      }
-
-      if (systemGIds.length) {
-        mapData.systems.push({
-          cat: systemGIds,
-          coords: system.coords,
-          name: system.name
-        });
-      }
-    }
-
-    const filteredGroupCategories = {};
-    for (const catId of Object.keys(mapData.categories[groupBy])) {
-      const catSystem = mapData.systems.find(sys => sys.cat.includes(Number(catId)));
-
-      if (catSystem) {
-        filteredGroupCategories[catId] = mapData.categories[groupBy][catId];
-      }
-    }
-
-    mapData.categories[groupBy] = filteredGroupCategories;
-  }
-
-  return mapData;
 }
