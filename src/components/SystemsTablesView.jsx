@@ -129,11 +129,14 @@ function SystemsTablesView({ groups, emptyText = 'No systems found' }) {
           label === 'Influence changed' &&
           Object.keys(comparison.influenceChanged).length > 0
         ) {
+          const [ systemColumn, ...columnsRest ] = columnDefinitions;
+
           columnDefinitions = [
+            systemColumn,
             tableColumnDefinition(label, {
               influenceChanged: comparison.influenceChanged
             }),
-            ...columnDefinitions
+            ...columnsRest
           ];
         }
 
