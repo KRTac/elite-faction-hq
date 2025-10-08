@@ -17,7 +17,7 @@ import { filterRange } from '../lib/input';
 function SystemsHeader({ viewType, setViewType }) {
   const { systems: filteredSystems, isFiltering } = useContext(SystemFiltersContext);
   const {
-    groupBy, setGroupBy, systemCountRange, setSystemCountRange
+    groupBy, setGroupBy, systemCountRange, setSystemCountRange, systemCount: groupedSystemCount
   } = useSystemsGroupBy(filteredSystems);
   const { systems } = useFactionDataset();
   const [ visibleFilters, setVisibleFilters ] = useStorageState('systems_visibleFilters', {
@@ -103,12 +103,12 @@ function SystemsHeader({ viewType, setViewType }) {
           {!isComparing && (
             <p className="dark:text-neutral-400 text-sm">
               {isFiltering && <>
-                <strong className="dark:text-neutral-300">{filteredSystems.length} </strong>
+                <strong className="dark:text-neutral-300">{groupedSystemCount} </strong>
                 systems filtered from
                 <strong className="dark:text-neutral-300"> {systems.length} </strong>
               </>}
               {!isFiltering && <>
-                <strong className="dark:text-neutral-300">{systems.length}</strong> systems
+                <strong className="dark:text-neutral-300">{groupedSystemCount}</strong> systems
               </>}
             </p>
           )}

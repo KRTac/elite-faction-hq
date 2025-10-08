@@ -5,9 +5,11 @@ import SystemsTablesView from '../../components/SystemsTablesView';
 import SystemsHeader from '../../components/SystemsHeader';
 import useSystemsGroupBy from '../../hooks/useSystemsGroupBy';
 import useDatasetComparison from '../../hooks/useDatasetComparison';
+import useFaction from '../../hooks/useFaction';
 
 
 function Systems() {
+  const { name } = useFaction();
   const { groupBy, groups } = useSystemsGroupBy();
   const [ viewType, setViewType ] = useStorageState('systems_viewType', {
     defaultValue: 'map',
@@ -21,7 +23,10 @@ function Systems() {
       <div className="flex-1 overflow-y-scroll">
         {viewType === 'map' && (
           <SystemsMapView
-            groupBy={isComparing ? 'Comparison' : groupBy}
+            groupBy={isComparing
+              ? 'Comparison'
+              : groupBy === 'None' ? name : groupBy
+            }
             groups={isComparing ? compareGroups : groups}
           />
         )}
