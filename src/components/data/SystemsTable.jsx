@@ -39,9 +39,9 @@ function SystemsTable({ groupId, label, systems, columns, withRowCount }) {
       ].join(' ')}
     >
       {label && (
-        <div className="flex flex-row justify-between items-center mb-1 px-5 py-2 rounded-md dark:bg-neutral-700/20">
-          <p className="dark:text-neutral-300 font-bold text-xl">{label}</p>
+        <div className="flex flex-row items-center mb-1 px-3 py-2 rounded-md dark:bg-neutral-700/20">
           <Switch checked={showTable} onChange={() => setShowTable(!showTable)} />
+          <p className="dark:text-neutral-300 font-bold text-xl ml-2">{label}</p>
         </div>
       )}
       {showTable && !!systems.length && (

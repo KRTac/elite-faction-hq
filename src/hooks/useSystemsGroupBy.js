@@ -160,10 +160,22 @@ export function useCreateSystemsGroupBy(systems) {
       displayGroups = filterGroupSystemsRange(displayGroups, filterRange(systemCountRange));
     }
 
+    const uniqueSystems = [];
+    for (const group of displayGroups) {
+      for (const system of group.systems) {
+        if (uniqueSystems.includes(system.name)) {
+          continue;
+        }
+
+        uniqueSystems.push(system.name);
+      }
+    }
+
     return {
       groupBy,
       setGroupBy,
       groups: displayGroups,
+      systemCount: uniqueSystems.length,
       systemCountRange,
       setSystemCountRange
     };
