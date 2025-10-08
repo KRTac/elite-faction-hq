@@ -7,6 +7,8 @@ import Switch from './inputs/Switch';
 import IconButton from './inputs/IconButton';
 import PowerName from './data/PowerName';
 import { useFactionTitle } from '../hooks/usePageTitle';
+import useDatasetComparison from '../hooks/useDatasetComparison';
+import { tableColumnDefinition } from '../lib/starSystems';
 
 
 const selectableColumns = [
@@ -36,7 +38,8 @@ function SystemsTablesView({ groups, emptyText = 'No systems found' }) {
     defaultValue: false,
     sync: false
   });
-  const columnDefinitions = useSystemsColumnDefinitions(tableColumns, { shortenedPowers });
+  let columnDefinitions = useSystemsColumnDefinitions(tableColumns, { shortenedPowers });
+  const { isActive: isComparing, result: comparison } = useDatasetComparison();
 
   const tableGroups = [];
 
@@ -119,6 +122,19 @@ function SystemsTablesView({ groups, emptyText = 'No systems found' }) {
               <span className="dark:text-stone-400 text-base">{` - ${systems.length}`}</span>
             </>
           );
+        }
+
+        if (
+          isComparing &&
+          label === 'Influence changed' &&
+          Object.keys(comparison.influenceChanged).length > 0
+        ) {
+          columnDefinitions = [
+            tableColumnDefinition(label, {
+              influenceChanged: comparison.influenceChanged
+            }),
+            ...columnDefinitions
+          ];
         }
 
         return (

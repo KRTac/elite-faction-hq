@@ -9,7 +9,7 @@ import useFaction from '../../hooks/useFaction';
 
 
 function Systems() {
-  const { name } = useFaction();
+  const { name: factionName } = useFaction();
   const { groupBy, groups } = useSystemsGroupBy();
   const [ viewType, setViewType ] = useStorageState('systems_viewType', {
     defaultValue: 'map',
@@ -25,7 +25,7 @@ function Systems() {
           <SystemsMapView
             groupBy={isComparing
               ? 'Comparison'
-              : groupBy === 'None' ? name : groupBy
+              : groupBy === 'None' ? factionName : groupBy
             }
             groups={isComparing ? compareGroups : groups}
           />

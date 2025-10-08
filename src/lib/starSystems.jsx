@@ -175,11 +175,12 @@ export function comparisonDisplayGroups(comparison, primarySystems, secondarySys
     });
   }
 
-  if (influenceChanged.length) {
+  const infChangedSystems = Object.keys(influenceChanged);
+  if (infChangedSystems.length) {
     groups.push({
       name: 'Influence changed',
-      systemNames: influenceChanged,
-      systems: primarySystems.filter(s => influenceChanged.includes(s.name))
+      systemNames: infChangedSystems,
+      systems: primarySystems.filter(s => infChangedSystems.includes(s.name))
     });
   }
 
@@ -188,7 +189,7 @@ export function comparisonDisplayGroups(comparison, primarySystems, secondarySys
 
 export function tableColumnDefinition(
   column,
-  { shortenedPowers, factionName, navigate }
+  { shortenedPowers, factionName, navigate, influenceChanged }
 ) {
   let definition;
 
@@ -570,6 +571,29 @@ export function tableColumnDefinition(
             </div>
           );
         }
+      };
+      break;
+
+    case 'Influence changed':
+      definition = {
+        accessorFn: row => Math.round(influenceChanged[row.name] * 10000) / 100,
+        header: 'Influence changed',
+        meta: {
+          filterVariant: 'range',
+          alignHeader: 'center'
+        },
+        cell: info => (
+          <span
+            className={[
+              'inline-block w-full text-center',
+              info.getValue() < 0
+                ? 'text-red-600'
+                : 'text-lime-400'
+            ].join(' ')}
+          >
+            {numeral(info.getValue()).format('0.00')}%
+          </span>
+        )
       };
       break;
 
