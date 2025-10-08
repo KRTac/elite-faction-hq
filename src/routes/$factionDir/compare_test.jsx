@@ -19,7 +19,7 @@ function Layout({ children, title = '' }) {
   );
 }
 
-function Stats() {
+function Compare() {
   const { datasetA, datasetB } = Route.useLoaderData();
 
   return (
@@ -29,7 +29,7 @@ function Stats() {
   );
 }
 
-export const Route = createFileRoute('/$factionDir/stats')({
+export const Route = createFileRoute('/$factionDir/compare_test')({
   loaderDeps: ({ search }) => ({
     queryA: search.a,
     queryB: search.b
@@ -47,7 +47,7 @@ export const Route = createFileRoute('/$factionDir/stats')({
 
     return { datasetA, datasetB };
   },
-  component: Stats,
+  component: Compare,
   errorComponent: ({ error }) => (
     <Layout title="Compare view">
       <p className="text-center px-3 mt-10 text-xl">{error.message}</p>

@@ -192,7 +192,7 @@ export function compareDatasets(primary, secondary) {
   }
 
   const infChangeThreshold = 0.02;
-  const influenceChanged = [];
+  const influenceChanged = {};
   const controllingFactionChanged = [];
   const colonisationFinished = [];
   const changedSystems = [ ...newSystems, ...removedSystems ];
@@ -207,7 +207,7 @@ export function compareDatasets(primary, secondary) {
     let hasChanged = false;
 
     if (Math.abs(inluenceChange) >= infChangeThreshold) {
-      influenceChanged.push(system.name);
+      influenceChanged[system.name] = inluenceChange;
       hasChanged = true;
     }
 
