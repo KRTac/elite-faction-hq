@@ -1,4 +1,4 @@
-import { powerColor } from './elite';
+import { engineerSystems, notableSystems, powerColor, powerHqSystems } from './elite';
 
 
 export function generateMapData(categories) {
@@ -195,4 +195,36 @@ export function combineMapData(datasets) {
   }
 
   return { categories, systems };
+}
+
+const availableReferenceSystems = {
+  'Notable': notableSystems,
+  'Power HQs': powerHqSystems,
+  'Ship engineers': engineerSystems
+};
+
+function referenceSystemOptions(category) {
+  return availableReferenceSystems[category].map(s => {
+    let label;
+
+    if (category === 'Notable') {
+      label = s._meta.notable.short;
+    } else if (category === 'Power HQs') {
+      label = s._meta.power.short;
+    } else if (category === 'Ship engineers') {
+      label = s._meta.engineer.short;
+    }
+
+    return {
+      label,
+      value: s.name
+    };
+  });
+}
+
+export const availableReferenceCategories = Object.keys(availableReferenceSystems);
+export const availableReferenceOptions = {};
+
+for (const cat of availableReferenceCategories) {
+  availableReferenceOptions[cat] = referenceSystemOptions(cat);
 }

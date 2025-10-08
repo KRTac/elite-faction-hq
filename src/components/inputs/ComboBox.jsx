@@ -10,7 +10,11 @@ function ComboBox({ options, value = '', onChange }) {
     query === ''
       ? options
       : options.filter(o => {
-          return o.toLowerCase().includes(query.toLowerCase())
+          if (typeof o === 'string') {
+            return o.toLowerCase().includes(query.toLowerCase())
+          }
+
+          return o.label.toLowerCase().includes(query.toLowerCase())
         });
 
   return (
@@ -47,16 +51,29 @@ function ComboBox({ options, value = '', onChange }) {
           'transition duration-100 ease-in data-leave:data-closed:opacity-0'
         ].join(' ')}
       >
-        {filtered.map(value => (
-          <ComboboxOption
-            key={value}
-            value={value}
-            className="group flex cursor-default items-center gap-1 rounded-lg px-1 py-0.5 select-none dark:data-focus:bg-white/10"
-          >
-            <CheckIcon className="invisible size-4 dark:fill-white group-data-selected:visible" />
-            <div className="text-sm/6 dark:text-neutral-300">{value}</div>
-          </ComboboxOption>
-        ))}
+        {filtered.map(option => {
+          let label;
+          let value;
+
+          if (typeof option === 'string') {
+            label = option;
+            value = option;
+          } else {
+            label = option.label;
+            value = option.value;
+          }
+
+          return (
+            <ComboboxOption
+              key={value}
+              value={value}
+              className="group flex cursor-default items-center gap-1 rounded-lg px-1 py-0.5 select-none dark:data-focus:bg-white/10"
+            >
+              <CheckIcon className="invisible size-4 dark:fill-white group-data-selected:visible" />
+              <div className="text-sm/6 dark:text-neutral-300">{value} - {label}</div>
+            </ComboboxOption>
+          );
+        })}
       </ComboboxOptions>
     </Combobox>
   );
