@@ -88,7 +88,7 @@ function GalaxyMapPlus({ groupBy, groups }) {
           >
             <div className="px-2 pt-2 flex flex-wrap xs:flex-nowrap gap-1">
               <div className="flex-1">
-                <p className="dark:text-neutral-300 text-base/5 pb-1">Reference systems</p>
+                <p className="dark:text-neutral-300 text-base/5 pb-2">Reference systems</p>
                 <div className="flex flex-wrap justify-center items-start">
                   {availableReferenceCategories.map(cat => (
                     <div
