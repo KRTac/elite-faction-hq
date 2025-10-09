@@ -622,7 +622,7 @@ export function tableColumnDefinition(
 
     case 'Controling power changed':
       definition = {
-        accessorFn: row => powerChanged[row.name],
+        accessorFn: row => powerChanged[row.name] ?? '',
         header: 'Former power',
         cell: info => {
           const oldPower = info.getValue();
@@ -638,7 +638,7 @@ export function tableColumnDefinition(
 
     case 'Power state changed':
       definition = {
-        accessorFn: row => powerStateChanged[row.name],
+        accessorFn: row => powerStateChanged[row.name] ?? '',
         header: 'Old power state'
       };
       break;
