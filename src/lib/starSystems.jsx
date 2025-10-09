@@ -639,7 +639,7 @@ export function tableColumnDefinition(
     case 'Power state changed':
       definition = {
         accessorFn: row => powerStateChanged[row.name] ?? '',
-        header: 'Old power state'
+        header: 'Former power state'
       };
       break;
 
