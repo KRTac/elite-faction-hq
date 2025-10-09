@@ -191,11 +191,13 @@ export function compareDatasets(primary, secondary) {
     }
   }
 
+  const changedSystems = [ ...newSystems, ...removedSystems ];
   const infChangeThreshold = 0.02;
   const influenceChanged = {};
   const controllingFactionChanged = [];
   const colonisationFinished = [];
-  const changedSystems = [ ...newSystems, ...removedSystems ];
+  const powerChanged = {};
+  const powerStateChanged = {};
 
   for (const system of primary.systems) {
     if (newSystems.includes(system.name) || removedSystems.includes(system.name)) {
@@ -221,6 +223,17 @@ export function compareDatasets(primary, secondary) {
       hasChanged = true;
     }
 
+    if (system.power_play.controlling !== oldSystem.power_play.controlling) {
+      powerChanged[system.name] = oldSystem.power_play.controlling;
+      hasChanged = true;
+    } else if (
+      system.power_play.controlling &&
+      system.power_play.state !== oldSystem.power_play.state
+    ) {
+      powerStateChanged[system.name] = oldSystem.power_play.state;
+      hasChanged = true;
+    }
+
     if (hasChanged) {
       changedSystems.push(system.name);
     }
@@ -231,6 +244,7 @@ export function compareDatasets(primary, secondary) {
     influenceChanged,
     controllingFactionChanged,
     colonisationFinished,
-    newSystems, removedSystems
+    newSystems, removedSystems,
+    powerChanged, powerStateChanged
   };
 }

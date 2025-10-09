@@ -124,20 +124,35 @@ function SystemsTablesView({ groups, emptyText = 'No systems found' }) {
           );
         }
 
-        if (
-          isComparing &&
-          label === 'Influence changed' &&
-          Object.keys(comparison.influenceChanged).length > 0
-        ) {
-          const [ systemColumn, ...columnsRest ] = columnDefinitions;
+        if (isComparing) {
+          let comparisonColumn;
 
-          columnDefinitions = [
-            systemColumn,
-            tableColumnDefinition(label, {
-              influenceChanged: comparison.influenceChanged
-            }),
-            ...columnsRest
-          ];
+          if (
+            label === 'Influence changed' &&
+            Object.keys(comparison.influenceChanged).length > 0
+          ) {
+            comparisonColumn = tableColumnDefinition(label, { comparison });
+          } else if (
+            label === 'Controling power changed' &&
+            Object.keys(comparison.powerChanged).length > 0
+          ) {
+            comparisonColumn = tableColumnDefinition(label, { comparison, shortenedPowers });
+          } else if (
+            label === 'Power state changed' &&
+            Object.keys(comparison.powerStateChanged).length > 0
+          ) {
+            comparisonColumn = tableColumnDefinition(label, { comparison });
+          }
+
+          if (comparisonColumn) {
+            const [ systemColumn, ...columnsRest ] = columnDefinitions;
+
+            columnDefinitions = [
+              systemColumn,
+              comparisonColumn,
+              ...columnsRest
+            ];
+          }
         }
 
         return (

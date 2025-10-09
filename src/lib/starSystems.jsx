@@ -138,7 +138,8 @@ export function comparisonDisplayGroups(comparison, primarySystems, secondarySys
     influenceChanged,
     controllingFactionChanged,
     colonisationFinished,
-    newSystems, removedSystems
+    newSystems, removedSystems,
+    powerChanged, powerStateChanged
   } = comparison;
 
   const groups = [];
@@ -167,6 +168,24 @@ export function comparisonDisplayGroups(comparison, primarySystems, secondarySys
     });
   }
 
+  const powerChangedSystems = Object.keys(powerChanged);
+  if (powerChangedSystems.length) {
+    groups.push({
+      name: 'Controling power changed',
+      systemNames: powerChangedSystems,
+      systems: primarySystems.filter(s => powerChangedSystems.includes(s.name))
+    });
+  }
+
+  const powerStateChangedSystems = Object.keys(powerStateChanged);
+  if (powerStateChangedSystems.length) {
+    groups.push({
+      name: 'Power state changed',
+      systemNames: powerStateChangedSystems,
+      systems: primarySystems.filter(s => powerStateChangedSystems.includes(s.name))
+    });
+  }
+
   if (colonisationFinished.length) {
     groups.push({
       name: 'Colonisation finished',
@@ -189,8 +208,12 @@ export function comparisonDisplayGroups(comparison, primarySystems, secondarySys
 
 export function tableColumnDefinition(
   column,
-  { shortenedPowers, factionName, navigate, influenceChanged }
+  {
+    shortenedPowers, factionName, navigate,
+    comparison
+  }
 ) {
+  const { influenceChanged, powerChanged, powerStateChanged } = comparison ?? {};
   let definition;
 
   switch (column) {
@@ -594,6 +617,29 @@ export function tableColumnDefinition(
             {numeral(info.getValue()).format('0.00')}%
           </span>
         )
+      };
+      break;
+
+    case 'Controling power changed':
+      definition = {
+        accessorFn: row => powerChanged[row.name],
+        header: 'Former power',
+        cell: info => {
+          const oldPower = info.getValue();
+
+          return (
+            oldPower
+              ? <PowerName name={oldPower} short={shortenedPowers} />
+              : <ValueOrNull value={null} nullText="None" />
+          );
+        }
+      };
+      break;
+
+    case 'Power state changed':
+      definition = {
+        accessorFn: row => powerStateChanged[row.name],
+        header: 'Old power state'
       };
       break;
 
