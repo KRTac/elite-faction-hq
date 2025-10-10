@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import { VitePluginRadar } from 'vite-plugin-radar'
-import updateFactionsMeta from './plugins/update_factions_meta';
+import updateFactionsMeta, { updatePowersMeta } from './plugins/update_factions_meta';
 
 
 process.env.VITE_BASE_PATH = process.env.VITE_BASE_PATH ?? '/';
@@ -19,7 +19,8 @@ export default defineConfig(() => {
     }),
     react(),
     tailwindcss(),
-    updateFactionsMeta()
+    updateFactionsMeta(),
+    updatePowersMeta()
   ];
 
   if (process.env.VITE_GA_TAG) {
