@@ -158,7 +158,7 @@ def main():
     powers = []
     output_root = Path(args.output_root).resolve()
     config = {
-        'power_data_root': ''
+        'data_root': ''
     }
 
     if args.config_json:
@@ -167,8 +167,8 @@ def main():
         with open(config_path, 'r') as f:
             config = json.load(f)
 
-    if not args.output_root and 'power_data_root' in config and config['power_data_root']:
-        output_root = output_root.joinpath(config['power_data_root']).resolve()
+    if not args.output_root and 'data_root' in config and config['data_root']:
+        output_root = output_root.joinpath(config['data_root'], 'powers').resolve()
 
     if args.power_name:
         if ',' in args.power_name:
