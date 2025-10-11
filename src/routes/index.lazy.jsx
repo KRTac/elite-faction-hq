@@ -68,7 +68,7 @@ function Dashboard() {
                   >
                     {faction.name}
                     <span
-                      className="inline-block ml-2 text-sm text-neutral-400 group-hover:text-neutral-300 transition duration-200"
+                      className="inline-block ml-2 text-sm text-neutral-400 group-hover:text-neutral-200 transition duration-200"
                     >
                       {faction.system_count}
                     </span>
@@ -87,16 +87,19 @@ function Dashboard() {
             {powers.map(power => {
               return (
                 <li
-                  className="block rounded-lg dark:bg-neutral-800 dark:hover:bg-neutral-700 transition duration-200"
+                  className="block mb-3"
                   key={power.directory}
                 >
                   <Link
-                    className="block text-lg px-4 py-2 no-underline mb-3"
+                    className={[
+                      'block text-lg px-4 py-2 no-underline group',
+                      'rounded-lg dark:bg-neutral-900 dark:hover:bg-neutral-800 transition duration-200'
+                    ].join(' ')}
                     to={`/${power.directory}`}
                   >
                     <PowerName name={power.name} />
                     <span
-                      className="inline-block ml-2 text-sm text-neutral-400 group-hover:text-neutral-300 transition duration-200"
+                      className="inline-block ml-2 text-sm text-neutral-400 group-hover:text-neutral-200 transition duration-200"
                     >
                       {power.system_count}
                     </span>
