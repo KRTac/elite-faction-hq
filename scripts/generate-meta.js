@@ -1,5 +1,4 @@
-import updateFactionsMeta, { updatePowersMeta } from '../plugins/update_factions_meta.js';
+import updateDatasetsMeta from '../plugins/update_datasets_meta.js';
 
 
-updateFactionsMeta().buildStart();
-updatePowersMeta().buildStart();
+updateDatasetsMeta().buildStart();

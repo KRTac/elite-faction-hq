@@ -10,14 +10,14 @@ import { DatasetComparisonContext, useCreateDatasetComparison } from '../../hook
 
 
 function FactionAppRoute() {
-  const { faction, data, compareData } = useLoaderData({ from: '/$factionDir' });
+  const { subject, data, compareData } = useLoaderData({ from: '/$factionDir' });
 
-  return <FactionApp faction={faction} data={data} compareData={compareData} />;
+  return <FactionApp faction={subject} data={data} compareData={compareData} />;
 }
 
 export function FactionApp({ faction, data, compareData }) {
-  const factionDataset = useCreateFactionDataset(data);
-  const compareDataset = useCreateFactionDataset(compareData);
+  const factionDataset = useCreateFactionDataset(data, faction);
+  const compareDataset = useCreateFactionDataset(compareData, faction);
   const datasetComparison = useCreateDatasetComparison(factionDataset, compareDataset);
   const systemFilters = useSystemFilters(factionDataset);
   const groupBy = useCreateSystemsGroupBy(systemFilters.systems);

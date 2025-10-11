@@ -1,10 +1,17 @@
 import { subDays, parseISO, isValid } from 'date-fns';
 import { trimSlashes } from './string';
 import { systemsStats } from './starSystems';
+import { isPowerSlug } from './elite';
 
 
 export function datasetUrl(factionDirectory, datasetName) {
-  let dataRoot = import.meta.env.VITE_FACTION_DATA_CLIENT_ROOT;
+  let dataRoot = import.meta.env.VITE_DATA_CLIENT_ROOT ?? '';
+
+  if (isPowerSlug(factionDirectory)) {
+    dataRoot += '/powers'
+  } else {
+    dataRoot += '/factions'
+  }
 
   if (!dataRoot.startsWith('http://') && !dataRoot.startsWith('https://')) {
     dataRoot = `${import.meta.env.BASE_URL}${trimSlashes(dataRoot)}`;
@@ -105,7 +112,7 @@ export function urlByTimeQuery(query, factions, fallbackFactionDir) {
   const faction = factions.find(({ directory }) => directory === factionDir);
 
   if (!faction) {
-    throw new Error('Specified faction doesn\'t exist.');
+    throw new Error('Specified faction or power doesn\'t exist.');
   }
 
   let datasetName = faction.datasets[0];
@@ -122,7 +129,7 @@ export function previousDataset(current, datasets, daysOld = 0) {
   const currentIdx = datasets.indexOf(current);
 
   if (currentIdx === -1) {
-    throw new Error('Can\'t lookup previous faction for non-existing reference.');
+    throw new Error('Can\'t lookup previous faction or power for non-existing reference.');
   }
 
   if (currentIdx === datasets.length - 1) {
@@ -149,27 +156,32 @@ export async function fetchDataset(url) {
   try {
     resp = await fetch(url);
   } catch {
-    throw new Error('Requested faction data doesn\'t exist.');
+    throw new Error('Requested faction or power data doesn\'t exist.');
   }
 
   try {
     return await resp.json();
   } catch {
-    throw new Error('Requested faction data not in the correct format.');
+    throw new Error('Requested faction or power data not in the correct format.');
   }
 }
 
-export function createFactionDataset(dataset) {
+export function createFactionDataset(dataset, factionDef) {
   const {
-    timestamp, import_duration, faction,
-    inara_faction_id, origin_system, systems
+    timestamp, import_duration, faction, power,
+    inara_faction_id, systems
   } = dataset;
+  let { origin_system } = dataset;
+
+  if (power) {
+    origin_system = factionDef.origin_system;
+  }
 
   const stats = systemsStats(systems ?? []);
 
   return {
     isSet: !!timestamp,
-    timestamp, faction,
+    timestamp, faction, power,
     importDuration: import_duration,
     inaraFactionId: inara_faction_id,
     originSystem: origin_system,
@@ -205,17 +217,20 @@ export function compareDatasets(primary, secondary) {
     }
 
     const oldSystem = secondary.systems.find(s => s.name === system.name);
-    const inluenceChange = system.faction_influence - oldSystem.faction_influence;
     let hasChanged = false;
 
-    if (Math.abs(inluenceChange) >= infChangeThreshold) {
-      influenceChanged[system.name] = inluenceChange;
-      hasChanged = true;
-    }
+    if (primary.faction) {
+      const inluenceChange = system.faction_influence - oldSystem.faction_influence;
 
-    if (system.is_controlling_faction !== oldSystem.is_controlling_faction) {
-      controllingFactionChanged.push(system.name);
-      hasChanged = true;
+      if (Math.abs(inluenceChange) >= infChangeThreshold) {
+        influenceChanged[system.name] = inluenceChange;
+        hasChanged = true;
+      }
+
+      if (system.is_controlling_faction !== oldSystem.is_controlling_faction) {
+        controllingFactionChanged.push(system.name);
+        hasChanged = true;
+      }
     }
 
     if (system.is_being_colonised !== oldSystem.is_being_colonised && !system.is_being_colonised) {
@@ -240,9 +255,9 @@ export function compareDatasets(primary, secondary) {
   }
 
   return {
-    changedSystems,
     influenceChanged,
     controllingFactionChanged,
+    changedSystems,
     colonisationFinished,
     newSystems, removedSystems,
     powerChanged, powerStateChanged

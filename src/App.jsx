@@ -1,6 +1,5 @@
 import { RouterProvider, createRouter } from '@tanstack/react-router';
-import { FactionsMetaContext } from './hooks/useFactionsMeta';
-import { PowersMetaContext } from './hooks/usePowersMeta';
+import { DatasetsMetaContext } from './hooks/useDatasetsMeta';
 import './index.css';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/600.css';
@@ -9,18 +8,17 @@ import { routeTree } from './routeTree.gen';
 
 
 function clientInit() {
-  const factionsMeta = window.factions_meta;
-  const powersMeta = window.powers_meta;
+  const datasetsMeta = window.datasets_meta;
   const router = createRouter({
     basepath: import.meta.env.BASE_URL,
     routeTree
   });
 
-  return { factionsMeta, powersMeta, router };
+  return { datasetsMeta, router };
 }
 
-const { factionsMeta, powersMeta, router } = import.meta.env.SSR
-  ? { factionsMeta: undefined, powersMeta: undefined, router: undefined }
+const { datasetsMeta, router } = import.meta.env.SSR
+  ? { datasetsMeta: undefined, router: undefined }
   : clientInit();
 
 if (!import.meta.env.SSR && import.meta.env.VITE_GA_TAG) {
@@ -34,20 +32,18 @@ if (!import.meta.env.SSR && import.meta.env.VITE_GA_TAG) {
   });
 }
 
-const routerContext = { factionsMeta, powersMeta };
+const routerContext = { datasetsMeta };
 
 export function App() {
-  if (!factionsMeta) {
+  if (!datasetsMeta) {
     console.warn('Factions meta not set.');
     console.warn(`Is SSR: ${import.meta.env.SSR ? 'yes' : 'no'}`);
   }
 
   return (
-    <FactionsMetaContext value={factionsMeta}>
-      <PowersMetaContext value={powersMeta}>
-        <RouterProvider router={router} context={routerContext} />
-      </PowersMetaContext>
-    </FactionsMetaContext>
+    <DatasetsMetaContext value={datasetsMeta}>
+      <RouterProvider router={router} context={routerContext} />
+    </DatasetsMetaContext>
   );
 }
 
