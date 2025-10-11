@@ -1,5 +1,5 @@
 {
-  "faction_data_root": "public/faction_data",
+  "data_root": "public/datasets",
   "factions": [
     {
       "faction": "The Dork Wheel",

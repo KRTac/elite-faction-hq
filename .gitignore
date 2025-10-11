@@ -32,6 +32,8 @@ hq-config.json
 public/faction_data
 public/faction_data_dev
 public/power_data_dev
+public/datasets
+public/datasets_dev
 faction_data_test
 zmq
 src/routeTree.gen.ts

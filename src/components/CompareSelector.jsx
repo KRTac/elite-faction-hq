@@ -7,7 +7,7 @@ import useFaction from '../hooks/useFaction';
 
 
 function CompareSelector() {
-  const { datasets, directory } = useFaction();
+  const faction = useFaction();
   const { timestamp } = useFactionDataset();
   const { isActive, setIsActive, setDataset } = useDatasetComparison();
 
@@ -15,10 +15,10 @@ function CompareSelector() {
     localStorage.setItem('compareDataset_daysOld', days);
 
     if (days > 0) {
-      const name = previousDataset(dateToName(timestamp), datasets, days);
-      const json = await fetchDataset(datasetUrl(directory, name));
+      const name = previousDataset(dateToName(timestamp), faction.datasets, days);
+      const json = await fetchDataset(datasetUrl(faction.directory, name));
 
-      setDataset(createFactionDataset(json));
+      setDataset(createFactionDataset(json, faction));
       setIsActive(true);
     }
   }

@@ -55,6 +55,10 @@ export function isPower(s) {
   return allPowers.includes(s);
 }
 
+export function isPowerSlug(s) {
+  return allPowers.includes(s.replaceAll('_', ' '));
+}
+
 export function powerColor(power, fallbackName = 'None', fallbackColor = '#cccccc') {
   if (!power || power === fallbackName || !isPower(power)) {
     return fallbackColor;
