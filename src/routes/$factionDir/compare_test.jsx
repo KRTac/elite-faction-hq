@@ -37,7 +37,7 @@ export const Route = createFileRoute('/$factionDir/compare_test')({
   loader: async ({
     params: { factionDir },
     deps: { queryA, queryB },
-    context: { factionsMeta: { factions }}
+    context: { datasetsMeta: { factions }}
   }) => {
     const urlA = urlByTimeQuery(queryA, factions, factionDir);
     const urlB = urlByTimeQuery(queryB, factions, factionDir);

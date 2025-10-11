@@ -1,10 +1,10 @@
 import { Link } from '@tanstack/react-router';
-import useFactionsMeta from '../../hooks/useFactionsMeta';
+import useDatasetsMeta from '../../hooks/useDatasetsMeta';
 import DateTimeText from '../data/DateTimeText';
 
 
 function Standard({ children }) {
-  const { generated_at } = useFactionsMeta();
+  const { generated_at } = useDatasetsMeta();
 
   return (
     <>

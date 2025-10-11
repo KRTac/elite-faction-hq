@@ -14,10 +14,10 @@ export function useSystemByName(systemName) {
   return system;
 }
 
-export function useCreateFactionDataset(dataset) {
+export function useCreateFactionDataset(dataset, faction) {
   return useMemo(() => {
-    return createFactionDataset(dataset ?? {});
-  }, [ dataset ]);
+    return createFactionDataset(dataset ?? {}, faction);
+  }, [ dataset, faction ]);
 }
 
 function useFactionDataset() {

@@ -56,37 +56,40 @@ export const Route = createFileRoute('/$factionDir')({
   loader: async ({
     params: { factionDir },
     deps: { timestamp },
-    context: { factionsMeta: { factions } }
+    context: { datasetsMeta: { factions, powers }}
   }) => {
-    const faction = factions.find(f => f.directory === factionDir);
+    let subject = powers.find(f => f.directory === factionDir);
 
-    if (!faction) {
-      throw new Error('Faction not found');
+    if (!subject) {
+      subject = factions.find(f => f.directory === factionDir);
+    }
+
+    if (!subject) {
+      throw new Error('Faction or power not found');
     }
 
     if (!timestamp) {
-      timestamp = faction.datasets[0];
+      timestamp = subject.datasets[0];
     }
 
     const data = await fetchDataset(datasetUrl(factionDir, timestamp));
 
+    let compareData = null;
     let compareDaysOld = 1;
 
     if (!import.meta.env.SSR) {
       compareDaysOld = localStorage.getItem('compareDataset_daysOld') ?? compareDaysOld;
     }
 
-    let compareData = null;
-
     if (compareDaysOld > 0) {
-      const compareName = previousDataset(timestamp, faction.datasets, compareDaysOld);
+      const compareName = previousDataset(timestamp, subject.datasets, compareDaysOld);
 
       if (compareName) {
         compareData = await fetchDataset(datasetUrl(factionDir, compareName));
       }
     }
 
-    return { faction, data, compareData };
+    return { subject, data, compareData };
   },
   component: FactionAppRoute,
   pendingComponent: PendingComponent,

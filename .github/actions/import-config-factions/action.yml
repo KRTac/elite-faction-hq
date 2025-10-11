@@ -13,6 +13,10 @@ runs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Powers data import
+      shell: bash
+      run: python scripts/power-data.py --config-json hq-config.json --indent 0
+
     - name: Factions data import
       shell: bash
       run: python scripts/faction-data.py --config-json hq-config.json --indent 0
@@ -36,7 +40,7 @@ runs:
     - name: Commit changes
       shell: bash
       run: |
-        git add public/faction_data/meta.js -f
-        git add public/faction_data/**/* -f
+        git add public/datasets/meta.js -f
+        git add public/datasets/**/* -f
         git commit -m "Daily factions data import" || echo "No changes to commit"
         git push origin HEAD
