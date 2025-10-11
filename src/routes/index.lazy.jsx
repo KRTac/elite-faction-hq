@@ -5,35 +5,6 @@ import usePageTitle from '../hooks/usePageTitle';
 import PowerName from '../components/data/PowerName';
 
 
-function SubjectList({ subjects }) {
-  return (
-    <ol className="flex flex-wrap justify-center gap-3">
-      {subjects.map(subject => {
-        return (
-          <li
-            className={[
-              'block flex-1 basis-1/2'
-            ].join(' ')}
-          >
-            <Link
-              className={[
-                'block px-6 py-3 rounded-md dark:bg-bg2-d dark:hover:bg-bg2-d/80',
-                'cursor-pointer transition duration-200',
-                'border-2 border-transparent dark:hover:border-neutral-600',
-                'text-lg dark:hover:text-accent-d no-underline'
-              ].join(' ')}
-              to={`/${subject.directory}`}
-              key={subject.directory}
-            >
-              {subject.name}
-            </Link>
-          </li>
-        );
-      })}
-    </ol>
-  );
-}
-
 function Dashboard() {
   usePageTitle();
   const { factions, powers } = useDatasetsMeta();
@@ -68,7 +39,7 @@ function Dashboard() {
                   >
                     {faction.name}
                     <span
-                      className="inline-block ml-2 text-sm text-neutral-400 group-hover:text-neutral-200 transition duration-200"
+                      className="inline-block ml-2 text-sm dark:text-neutral-400 dark:group-hover:text-neutral-200 transition duration-200"
                     >
                       {faction.system_count}
                     </span>
@@ -99,7 +70,7 @@ function Dashboard() {
                   >
                     <PowerName name={power.name} />
                     <span
-                      className="inline-block ml-2 text-sm text-neutral-400 group-hover:text-neutral-200 transition duration-200"
+                      className="inline-block ml-2 text-sm dark:text-neutral-400 dark:group-hover:text-neutral-200 transition duration-200"
                     >
                       {power.system_count}
                     </span>
