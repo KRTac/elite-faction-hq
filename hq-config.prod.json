@@ -34,6 +34,17 @@
     { "faction": "Nova Paresa" }
   ],
   "powers": [
-    { "power": "Denton Patreus", "origin_system": "Eotienses" }
+    { "power": "Aisling Duval", "origin_system": "Cubeo" },
+    { "power": "Archon Delaine", "origin_system": "Harma" },
+    { "power": "A. Lavigny-Duval", "origin_system": "Kamadhenu" },
+    { "power": "Denton Patreus", "origin_system": "Eotienses" },
+    { "power": "Edmund Mahon", "origin_system": "Gateway" },
+    { "power": "Felicia Winters", "origin_system": "Rhea" },
+    { "power": "Jerome Archer", "origin_system": "Nanomam" },
+    { "power": "Li Yong-Rui", "origin_system": "Lembava" },
+    { "power": "Nakato Kaine", "origin_system": "Tionisla" },
+    { "power": "Pranav Antal", "origin_system": "Polevnic" },
+    { "power": "Yuri Grom", "origin_system": "Clayakarma" },
+    { "power": "Zemina Torval", "origin_system": "Synteini" }
   ]
 }
