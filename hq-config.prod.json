@@ -1,5 +1,5 @@
 {
-  "faction_data_root": "public/faction_data",
+  "data_root": "public/datasets",
   "factions": [
     {
       "faction": "B.I.G. - Balkan Intergalactic Guerilla",
@@ -32,5 +32,8 @@
     { "faction": "Federal Republican Guard" },
     { "faction": "Ice Storm Squadron" },
     { "faction": "Nova Paresa" }
+  ],
+  "powers": [
+    { "power": "Denton Patreus", "origin_system": "Eotienses" }
   ]
 }
