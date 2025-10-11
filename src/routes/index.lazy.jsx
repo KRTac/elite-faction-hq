@@ -46,41 +46,65 @@ function Dashboard() {
           'flex justify-center gap-3'
         ].join(' ')}
       >
-        <ol className="grid sm:grid-cols-2 gap-3">
-          {factions.map(power => {
-            return (
-              <li
-                className="block"
-                key={power.directory}
-              >
-                <Link
-                  className={[
-                    'block text-lg px-4 py-2 no-underline',
-                    'rounded-lg dark:bg-neutral-900 dark:hover:bg-neutral-800 transition duration-200'
-                  ].join(' ')}
-                  to={`/${power.directory}`}
+        <div>
+          <h2
+            className="text-xl dark:text-slate-400 mx-4 mb-3"
+          >
+            Factions
+          </h2>
+          <ol>
+            {factions.map(faction => {
+              return (
+                <li
+                  className="block mb-3"
+                  key={faction.directory}
                 >
-                  {power.name}
-                </Link>
-              </li>
-          )})}
-        </ol>
-        <ol className="w-full max-w-54">
-          {powers.map(power => {
-            return (
-              <li
-                className="block rounded-lg dark:bg-neutral-800 dark:hover:bg-neutral-700 transition duration-200"
-                key={power.directory}
-              >
-                <Link
-                  className="block text-lg px-4 py-2 no-underline mb-3"
-                  to={`/${power.directory}`}
+                  <Link
+                    className={[
+                      'block text-lg px-4 py-2 no-underline group',
+                      'rounded-lg dark:bg-neutral-900 dark:hover:bg-neutral-800 transition duration-200'
+                    ].join(' ')}
+                    to={`/${faction.directory}`}
+                  >
+                    {faction.name}
+                    <span
+                      className="inline-block ml-2 text-sm text-neutral-400 group-hover:text-neutral-300 transition duration-200"
+                    >
+                      {faction.system_count}
+                    </span>
+                  </Link>
+                </li>
+            )})}
+          </ol>
+        </div>
+        <div>
+          <h2
+            className="text-xl dark:text-slate-400 mx-4 mb-3"
+          >
+            Powers
+          </h2>
+          <ol className="w-full max-w-54">
+            {powers.map(power => {
+              return (
+                <li
+                  className="block rounded-lg dark:bg-neutral-800 dark:hover:bg-neutral-700 transition duration-200"
+                  key={power.directory}
                 >
-                  <PowerName name={power.name} />
-                </Link>
-              </li>
-          )})}
-        </ol>
+                  <Link
+                    className="block text-lg px-4 py-2 no-underline mb-3"
+                    to={`/${power.directory}`}
+                  >
+                    <PowerName name={power.name} />
+                    <span
+                      className="inline-block ml-2 text-sm text-neutral-400 group-hover:text-neutral-300 transition duration-200"
+                    >
+                      {power.system_count}
+                    </span>
+                  </Link>
+                </li>
+            )})}
+          </ol>
+        </div>
       </div>
     </StandardLayout>
   );
