@@ -381,7 +381,7 @@ def main():
     factions = []
     output_root = Path(args.output_root).resolve()
     config = {
-        'faction_data_root': ''
+        'data_root': ''
     }
 
     if args.config_json:
@@ -390,8 +390,8 @@ def main():
         with open(config_path, 'r') as f:
             config = json.load(f)
 
-    if not args.output_root and 'faction_data_root' in config and config['faction_data_root']:
-        output_root = output_root.joinpath(config['faction_data_root']).resolve()
+    if not args.output_root and 'data_root' in config and config['data_root']:
+        output_root = output_root.joinpath(config['data_root'], 'factions').resolve()
 
     if args.faction_name:
         if ',' in args.faction_name:
