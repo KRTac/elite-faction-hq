@@ -1,7 +1,8 @@
 import {
-  useContext, useState, useMemo, createContext, useCallback
+  useContext, useMemo, createContext, useCallback
 } from 'react';
 import { useNavigate } from '@tanstack/react-router';
+import useStorageState from 'use-storage-state';
 import useFactionDataset from '../hooks/useFactionDataset';
 import { filterSystems, tableColumnDefinition } from '../lib/starSystems';
 
@@ -47,7 +48,7 @@ export const availableSystemGroups = [
   'None', 'Controlling power', 'Faction priority'
 ];
 
-function useSystemFilters({ stats, systems }) {
+function useSystemFilters({ stats, systems }, { isPower, directory }) {
   const filterOptions = useMemo(() => {
     const filterOptions = {
       keySystems: [ true, false ],
@@ -76,7 +77,25 @@ function useSystemFilters({ stats, systems }) {
     return filterOptions;
   }, [ stats ]);
 
-  const [ activeFilters, setActiveFilters ] = useState({});
+  const [ factionFilters, setFactionFilters ] = useStorageState(`systemFilters_${directory}`, {
+    defaultValue: {},
+    sync: false
+  });
+  const [ powerFilters, setPowerFilters ] = useStorageState(`systemFilters_${directory}`, {
+    defaultValue: {},
+    sync: false
+  });
+
+  const setActiveFilters = useCallback(filters => {
+    if (isPower) {
+      setPowerFilters(filters);
+    } else {
+      setFactionFilters(filters);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ isPower ]);
+
+  const activeFilters = isPower ? powerFilters : factionFilters;
 
   const setFilter = useCallback((filter, value) => {
     const newFilters = { ...activeFilters };
@@ -91,11 +110,11 @@ function useSystemFilters({ stats, systems }) {
     }
 
     setActiveFilters(newFilters);
-  }, [ activeFilters ]);
+  }, [ activeFilters, setActiveFilters ]);
 
   const resetFilters = useCallback(() => {
     setActiveFilters({});
-  }, []);
+  }, [ setActiveFilters ]);
 
   return useMemo(() => {
     return {
