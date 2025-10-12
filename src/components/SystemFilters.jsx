@@ -3,6 +3,7 @@ import { SystemsFilterBox } from './inputs/FilterBox';
 import { SystemFiltersContext } from '../hooks/useSystemFilters';
 import Tabs, { TabPanel } from './data/Tabs';
 import { SystemsFilterRange } from './inputs/Range';
+import useFaction from '../hooks/useFaction';
 
 
 const filterList = [
@@ -74,7 +75,7 @@ const filterList = [
   }
 ];
 
-const tabData = [
+const factionTabData = [
   {
     title: 'General',
     filters: [
@@ -101,7 +102,30 @@ const tabData = [
   }
 ];
 
+const powerTabData = [
+  {
+    title: 'General',
+    filters: [
+      'population', 'governments', 'allegiances', 'primaryEconomies', 'secondaryEconomies'
+    ]
+  },
+  {
+    title: 'Factions',
+    filters: [
+      'controllingFactions', 'securityStates'
+    ]
+  },
+  {
+    title: 'Powers',
+    filters: [
+      'powers', 'powerStates'
+    ]
+  }
+];
+
 function SystemFilters() {
+  const { isPower } = useFaction();
+  const tabData = isPower ? powerTabData : factionTabData;
   const activeFilters = Object.keys(useContext(SystemFiltersContext).values);
 
   return (
