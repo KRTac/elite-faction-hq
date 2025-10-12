@@ -9,6 +9,7 @@ import PowerName from './data/PowerName';
 import { useFactionTitle } from '../hooks/usePageTitle';
 import useDatasetComparison from '../hooks/useDatasetComparison';
 import { tableColumnDefinition } from '../lib/starSystems';
+import useFaction from '../hooks/useFaction';
 
 
 const selectableColumns = [
@@ -22,14 +23,22 @@ const selectableColumns = [
 
 function SystemsTablesView({ groups, emptyText = 'No systems found' }) {
   useFactionTitle();
+  const { isPower } = useFaction();
 
   const [ showSettings, setShowSettings ] = useState(false);
-  const [ tableColumns, setTableColumns ] = useStorageState('systemsTables_columns', {
-    defaultValue: [
-      'Name', 'Controlling faction', 'Controlling power', 'Key system', 'Influence', 'Last update'
-    ],
-    sync: false
-  });
+  const [ tableColumns, setTableColumns ] = useStorageState(
+    isPower ? 'systemsTables_power_columns' : 'systemsTables_faction_columns',
+    {
+      defaultValue: isPower
+        ? [
+          'Name', 'Power state', 'Control progress', 'Reinforcement', 'Undermining', 'Controlling faction', 'Last update'
+        ]
+        : [
+          'Name', 'Controlling faction', 'Controlling power', 'Key system', 'Influence', 'Last update'
+        ],
+      sync: false
+    }
+  );
   const [ showRowCount, setShowRowCount ] = useStorageState('systemsTables_showRowCount', {
     defaultValue: true,
     sync: false
