@@ -2,7 +2,7 @@ import { Outlet, useLoaderData } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import Header from '../Header';
 import SystemModal from '../SystemModal';
-import { FactionContext } from '../../hooks/useFaction';
+import { useCreateFaction, FactionContext } from '../../hooks/useFaction';
 import { useCreateFactionDataset, FactionDatasetContext } from '../../hooks/useFactionDataset';
 import useSystemFilters, { SystemFiltersContext } from '../../hooks/useSystemFilters';
 import { SystemsGroupByContext, useCreateSystemsGroupBy } from '../../hooks/useSystemsGroupBy';
@@ -16,10 +16,11 @@ function FactionAppRoute() {
 }
 
 export function FactionApp({ faction, data, compareData }) {
+  faction = useCreateFaction(faction);
   const factionDataset = useCreateFactionDataset(data, faction);
   const compareDataset = useCreateFactionDataset(compareData, faction);
   const datasetComparison = useCreateDatasetComparison(factionDataset, compareDataset);
-  const systemFilters = useSystemFilters(factionDataset);
+  const systemFilters = useSystemFilters(factionDataset, faction);
   const groupBy = useCreateSystemsGroupBy(systemFilters.systems);
 
   const { setDataset } = datasetComparison;
