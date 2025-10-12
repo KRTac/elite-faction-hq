@@ -59,12 +59,24 @@ export function isPowerSlug(s) {
   return allPowers.includes(s.replaceAll('_', ' '));
 }
 
-export function powerColor(power, fallbackName = 'None', fallbackColor = '#cccccc') {
+export function powerColor(power, fallbackColor = '#cccccc', fallbackName = 'None') {
   if (!power || power === fallbackName || !isPower(power)) {
     return fallbackColor;
   }
 
   return powers[power].color;
+}
+
+export function powerColorClass(power, fallbackClass = 'neutral-300', fallbackName = 'None') {
+  if (!power || power === fallbackName || !isPower(power)) {
+    return fallbackClass;
+  }
+
+  return `power-${powers[power].shortened.toLowerCase()}`;
+}
+
+export function powerTextClass(power) {
+  return `text-${powerColorClass(power)}`;
 }
 
 export const mapReferenceSystems = [
