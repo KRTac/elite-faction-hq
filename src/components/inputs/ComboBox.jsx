@@ -52,14 +52,13 @@ function ComboBox({ options, value = '', onChange }) {
         ].join(' ')}
       >
         {filtered.map(option => {
-          let label;
+          let label = '';
           let value;
 
           if (typeof option === 'string') {
-            label = option;
             value = option;
           } else {
-            label = option.label;
+            label = ` - ${option.label}`;
             value = option.value;
           }
 
@@ -70,7 +69,7 @@ function ComboBox({ options, value = '', onChange }) {
               className="group flex cursor-default items-center gap-1 rounded-lg px-1 py-0.5 select-none dark:data-focus:bg-white/10"
             >
               <CheckIcon className="invisible size-4 dark:fill-white group-data-selected:visible" />
-              <div className="text-sm/6 dark:text-neutral-300">{value} - {label}</div>
+              <div className="text-sm/6 dark:text-neutral-300">{value}{label}</div>
             </ComboboxOption>
           );
         })}
