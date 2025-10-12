@@ -76,6 +76,14 @@ function SystemsHeader({ viewType, setViewType }) {
             </div>
           </div>
         </div>
+        <p
+          className={[
+            'mb-3 mx-auto max-w-site dark:text-neutral-400 text-center my-3',
+            visibleFilters && isComparing ? 'block' : 'hidden'
+          ].join(' ')}
+        >
+          Filters disabled when comparing
+        </p>
         <div className="flex flex-row justify-center items-center max-w-7xl mx-auto">
           <button
             className={[
@@ -125,12 +133,11 @@ function SystemsHeader({ viewType, setViewType }) {
             </div>
             <Button
               smaller
-              disabled={isComparing}
               onClick={() => {
                 setVisibleFilters(visibleFilters === 'all' ? '' : 'all');
               }}
             >
-              {visibleFilters === 'all' && !isComparing
+              {visibleFilters === 'all'
                 ? 'Hide'
                 : 'Filters'
               }
