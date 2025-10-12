@@ -1,13 +1,15 @@
+import { useMemo } from 'react';
 import { Link, createLazyFileRoute } from '@tanstack/react-router';
 import StandardLayout from '../components/layouts/Standard';
 import useDatasetsMeta from '../hooks/useDatasetsMeta';
 import usePageTitle from '../hooks/usePageTitle';
-import PowerName from '../components/data/PowerName';
+import { powerTextClass } from '../lib/elite';
 
 
 function Dashboard() {
   usePageTitle();
   const { factions, powers } = useDatasetsMeta();
+  const sortedPowers = useMemo(() => powers.sort((a, b) => b.system_count - a.system_count), [ powers ]);
 
   return (
     <StandardLayout>
@@ -18,9 +20,7 @@ function Dashboard() {
         ].join(' ')}
       >
         <div>
-          <h2
-            className="text-xl dark:text-slate-400 mx-4 mb-3"
-          >
+          <h2 className="text-xl dark:text-slate-400 mx-4 mb-3">
             Factions
           </h2>
           <ol>
@@ -49,13 +49,11 @@ function Dashboard() {
           </ol>
         </div>
         <div>
-          <h2
-            className="text-xl dark:text-slate-400 mx-4 mb-3"
-          >
+          <h2 className="text-xl dark:text-slate-400 mx-4 mb-3">
             Powers
           </h2>
-          <ol className="w-full max-w-54">
-            {powers.map(power => {
+          <ol className="w-full">
+            {sortedPowers.map(power => {
               return (
                 <li
                   className="block mb-3"
@@ -63,12 +61,13 @@ function Dashboard() {
                 >
                   <Link
                     className={[
-                      'block text-lg px-4 py-2 no-underline group',
-                      'rounded-lg dark:bg-neutral-900 dark:hover:bg-neutral-800 transition duration-200'
+                      'block text-lg px-4 py-2 no-underline group transition duration-200',
+                      'rounded-lg dark:bg-neutral-900 dark:hover:bg-neutral-800',
+                      `dark:text-neutral-300 dark:hover:${powerTextClass(power.name)}`
                     ].join(' ')}
                     to={`/${power.directory}`}
                   >
-                    <PowerName name={power.name} />
+                    {power.name}
                     <span
                       className="inline-block ml-2 text-sm dark:text-neutral-400 dark:group-hover:text-neutral-200 transition duration-200"
                     >

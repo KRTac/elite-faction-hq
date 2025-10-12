@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@source inline("{dark:,dark:hover:}text-power-{adu,ade,ald,dp,em,fw,ja,lyr,nk,pa,yg,zt}");
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -7,6 +9,19 @@
   --color-bg-d: var(--color-neutral-950);
   --color-bg2-d: var(--color-neutral-900);
   --color-accent-d: var(--color-lime-500);
+
+  --color-power-adu: #1b8fbb;
+  --color-power-ade: #cb3e3e;
+  --color-power-ald: #8b50a4;
+  --color-power-dp: #31bdbd;
+  --color-power-em: #35a432;
+  --color-power-fw: #d79f32;
+  --color-power-ja: #c740d7;
+  --color-power-lyr: #32e2a1;
+  --color-power-nk: #8fcf33;
+  --color-power-pa: #f3f539;
+  --color-power-yg: #e06530;
+  --color-power-zt: #2e69cb;
 }
 
 @layer base {
