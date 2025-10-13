@@ -1,6 +1,8 @@
 import numeral from 'numeral';
 import useFactionDataset from '../hooks/useFactionDataset';
 import DateTimeText from './data/DateTimeText';
+import useFaction from '../hooks/useFaction';
+import { powerTextClass } from '../lib/elite';
 
 
 function DetailsItem({ label, children, ...rest }) {
@@ -21,34 +23,43 @@ function DetailsWrapper({ children, ...rest }) {
 }
 
 function FactionDetails() {
+  const { name, isPower } = useFaction();
   const {
     stats, originSystem, inaraFactionId, timestamp,
     importDuration
   } = useFactionDataset();
 
   return (
-    <div
-      className={[
-        'grid gap-x-4 grid-cols-[repeat(auto-fit,minmax(250px,400px))] justify-center',
-        'py-2 px-4 my-5 dark:bg-neutral-900'
-      ].join(' ')}
-    >
-      <DetailsWrapper>
-        <DetailsItem label="Origin system">{originSystem}</DetailsItem>
-        <DetailsItem label="Total systems">{stats.proccessedSystems.length}</DetailsItem>
-        <DetailsItem label="Total population">{numeral(stats.totalPopulation).format('0,0')}</DetailsItem>
-      </DetailsWrapper>
-      <DetailsWrapper>
-        {inaraFactionId && <DetailsItem label="Links">
-          {inaraFactionId && <a href={`https://inara.cz/elite/minorfaction/${inaraFactionId}/`} target="_blank">Inara</a>}
-        </DetailsItem>}
-        <DetailsItem label="Import duration">{numeral(importDuration).format('0.00')}s</DetailsItem>
-        <DetailsItem label="Generated at">
-          <p><DateTimeText date={timestamp} showDate dateFormat="do MMM y', 'HH:mm" /></p>
-          <p><DateTimeText date={timestamp} /></p>
-        </DetailsItem>
-      </DetailsWrapper>
-    </div>
+    <>
+      <h2 className={[
+        'mt-6 mb-2 px-3 text-xl text-center',
+        isPower ? `dark:${powerTextClass(name)}` : 'dark:text-slate-300'
+      ].join(' ')}>
+        {name}
+      </h2>
+      <div
+        className={[
+          'grid gap-x-4 grid-cols-[repeat(auto-fit,minmax(250px,400px))] justify-center',
+          'py-2 px-4 mb-5 dark:bg-neutral-900'
+        ].join(' ')}
+      >
+        <DetailsWrapper>
+          <DetailsItem label="Origin system">{originSystem}</DetailsItem>
+          <DetailsItem label="Total systems">{stats.proccessedSystems.length}</DetailsItem>
+          <DetailsItem label="Total population">{numeral(stats.totalPopulation).format('0,0')}</DetailsItem>
+        </DetailsWrapper>
+        <DetailsWrapper>
+          {inaraFactionId && <DetailsItem label="Links">
+            {inaraFactionId && <a href={`https://inara.cz/elite/minorfaction/${inaraFactionId}/`} target="_blank">Inara</a>}
+          </DetailsItem>}
+          <DetailsItem label="Import duration">{numeral(importDuration).format('0.00')}s</DetailsItem>
+          <DetailsItem label="Generated at">
+            <p><DateTimeText date={timestamp} showDate dateFormat="do MMM y', 'HH:mm" /></p>
+            <p><DateTimeText date={timestamp} /></p>
+          </DetailsItem>
+        </DetailsWrapper>
+      </div>
+    </>
   );
 }
 

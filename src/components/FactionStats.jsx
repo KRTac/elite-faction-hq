@@ -1,3 +1,4 @@
+import useFaction from '../hooks/useFaction';
 import useFactionDataset from '../hooks/useFactionDataset';
 
 
@@ -30,6 +31,7 @@ function StatsBox({ label, items, ...rest }) {
 }
 
 function FactionStats() {
+  const { isPower } = useFaction();
   const { stats } = useFactionDataset();
 
   return (
@@ -42,24 +44,30 @@ function FactionStats() {
       <div>
         <StatsBox label="Controlling factions" items={stats.controllingFactions} />
       </div>
-      <div>
-        <StatsBox label="Controlling powers" items={stats.controllingPowers} />
-      </div>
+      {!isPower && (
+        <div>
+          <StatsBox label="Controlling powers" items={stats.controllingPowers} />
+        </div>
+      )}
       <div>
         <StatsBox label="All powers present" items={stats.powers} />
       </div>
       <div>
         <StatsBox label="Power states" items={stats.powerStates} />
       </div>
-      <div>
-        <StatsBox label="Active system faction states" items={stats.activeStates} />
-      </div>
-      <div>
-        <StatsBox label="Pending system faction states" items={stats.pendingStates} />
-      </div>
-      <div>
-        <StatsBox label="Recovering system faction states" items={stats.recoveringStates} />
-      </div>
+      {!isPower && (
+        <>
+          <div>
+            <StatsBox label="Active system faction states" items={stats.activeStates} />
+          </div>
+          <div>
+            <StatsBox label="Pending system faction states" items={stats.pendingStates} />
+          </div>
+          <div>
+            <StatsBox label="Recovering system faction states" items={stats.recoveringStates} />
+          </div>
+        </>
+      )}
       <div>
         <StatsBox label="Governments" items={stats.governments} />
       </div>
