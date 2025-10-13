@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Button from './inputs/Button';
 
 
 const postTargetOrigin = import.meta.env.VITE_PROTOCOL_HOSTNAME;
 
 function GalaxyMap({ data, debug = false }) {
+  const [ url, setUrl ] = useState('');
   const iframeRef = useRef(null);
   const iframeLoaded = useRef(false);
 
@@ -20,6 +21,15 @@ function GalaxyMap({ data, debug = false }) {
       { type: 'update', mapData },
       postTargetOrigin
     );
+  }, []);
+
+  useLayoutEffect(() => {
+    setUrl(`${import.meta.env.BASE_URL}edmap.html`);
+
+    return () => {
+      setUrl('');
+      iframeLoaded.current = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -41,13 +51,15 @@ function GalaxyMap({ data, debug = false }) {
 
   return (
     <>
-      <iframe
-        ref={iframeRef}
-        src={`${import.meta.env.BASE_URL}edmap.html`}
-        title="Galaxy map"
-        className="border-0 absolute top-0 left-0 w-full h-full"
-        onLoad={handleLoad}
-      />
+      {url && (
+        <iframe
+          ref={iframeRef}
+          src={url}
+          title="Galaxy map"
+          className="border-0 absolute top-0 left-0 w-full h-full"
+          onLoad={handleLoad}
+        />
+      )}
       {import.meta.env.DEV && debug && (
         <div className="absolute bottom-0 right-0 mb-3 mr-3">
           <Button onClick={sendDebug} smaller>Debug</Button>
