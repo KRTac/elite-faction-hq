@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @source inline("{dark:,dark:hover:}text-power-{adu,ade,ald,dp,em,fw,ja,lyr,nk,pa,yg,zt}");
+@source inline("{dark:,dark:hover:}border-power-{adu,ade,ald,dp,em,fw,ja,lyr,nk,pa,yg,zt}");
 
 @custom-variant dark (&:where(.dark, .dark *));
 
