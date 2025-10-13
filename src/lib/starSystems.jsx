@@ -80,7 +80,15 @@ export function systemsStats(systems) {
     proccessedSystems.push(system);
     proccessedSystemNames.push(system.name);
 
-    statByOccurrence(powers, system.power_play.powers, system.name);
+    let powersPresent = system.power_play.powers;
+    if (!powersPresent.includes(system.power_play.controlling)) {
+      powersPresent = [
+        system.power_play.controlling,
+        ...powersPresent
+      ];
+    }
+
+    statByOccurrence(powers, powersPresent, system.name);
     statByOccurrence(controllingPowers, system.power_play.controlling, system.name);
     statByOccurrence(controllingFactions, system.controlling_faction, system.name);
 
