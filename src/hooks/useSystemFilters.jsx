@@ -1,7 +1,6 @@
 import {
   useContext, useMemo, createContext, useCallback
 } from 'react';
-import { useNavigate } from '@tanstack/react-router';
 import useStorageState from 'use-storage-state';
 import useFactionDataset from '../hooks/useFactionDataset';
 import { filterSystems, tableColumnDefinition } from '../lib/starSystems';
@@ -23,7 +22,6 @@ export function useSystemFilter(filter) {
 }
 
 export function useSystemsColumnDefinitions(columns, { shortenedPowers }) {
-  const navigate = useNavigate();
   const factionData = useFactionDataset();
 
   return useMemo(() => {
@@ -34,14 +32,13 @@ export function useSystemsColumnDefinitions(columns, { shortenedPowers }) {
         column,
         {
           shortenedPowers,
-          factionName: factionData.faction,
-          navigate
+          factionName: factionData.faction
         }
       ));
     }
 
     return definitions;
-  }, [ columns, shortenedPowers, factionData.faction, navigate ]);
+  }, [ columns, shortenedPowers, factionData.faction ]);
 }
 
 export const availableSystemGroups = [
