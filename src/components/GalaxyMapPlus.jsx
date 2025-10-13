@@ -80,20 +80,20 @@ function GalaxyMapPlus({ groupBy, groups }) {
             transition
             anchor="top"
             className={[
-              'w-full md:w-2xl lg:w-4xl rounded-lg dark:bg-neutral-800/85',
+              'w-full md:w-2xl lg:w-3xl rounded-lg dark:bg-neutral-800/85',
               'transition duration-200 ease-in-out',
               'text-sm/6 [--anchor-gap:--spacing(2)]',
               'data-closed:-translate-y-1 data-closed:opacity-0'
             ].join(' ')}
           >
-            <div className="px-2 pt-2 flex flex-wrap xs:flex-nowrap gap-1">
+            <div className="pl-2 pt-2 flex flex-wrap xs:flex-nowrap gap-1">
               <div className="flex-1">
-                <p className="dark:text-neutral-300 text-base/5 pb-2">Reference systems</p>
+                <p className="dark:text-neutral-300 text-base/5 pb-2 pr-2">Reference systems</p>
                 <div className="flex flex-wrap justify-center items-start">
                   {availableReferenceCategories.map(cat => (
                     <div
                       key={cat}
-                      className="min-w-66 basis-1/2 grow md:min-w-auto md:grow-0 md:basis-1/2 pr-2 pb-2"
+                      className="min-w-66 max-w-96 basis-1/2 grow md:min-w-auto md:grow-0 md:basis-1/2 pr-2 pb-2"
                     >
                       <FilterBox
                         label={cat}

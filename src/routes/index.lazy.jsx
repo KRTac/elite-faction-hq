@@ -3,7 +3,7 @@ import { Link, createLazyFileRoute } from '@tanstack/react-router';
 import StandardLayout from '../components/layouts/Standard';
 import useDatasetsMeta from '../hooks/useDatasetsMeta';
 import usePageTitle from '../hooks/usePageTitle';
-import { powerTextClass } from '../lib/elite';
+import { powerColorClass, powerTextClass } from '../lib/elite';
 
 
 function Dashboard() {
@@ -61,9 +61,10 @@ function Dashboard() {
                 >
                   <Link
                     className={[
-                      'block text-lg px-4 py-2 no-underline group transition duration-200',
+                      'block text-lg pl-3 pr-4 py-2 no-underline group transition duration-200',
                       'rounded-lg dark:bg-neutral-900 dark:hover:bg-neutral-800',
-                      `dark:text-neutral-300 dark:hover:${powerTextClass(power.name)}`
+                      `dark:text-neutral-300 dark:hover:${powerTextClass(power.name)}`,
+                      `border-l-4 dark:border-${powerColorClass(power.name)}`
                     ].join(' ')}
                     to={`/${power.directory}`}
                   >

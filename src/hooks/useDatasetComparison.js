@@ -17,7 +17,7 @@ export function useCreateDatasetComparison(refDataset, initialDataset = null) {
     let result = null;
     let displayGroups = null;
 
-    if (dataset.isSet) {
+    if (dataset && dataset.isSet) {
       result = compareDatasets(refDataset, dataset);
       displayGroups = comparisonDisplayGroups(result, refDataset.systems, dataset.systems);
     }

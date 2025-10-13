@@ -1,3 +1,4 @@
+import { Activity } from 'react';
 import useStorageState from 'use-storage-state';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import SystemsMapView from '../../components/SystemsMapView';
@@ -21,7 +22,7 @@ function Systems() {
     <>
       <SystemsHeader viewType={viewType} setViewType={setViewType} />
       <div className="flex-1 overflow-y-scroll">
-        {viewType === 'map' && (
+        <Activity mode={viewType === 'map' ? 'visible' : 'hidden'}>
           <SystemsMapView
             groupBy={isComparing
               ? 'Comparison'
@@ -29,13 +30,13 @@ function Systems() {
             }
             groups={isComparing ? compareGroups : groups}
           />
-        )}
-        {viewType !== 'map' && (
+        </Activity>
+        <Activity mode={viewType !== 'map' ? 'visible' : 'hidden'}>
           <SystemsTablesView
             groups={isComparing ? compareGroups : groups}
             emptyText={isComparing ? 'No changes to report' : undefined}
           />
-        )}
+        </Activity>
       </div>
     </>
   );
