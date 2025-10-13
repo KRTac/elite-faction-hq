@@ -97,6 +97,7 @@ function Header({ factionName }) {
             'px-1 py-1 mr-3 my-3 border-[1px] rounded-md'
           ].join(' ')}
           to="/"
+          search={{ dataset: undefined }}
         >
           <ChevronLeftIcon
             className="size-5 transition duration-200 dark:text-neutral-100 dark:group-hover:text-accent-d"

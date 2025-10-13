@@ -1,4 +1,4 @@
-import { createRootRoute, Outlet } from '@tanstack/react-router';
+import { createRootRoute, retainSearchParams, Outlet } from '@tanstack/react-router';
 
 
 function Root() {
@@ -8,5 +8,8 @@ function Root() {
 }
 
 export const Route = createRootRoute({
-  component: Root
+  component: Root,
+  search: {
+    middlewares: [ retainSearchParams(['dataset']) ],
+  }
 });

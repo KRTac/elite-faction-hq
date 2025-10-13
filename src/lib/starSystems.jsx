@@ -1,5 +1,6 @@
 
 import numeral from 'numeral';
+import { Link } from '@tanstack/react-router';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid';
 import ToClipboard from '../components/ToClipboard';
@@ -209,8 +210,7 @@ export function comparisonDisplayGroups(comparison, primarySystems, secondarySys
 export function tableColumnDefinition(
   column,
   {
-    shortenedPowers, factionName, navigate,
-    comparison
+    shortenedPowers, factionName, comparison
   }
 ) {
   const { influenceChanged, powerChanged, powerStateChanged } = comparison ?? {};
@@ -226,15 +226,15 @@ export function tableColumnDefinition(
 
           return (
             <span className="inline-flex w-full items-center gap-1">
-              <span
+              <Link
                 className={[
-                  'cursor-pointer transition duration-100',
+                  'cursor-pointer transition duration-100 no-underline',
                   'dark:text-lime-600 dark:hover:text-lime-400'
                 ].join(' ')}
-                onClick={() => navigate({ search: { system }})}
+                search={{ system }}
               >
                 {system}
-              </span>
+              </Link>
               <ToClipboard text={system} title="Copy system name" />
             </span>
           );
