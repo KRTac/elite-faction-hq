@@ -1,4 +1,4 @@
-import { subDays, parseISO, isValid } from 'date-fns';
+import { subDays, parseISO, isValid, format } from 'date-fns';
 import { trimSlashes } from './string';
 import { systemsStats } from './starSystems';
 import { isPowerSlug } from './elite';
@@ -186,7 +186,8 @@ export function createFactionDataset(dataset, factionDef) {
     inaraFactionId: inara_faction_id,
     originSystem: origin_system,
     systems: stats.proccessedSystems,
-    stats
+    stats,
+    paginate: paginateDataset(dateToName(timestamp), factionDef.datasets)
   };
 }
 
@@ -262,4 +263,41 @@ export function compareDatasets(primary, secondary) {
     newSystems, removedSystems,
     powerChanged, powerStateChanged
   };
+}
+
+export function paginateDataset(dataset, datasets) {
+  let activeIndex = 0;
+  
+  if (dataset) {
+    activeIndex = datasets.indexOf(dataset);
+  }
+
+  if (activeIndex === -1) {
+    return null;
+  }
+
+  let prevDataset;
+  let nextDataset;
+
+  if (activeIndex > 0) {
+    nextDataset = datasets[activeIndex - 1];
+  }
+
+  if (activeIndex < datasets.length - 1) {
+    prevDataset = datasets[activeIndex + 1];
+  }
+
+  return {
+    activeIndex,
+    prevDataset,
+    nextDataset
+  };
+}
+
+const fileDateFormat = 'yyyy-MM-dd';
+
+export function datasetsForDate(date, datasets) {
+  const datePart = format(date, fileDateFormat);
+
+  return datasets.filter(d => d.startsWith(datePart));
 }

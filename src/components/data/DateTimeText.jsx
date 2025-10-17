@@ -6,7 +6,7 @@ function DateTimeText({
   date, showDate = false, dateFormat = defaultDateFormat,
   timeAgoSuffix = true, refreshSeconds = 30
  }) {
-  const [ _refresh, refresh ] = useState();
+  const [ _refresh, doRefresh ] = useState();
 
   useEffect(() => {
     if (refreshSeconds === 0 || showDate) {
@@ -14,11 +14,11 @@ function DateTimeText({
     }
 
     const timeout = setTimeout(() => {
-      refresh(!_refresh)
+      doRefresh(!_refresh)
     }, refreshSeconds * 1000);
 
     return () => {
-      refresh(!_refresh)
+      doRefresh(!_refresh)
       clearTimeout(timeout);
     };
   }, [ _refresh, refreshSeconds, showDate ]);
