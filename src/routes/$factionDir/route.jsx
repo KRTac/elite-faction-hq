@@ -52,10 +52,13 @@ function PendingComponent() {
 }
 
 export const Route = createFileRoute('/$factionDir')({
-  loaderDeps: ({ search }) => ({ timestamp: search.dataset }),
+  loaderDeps: ({ search }) => ({
+    timestamp: search.dataset,
+    compareTimestamp: search.compare
+  }),
   loader: async ({
     params: { factionDir },
-    deps: { timestamp },
+    deps: { timestamp, compareTimestamp },
     context: { datasetsMeta: { factions, powers }}
   }) => {
     let subject = powers.find(f => f.directory === factionDir);
@@ -75,17 +78,22 @@ export const Route = createFileRoute('/$factionDir')({
     const data = await fetchDataset(datasetUrl(factionDir, timestamp));
 
     let compareData = null;
-    let compareDaysOld = 1;
 
-    if (!import.meta.env.SSR) {
-      compareDaysOld = localStorage.getItem('compareDataset_daysOld') ?? compareDaysOld;
-    }
+    if (compareTimestamp) {
+      compareData = await fetchDataset(datasetUrl(factionDir, compareTimestamp));
+    } else {
+      let compareDaysOld = 1;
 
-    if (compareDaysOld > 0) {
-      const compareName = previousDataset(timestamp, subject.datasets, compareDaysOld);
+      if (!import.meta.env.SSR) {
+        compareDaysOld = localStorage.getItem('compareDataset_daysOld') ?? compareDaysOld;
+      }
 
-      if (compareName) {
-        compareData = await fetchDataset(datasetUrl(factionDir, compareName));
+      if (compareDaysOld > 0) {
+        const compareName = previousDataset(timestamp, subject.datasets, compareDaysOld);
+
+        if (compareName) {
+          compareData = await fetchDataset(datasetUrl(factionDir, compareName));
+        }
       }
     }
 

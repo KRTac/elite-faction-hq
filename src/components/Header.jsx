@@ -1,10 +1,10 @@
-import { Link, useSearch } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { ChevronLeftIcon } from '@heroicons/react/20/solid';
-import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
+import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import NavLink from './NavLink';
-import useFaction from '../hooks/useFaction';
 import DateTimeText from './data/DateTimeText';
-import CompareSelector from './CompareSelector';
+import useFactionDataset from '../hooks/useFactionDataset';
+import DatasetSelector from './DatasetSelector';
 
 
 function HeaderButton({ to, children, matchExact }) {
@@ -23,66 +23,36 @@ function HeaderButton({ to, children, matchExact }) {
   );
 }
 
-function DatasetSelector() {
-  const { datasets } = useFaction();
-  let { dataset } = useSearch({
-    from: '/$factionDir'
-  });
-  let activeIndex = 0;
-  
-  if (dataset) {
-    activeIndex = datasets.indexOf(dataset);
-  }
-
-  dataset = datasets[activeIndex];
-
-  if (activeIndex === -1) {
-    return null;
-  }
-
-  const timestampParts = dataset.split('T');
-  const timestamp = `${timestampParts[0]}T${timestampParts[1].replaceAll('-', ':')}`;
-
-  let prevDataset = '';
-  let nextDataset = '';
-
-  if (activeIndex > 0) {
-    prevDataset = datasets[activeIndex - 1];
-  }
-
-  if (activeIndex < datasets.length - 1) {
-    nextDataset = datasets[activeIndex + 1];
-  }
+function DatasetsPopup() {
+  const { timestamp } = useFactionDataset();
 
   return (
-    <div className="ml-auto flex flex-nowrap gap-2 items-center relative">
-      <Link
-        className="p-2 dark:hover:text-lime-500 transition duration-200 relative z-10"
-        search={{
-          dataset: prevDataset
-        }}
-        disabled={!prevDataset}
+    <Popover className="h-full">
+      <PopoverButton
+        className={[
+          'block cursor-pointer h-full w-40 text-center',
+          'focus:outline-none data-focus:outline transition duration-200',
+          'dark:bg-slate-800 dark:hover:bg-slate-700'
+        ].join(' ')}
       >
-        <ArrowLeftIcon className="size-6" />
-      </Link>
-      <div className="text-center w-40">
-        <p className="text-sm dark:text-neutral-300">
-          <DateTimeText date={timestamp} />
-        </p>
-        <p className="text-xs dark:text-neutral-400">
-          <DateTimeText date={timestamp} showDate />
-        </p>
-      </div>
-      <Link
-        className="p-2 dark:hover:text-lime-500 transition duration-200 relative z-10"
-        search={{
-          dataset: nextDataset
-        }}
-        disabled={!nextDataset}
+        <span className="block text-sm text-ellipsis whitespace-nowrap px-2 overflow-hidden"><DateTimeText date={timestamp} /></span>
+        <span className="block text-xs pt-0.5 text-neutral-400 text-ellipsis whitespace-nowrap px-2 overflow-hidden"><DateTimeText date={timestamp} showDate /></span>
+      </PopoverButton>
+      <PopoverPanel
+        transition
+        anchor="top"
+        className={[
+          'w-full md:w-xl px-3',
+          'transition duration-200 ease-in-out',
+          'text-sm/6 [--anchor-gap:--spacing(0)]',
+          'data-closed:-translate-y-1 data-closed:opacity-0'
+        ].join(' ')}
       >
-        <ArrowRightIcon className="size-6" />
-      </Link>
-    </div>
+        <div className="dark:bg-slate-800 p-2 rounded-b-lg border-b-2 border-accent-d/50 flex flex-col items-center">
+          <DatasetSelector />
+        </div>
+      </PopoverPanel>
+    </Popover>
   );
 }
 
@@ -110,8 +80,9 @@ function Header({ factionName }) {
           <HeaderButton to="/$factionDir/" matchExact>Systems</HeaderButton>
           <HeaderButton to="/$factionDir/details">Details</HeaderButton>
         </div>
-        <DatasetSelector />
-        <CompareSelector />
+        <div className="ml-auto self-stretch">
+          <DatasetsPopup />
+        </div>
       </div>
     </div>
   );

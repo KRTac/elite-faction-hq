@@ -38,32 +38,42 @@ export function generateMapData(categories) {
               break;
 
             default:
+              groupColor = '#cccccc';
           }
           break;
 
         case 'Comparison':
           switch (groupName) {
             case 'Added systems':
-              groupColor = '#7ccf00';
+              groupColor = '#7ccf00'; // green
               break;
 
             case 'Removed systems':
-              groupColor = '#e7000b';
+              groupColor = '#e7000b'; // red
               break;
 
             case 'Controlling faction changed':
-              groupColor = '#c800de';
+              groupColor = '#c800de'; // purple
+              break;
+
+            case 'Controling power changed':
+              groupColor = '#90a1b9'; // slate
+              break;
+
+            case 'Power state changed':
+              groupColor = '#00bc7d'; // emerald
               break;
 
             case 'Colonisation finished':
-              groupColor = '#fdc700';
+              groupColor = '#fdc700'; // yellow
               break;
 
             case 'Influence changed':
-              groupColor = '#a2f4fd';
+              groupColor = '#a2f4fd'; // cyan
               break;
 
             default:
+              groupColor = '#cccccc';
           }
           break;
 

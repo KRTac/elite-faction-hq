@@ -20,6 +20,7 @@
     "@tanstack/react-router": "^1.131.48",
     "@tanstack/react-router-devtools": "^1.131.48",
     "@tanstack/react-table": "^8.21.3",
+    "cally": "^0.8.0",
     "date-fns": "^4.1.0",
     "notifyx": "^2.2.33",
     "numeral": "^2.0.6",

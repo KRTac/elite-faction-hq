@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
+import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import useStorageState from 'use-storage-state';
 import { availableReferenceCategories, availableReferenceOptions, generateMapData } from '../lib/ed3d';
 import GalaxyMap from './GalaxyMap';

@@ -11,7 +11,7 @@ function StatsItem({ stat, ...rest }) {
         className="absolute top-0 left-0 bg-emerald-800 h-full rounded-md"
         style={{ width: `${(stat.occurrence / systems.length) * 100}%`}}
       />
-      <span className="flex justify-between relative z-10">
+      <span className="flex justify-between relative">
         <span className="font-bold text-amber-100">{stat.value}</span>
         <span className="font-bold text-amber-50">{stat.occurrence}</span>
       </span>
