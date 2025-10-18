@@ -23,18 +23,28 @@ function HeaderButton({ to, children, matchExact }) {
   );
 }
 
-function TraverseButton({ dataset, icon: Icon }) {
+// eslint-disable-next-line no-unused-vars
+function TraverseButton({ dataset, icon: Icon, label }) {
+  const Comp = dataset ? Link : 'span';
+
   return (
-    <Link
+    <Comp
       className={[
         'group flex justify-center items-center px-2',
         '',
         dataset
           ? 'dark:bg-yellow-900 dark:hover:bg-yellow-700'
-          : 'dark:bg-neutral-900 opacity-50 cursor-default',
+          : 'dark:bg-neutral-900 opacity-50',
         'transition duration-200'
       ].join(' ')}
-      search={s => ({ ...s, dataset })}
+      search={dataset
+        ? s => ({ ...s, dataset })
+        : undefined
+      }
+      title={dataset
+        ? label
+        : undefined
+      }
     >
       <Icon
         className={[
@@ -42,7 +52,7 @@ function TraverseButton({ dataset, icon: Icon }) {
           'dark:text-neutral-300 dark:group-hover:text-white'
         ].join(' ')}
       />
-    </Link>
+    </Comp>
   );
 }
 
@@ -51,7 +61,7 @@ function DatasetsPopup() {
 
   return (
     <div className="h-full grid grid-cols-[auto_1fr] grid-rows-2 gap-[1px] dark:bg-neutral-400">
-      <TraverseButton dataset={prevDataset} icon={ChevronLeftIcon} />
+      <TraverseButton dataset={prevDataset} icon={ChevronLeftIcon} label="Previous snapshot" />
       <Popover className="h-full row-span-2">
         <PopoverButton
           className={[
@@ -82,7 +92,7 @@ function DatasetsPopup() {
           </div>
         </PopoverPanel>
       </Popover>
-      <TraverseButton dataset={nextDataset} icon={ChevronRightIcon} />
+      <TraverseButton dataset={nextDataset} icon={ChevronRightIcon} label="Next snapshot" />
     </div>
   );
 }
