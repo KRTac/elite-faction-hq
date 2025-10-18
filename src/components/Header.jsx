@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { ChevronLeftIcon } from '@heroicons/react/20/solid';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import NavLink from './NavLink';
 import DateTimeText from './data/DateTimeText';
@@ -23,36 +23,67 @@ function HeaderButton({ to, children, matchExact }) {
   );
 }
 
+function TraverseButton({ dataset, icon: Icon }) {
+  return (
+    <Link
+      className={[
+        'group flex justify-center items-center px-2',
+        '',
+        dataset
+          ? 'dark:bg-yellow-900 dark:hover:bg-yellow-700'
+          : 'dark:bg-neutral-900 opacity-50 cursor-default',
+        'transition duration-200'
+      ].join(' ')}
+      search={s => ({ ...s, dataset })}
+    >
+      <Icon
+        className={[
+          'size-5 transition duration-200',
+          'dark:text-neutral-300 dark:group-hover:text-white'
+        ].join(' ')}
+      />
+    </Link>
+  );
+}
+
 function DatasetsPopup() {
-  const { timestamp } = useFactionDataset();
+  const { timestamp, paginate: { prevDataset, nextDataset }} = useFactionDataset();
 
   return (
-    <Popover className="h-full">
-      <PopoverButton
-        className={[
-          'block cursor-pointer h-full w-40 text-center',
-          'focus:outline-none data-focus:outline transition duration-200',
-          'dark:bg-slate-800 dark:hover:bg-slate-700'
-        ].join(' ')}
-      >
-        <span className="block text-sm text-ellipsis whitespace-nowrap px-2 overflow-hidden"><DateTimeText date={timestamp} /></span>
-        <span className="block text-xs pt-0.5 text-neutral-400 text-ellipsis whitespace-nowrap px-2 overflow-hidden"><DateTimeText date={timestamp} showDate /></span>
-      </PopoverButton>
-      <PopoverPanel
-        transition
-        anchor="top"
-        className={[
-          'w-full md:w-xl px-3',
-          'transition duration-200 ease-in-out',
-          'text-sm/6 [--anchor-gap:--spacing(0)]',
-          'data-closed:-translate-y-1 data-closed:opacity-0'
-        ].join(' ')}
-      >
-        <div className="dark:bg-slate-800 p-2 rounded-b-lg border-b-2 border-accent-d/50 flex flex-col items-center">
-          <DatasetSelector />
-        </div>
-      </PopoverPanel>
-    </Popover>
+    <div className="h-full grid grid-cols-[auto_1fr] grid-rows-2 gap-[1px] dark:bg-neutral-400">
+      <TraverseButton dataset={prevDataset} icon={ChevronLeftIcon} />
+      <Popover className="h-full row-span-2">
+        <PopoverButton
+          className={[
+            'block cursor-pointer h-full w-40 text-center',
+            'focus:outline-none data-focus:outline transition duration-200',
+            'dark:bg-slate-800 dark:hover:bg-slate-700'
+          ].join(' ')}
+        >
+          <span className="block text-sm text-ellipsis whitespace-nowrap px-2 overflow-hidden">
+            <DateTimeText date={timestamp} />
+          </span>
+          <span className="block text-xs pt-0.5 text-neutral-400 text-ellipsis whitespace-nowrap px-2 overflow-hidden">
+            <DateTimeText date={timestamp} showDate />
+          </span>
+        </PopoverButton>
+        <PopoverPanel
+          transition
+          anchor="top"
+          className={[
+            'w-full md:w-xl px-3',
+            'transition duration-200 ease-in-out',
+            'text-sm/6 [--anchor-gap:--spacing(0)]',
+            'data-closed:-translate-y-1 data-closed:opacity-0'
+          ].join(' ')}
+        >
+          <div className="dark:bg-slate-800 p-2 rounded-b-lg border-b-2 border-accent-d/50 flex flex-col items-center">
+            <DatasetSelector />
+          </div>
+        </PopoverPanel>
+      </Popover>
+      <TraverseButton dataset={nextDataset} icon={ChevronRightIcon} />
+    </div>
   );
 }
 
