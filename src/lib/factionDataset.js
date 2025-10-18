@@ -167,11 +167,16 @@ export async function fetchDataset(url) {
 }
 
 export function createFactionDataset(dataset, factionDef) {
+  if (!dataset) {
+    dataset = {};
+  }
+
   const {
     timestamp, import_duration, faction, power,
     inara_faction_id, systems
   } = dataset;
   let { origin_system } = dataset;
+  const isSet = !!timestamp;
 
   if (power) {
     origin_system = factionDef.origin_system;
@@ -180,14 +185,14 @@ export function createFactionDataset(dataset, factionDef) {
   const stats = systemsStats(systems ?? []);
 
   return {
-    isSet: !!timestamp,
+    isSet,
     timestamp, faction, power,
     importDuration: import_duration,
     inaraFactionId: inara_faction_id,
     originSystem: origin_system,
     systems: stats.proccessedSystems,
     stats,
-    paginate: paginateDataset(dateToName(timestamp), factionDef.datasets)
+    paginate: paginateDataset(isSet ? dateToName(timestamp) : null, factionDef.datasets)
   };
 }
 
@@ -266,25 +271,22 @@ export function compareDatasets(primary, secondary) {
 }
 
 export function paginateDataset(dataset, datasets) {
-  let activeIndex = 0;
+  let activeIndex = -1;
+  let prevDataset;
+  let nextDataset;
   
   if (dataset) {
     activeIndex = datasets.indexOf(dataset);
   }
 
-  if (activeIndex === -1) {
-    return null;
-  }
+  if (activeIndex !== -1) {
+    if (activeIndex > 0) {
+      nextDataset = datasets[activeIndex - 1];
+    }
 
-  let prevDataset;
-  let nextDataset;
-
-  if (activeIndex > 0) {
-    nextDataset = datasets[activeIndex - 1];
-  }
-
-  if (activeIndex < datasets.length - 1) {
-    prevDataset = datasets[activeIndex + 1];
+    if (activeIndex < datasets.length - 1) {
+      prevDataset = datasets[activeIndex + 1];
+    }
   }
 
   return {
